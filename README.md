@@ -40,7 +40,7 @@
 | :--- | :--- | :--- |
 | **Windows / macOS** | Chrome / Edge / Brave | [Tampermonkey (篡改猴)](https://www.tampermonkey.net/) 或 [Violentmonkey](https://violentmonkey.github.io/) |
 | **macOS** | Safari | [Userscripts Safari](https://apps.apple.com/app/userscripts/id1463298887) 或 [Stay](https://apps.apple.com/app/stay-for-safari/id1591620924) |
-| **iPadOS / iOS** | Safari | [Userscripts](https://apps.apple.com/app/userscripts/id1463298887) 或 [Stay 2]([https://apps.apple.com/app/stay-for-safari/id1591620924](https://apps.apple.com/tw/app/stay-for-safari-%E4%BD%BF%E7%94%A8%E8%80%85%E8%85%B3%E6%9C%AC%E8%88%87%E5%BB%A3%E5%91%8A%E6%94%94%E6%88%AA%E6%93%B4%E5%85%85/id1591620171]) |
+| **iPadOS / iOS** | Safari | [Userscripts](https://apps.apple.com/app/userscripts/id1463298887) 或 [Stay 2]([https://apps.apple.com/tw/app/stay-for-safari-%E4%BD%BF%E7%94%A8%E8%80%85%E8%85%B3%E6%9C%AC%E8%88%87%E5%BB%A3%E5%91%8A%E6%94%94%E6%88%AA%E6%93%B4%E5%85%85/id1591620171]) |
 | **iPadOS / iOS** | Orion Browser | 內建支援 Chrome / Firefox 擴充套件，直接安裝 Tampermonkey |
 | **Android** | Kiwi Browser / Firefox | [Tampermonkey](https://www.tampermonkey.net/) |
 
