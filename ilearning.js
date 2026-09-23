@@ -557,6 +557,63 @@
 
     setInterval(() => { sendCommandToYTIframes('addEventListener', ['onStateChange']); }, 2000);
 
+    // 獨立 AI 字幕引導彈窗（掛載至 body，徹底避免受浮動面板樣式與 overflow 限制）
+    function openCCGuideModal() {
+        let mask = document.getElementById('cycu-cc-guide-mask');
+        if (!mask) {
+            mask = document.createElement('div');
+            mask.id = 'cycu-cc-guide-mask';
+            mask.style.cssText = `
+                position: fixed !important;
+                inset: 0 !important;
+                background: rgba(15, 23, 42, 0.65) !important;
+                backdrop-filter: blur(5px) !important;
+                -webkit-backdrop-filter: blur(5px) !important;
+                z-index: 1000005 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 16px !important;
+                box-sizing: border-box !important;
+                animation: fadeIn 0.2s ease;
+            `;
+
+            mask.innerHTML = `
+                <div style="background:#ffffff; padding:20px; border-radius:16px; box-shadow:0 20px 40px rgba(0,0,0,0.3); width:100%; max-width:400px; text-align:center; border:2px solid #10b981; max-height:90vh; overflow-y:auto; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h3 style="margin:0; color:#059669; font-size:16px; font-weight:700; display:flex; align-items:center; gap:6px;">
+                            <span>💬</span><span>開啟 AI 即時字幕與翻譯</span>
+                        </h3>
+                        <button id="cycu-cc-close-x" style="background:rgba(0,0,0,0.06); border:none; border-radius:50%; width:26px; height:26px; font-size:13px; color:#64748b; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                    </div>
+                    <p style="font-size:12px; color:#475569; line-height:1.5; text-align:left; margin-bottom:12px;">
+                        利用瀏覽器免費 AI 語音識別技術，直接將老師上課語音轉成中文字幕：
+                    </p>
+                    <div style="background:#ecfdf5; padding:12px 14px; border-radius:10px; text-align:left; font-size:11px; color:#064e3b; margin-bottom:16px; border:1px solid #a7f3d0; line-height:1.6;">
+                        <b style="color:#047857;">💻 電腦 (Chrome / Edge)：</b><br>
+                        點擊網址列右側 <b>🎵 媒體控制圖示</b> > 開啟 <b>即時字幕 (Live Caption)</b> > 勾選即時翻譯為繁體中文。<br><br>
+                        <b style="color:#047857;">📱 行動端 (iPadOS / iOS / Android)：</b><br>
+                        - <b>iOS / iPadOS</b>: 設定 > 輔助使用 > 即時字幕 (Beta)<br>
+                        - <b>Android</b>: 按實體音量鍵 > 點選音量滑桿下方「即時字幕」圖示
+                    </div>
+                    <button id="cycu-cc-close-btn" style="background:#10b981; color:white; border:none; padding:10px 16px; border-radius:10px; font-weight:700; cursor:pointer; width:100%; font-size:13px; box-shadow:0 3px 8px rgba(16,185,129,0.25);">👌 我知道了</button>
+                </div>
+            `;
+            document.body.appendChild(mask);
+
+            mask.addEventListener('click', (e) => {
+                if (e.target === mask) mask.style.display = 'none';
+            });
+            mask.querySelector('#cycu-cc-close-x').addEventListener('click', () => {
+                mask.style.display = 'none';
+            });
+            mask.querySelector('#cycu-cc-close-btn').addEventListener('click', () => {
+                mask.style.display = 'none';
+            });
+        }
+        mask.style.display = 'flex';
+    }
+
     // 建立極簡超薄控制面板
     function createVideoAssistant() {
         if (document.getElementById('cycu-video-assistant')) return;
@@ -574,7 +631,7 @@
         assistantCard.id = 'cycu-video-assistant';
         assistantCard.innerHTML = `
             <div style="background:#ffffff; overflow:hidden; width:100%;">
-                <!-- 1. 極簡標題拖動列 (高度僅 ~28px) -->
+                <!-- 1. 極簡標題拖動列 (高度約 ~28px) -->
                 <div id="cycu-v-drag-header" style="background:#2563eb; padding:6px 12px; color:white; display:flex; align-items:center; justify-content:space-between; cursor:grab; user-select:none; touch-action:none;">
                     <div style="display:flex; align-items:center; gap:6px;">
                         <span style="font-size:13px;">🎬</span>
@@ -592,7 +649,7 @@
                     </div>
                 </div>
 
-                <!-- 2. 極簡工具箱主體 (高度僅 ~55px) -->
+                <!-- 2. 極簡工具箱主體 (高度約 ~55px) -->
                 <div id="cycu-v-assistant-body" style="padding:8px 12px; display:${isCollapsed ? 'none' : 'flex'}; flex-direction:column; gap:6px; background:#ffffff;">
                     <!-- 第一行：播放/跳轉 + 進度條 + 時間顯示 (整合於同一橫列) -->
                     <div style="display:flex; align-items:center; gap:6px;">
@@ -631,20 +688,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- AI 字幕引導彈窗 -->
-            <div id="cycu-cc-guide" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:1000001; background:white; padding:20px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.25); width:88%; max-width:360px; text-align:center; border: 2px solid #10b981;">
-                <h3 style="margin:0 0 10px 0; color:#059669; font-size:16px;">💬 開啟 AI 即時字幕與翻譯</h3>
-                <p style="font-size:12px; color:#475569; line-height:1.5; text-align:left; margin-bottom:10px;">利用瀏覽器免費 AI 語音識別直接轉成中文字幕：</p>
-                <div style="background:#ecfdf5; padding:10px; border-radius:8px; text-align:left; font-size:11px; color:#064e3b; margin-bottom:14px; border:1px solid #a7f3d0; line-height:1.5;">
-                    <b>💻 電腦 (Chrome / Edge)：</b><br>
-                    點擊右上角 <b>🎵 圖示</b> > 開啟 <b>即時字幕 (Live Caption)</b> > 勾選即時翻譯成繁中。<br><br>
-                    <b>📱 行動端 (iOS / Android)：</b><br>
-                    - iOS: 設定 > 輔助使用 > 即時字幕 (Beta)<br>
-                    - Android: 按實體音量鍵 > 點選音量列下方字幕圖示
-                </div>
-                <button id="cycu-cc-guide-close" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; font-size:12px;">👌 我知道了</button>
             </div>
         `;
 
@@ -702,13 +745,10 @@
             showToast("🎬 控制列已縮小至左下角按鈕！");
         });
 
+        // 點擊 AI 字幕按鈕，呼叫獨立的模態視窗
         document.getElementById('cycu-v-cc-toggle').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('cycu-cc-guide').style.display = 'block';
-        });
-        document.getElementById('cycu-cc-guide-close').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('cycu-cc-guide').style.display = 'none';
+            openCCGuideModal();
         });
 
         toggleFab.addEventListener('click', (e) => {
@@ -965,7 +1005,7 @@
                 <div style="border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 4px 14px rgba(0,0,0,0.03); background:#ffffff; overflow:hidden;">
                     <div style="background:linear-gradient(135deg, #6366f1, #4f46e5); padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
                         <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:16px;">⚡</span><span style="font-weight:700; font-size:13px; color:white !important;">iLearning 體驗增強工具箱</span></div>
-                        <span style="font-size:10px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 6px; border-radius:10px; font-weight:bold;">v6.8.4 極簡版</span>
+                        <span style="font-size:10px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 6px; border-radius:10px; font-weight:bold;">v6.8.5 極簡修復版</span>
                     </div>
                     <div style="padding:14px; display:flex; flex-direction:column; gap:12px;">
                         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
