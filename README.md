@@ -1,6 +1,6 @@
 #  中原 iLearning 2.0 頁面addon (CYCU iLearning Enhancer-page-addon)
 
-[![Greasy Fork Version](https://img.shields.io/badge/Greasy%20Fork-v6.8.3-red?logo=greasemonkey&style=flat-square)](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-ilearning-2-0-%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7)
+[![Greasy Fork Version](https://img.shields.io/badge/Greasy%20Fork-v6.8.3-red?logo=greasemonkey&style=flat-square)]((https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon))
 [![Auto Update](https://img.shields.io/badge/Auto%20Update-Supported-brightgreen?style=flat-square&logo=git)](https://update.greasyfork.org/scripts/597066/%E4%B8%AD%E5%8E%9F%20iLearning%2020%20%E9%A0%81%E9%9D%A2%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7.meta.js)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Platform Support](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20iPadOS%20%7C%20iOS%20%7C%20Android-blue?style=flat-square)](#-跨平台安裝指南)
@@ -8,7 +8,7 @@
 
 專為**中原大學 (CYCU) iLearning 2.0** 平台打造的全方位體驗優化油猴腳本（UserScript）。告別 Moodle 播放限制、iPadOS 滿版時消不掉的網址列、微弱課堂錄音與繁瑣的逐檔下載作業！
 
-👉 **[立即前往 Greasy Fork 安裝最新版本](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-ilearning-2-0-%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7)**
+👉 **[立即前往 Greasy Fork 安裝最新版本](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon)**
 
 ---
 
@@ -53,7 +53,7 @@
 若使用 App Store 免費開源神器 **[Userscripts Safari](https://apps.apple.com/app/userscripts/id1463298887)**：
 
 1. **安裝擴充套件**：從 App Store 安裝 **Userscripts**，並在「設定」>「Safari」>「延伸功能」中啟用它。
-2. **下載腳本檔案**：在 Safari 長按或點擊 [👉 下載 ilearning.user.js](https://update.greasyfork.org/scripts/597066/%E4%B8%AD%E5%8E%9F%20iLearning%2020%20%E9%A0%81%E9%9D%A2%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7.user.js)，選擇**「儲存到檔案」**。
+2. **下載腳本檔案**：在 Safari 長按或點擊 [👉 下載 ilearning.user.js](https://update.greasyfork.org/scripts/597066/%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon.user.js)，選擇**「儲存到檔案」**。
 3. **存入 Userscripts 資料夾**：
    - 打開 iPhone / iPad 內建的 **「檔案 (Files)」App**。
    - 瀏覽位置選擇 **「我的 iPhone / iPad」**（或 iCloud 雲端硬碟）中的 **`Userscripts`** 資料夾。
@@ -76,7 +76,7 @@
 ### 💻 電腦版 (Windows / macOS) 安裝
 
 1. 安裝管理套件：推薦使用 [Tampermonkey (篡改猴)](https://www.tampermonkey.net/) 或 [Violentmonkey (暴力猴)](https://violentmonkey.github.io/)。
-2. 前往 **[Greasy Fork 腳本頁面](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-ilearning-2-0-%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7)** 點擊安裝。
+2. 前往 **[Greasy Fork 腳本頁面](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon)** 點擊安裝。
 3. 重新整理或登入 [中原大學 iLearning 2.0](https://ilearning.cycu.edu.tw/) 即可使用。
 
 ---
