@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         中原 iLearning 2.0 頁面體驗增強 (v6.8.3 自由漂浮全功能版)
+// @name         中原 iLearning 2.0 體驗增強
 // @namespace    http://ilearning.cycu.edu.tw/
 // @version      6.8.3
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標記憶）、直接調用 HTML5 Video 原生全螢幕（徹底隱藏 iPadOS Safari 網址列/分頁列，與 YouTube 完全一致）、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP，並支援 Web Audio 600% 爆音引擎。
