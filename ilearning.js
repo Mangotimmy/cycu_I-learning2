@@ -1881,7 +1881,7 @@
             <div style="border-radius:16px; border:1px solid #e2e8f0; background:#ffffff; box-shadow:0 4px 20px rgba(0,0,0,0.05); overflow:hidden; width:100%;">
                 <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
                     <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:16px;">📖</span><span style="font-weight:700; font-size:13px; color:white !important;">iLearning PDF 智慧學習助理</span></div>
-                    <span style="font-size:11px; opacity:0.8; font-weight:bold;">中原大學專屬輔助</span>
+                    <span style="font-size:11px; opacity:0.8; font-weight:bold;">.</span>
                 </div>
                 <div style="padding:14px; display:flex; flex-direction:column; gap:10px; background:#fafafa;">
                     <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px;">
