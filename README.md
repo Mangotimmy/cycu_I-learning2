@@ -1,4 +1,4 @@
-#  中原 iLearning 2.0 頁面體驗增強 (CYCU iLearning Enhancer)
+#  中原 iLearning 2.0 頁面addon (CYCU iLearning Enhancer-page-addon)
 
 [![Greasy Fork Version](https://img.shields.io/badge/Greasy%20Fork-v6.8.3-red?logo=greasemonkey&style=flat-square)](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-ilearning-2-0-%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7)
 [![Auto Update](https://img.shields.io/badge/Auto%20Update-Supported-brightgreen?style=flat-square&logo=git)](https://update.greasyfork.org/scripts/597066/%E4%B8%AD%E5%8E%9F%20iLearning%2020%20%E9%A0%81%E9%9D%A2%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7.meta.js)
