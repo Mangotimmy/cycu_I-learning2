@@ -315,7 +315,124 @@
         .cycu-fs-filter-chip.active { background: #4f46e5; color: white; border-color: #4f46e5; }
         .cycu-fs-item-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
         .cycu-fs-item-row:hover { background: #f1f5f9; }
-    `;
+    `
+        /* ================= 劇院全螢幕模式 (YouTube Style) ================= */
+        body.cycu-pdf-theater-mode {
+            overflow: hidden !important;
+            background: #000000 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* 徹底抹除頂部紫色導航列、章節分頁列(Overview/Chap/Statistics)、麵包屑與舊助理面板 */
+        body.cycu-pdf-theater-mode .navbar,
+        body.cycu-pdf-theater-mode header,
+        body.cycu-pdf-theater-mode #usernavigation,
+        body.cycu-pdf-theater-mode #page-header,
+        body.cycu-pdf-theater-mode #page-footer,
+        body.cycu-pdf-theater-mode .breadcrumb,
+        body.cycu-pdf-theater-mode .nav-tabs,
+        body.cycu-pdf-theater-mode ul.nav,
+        body.cycu-pdf-theater-mode #theme_boost-drawers-courseindex,
+        body.cycu-pdf-theater-mode #cycu-floating-drawer-toggle,
+        body.cycu-pdf-theater-mode #cycu-pdf-assistant {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* 將 PDF 主畫布與 iframe 擴展覆蓋全螢幕四角 */
+        body.cycu-pdf-theater-mode #page,
+        body.cycu-pdf-theater-mode #page-content,
+        body.cycu-pdf-theater-mode #region-main,
+        body.cycu-pdf-theater-mode #body-wrapper,
+        body.cycu-pdf-theater-mode #content-wrapper {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            width: 100dvw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            z-index: 999990 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            background: #18181b !important;
+            max-width: none !important;
+            flex: none !important;
+        }
+
+        body.cycu-pdf-theater-mode iframe,
+        body.cycu-pdf-theater-mode #viewerContainer {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+        }
+
+        /* 底部半透明懸浮控制膠囊 (HUD) */
+        #cycu-pdf-theater-hud {
+            position: fixed !important;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000000 !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            user-select: none;
+        }
+
+        #cycu-pdf-theater-hud.cycu-hud-idle {
+            opacity: 0.15 !important;
+        }
+        #cycu-pdf-theater-hud:hover {
+            opacity: 1 !important;
+        }
+
+        .cycu-hud-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fafc;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .cycu-hud-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        .cycu-hud-btn:active {
+            transform: scale(0.96);
+        }
+        .cycu-hud-btn.danger {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+        .cycu-hud-btn.danger:hover {
+            background: #dc2626;
+        };
     document.head.appendChild(style);
 
     // 任意漂浮拖曳引擎（支援 PC 滑鼠/iPad 觸控、防出界、座標與旋轉螢幕自適應）
@@ -2042,12 +2159,12 @@
                 <div id="cycu-pdf-assistant-body" style="padding:10px 14px; display:flex; flex-direction:column; gap:8px; background:#fafafa;">
                     <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px;">
                         <button id="cycu-pdf-dark-toggle" class="cycu-slim-btn">🌓 護眼深色</button>
-                        <button id="cycu-pdf-focus-toggle" class="cycu-slim-btn">🔍 全螢幕</button>
+                        <button id="cycu-pdf-focus-toggle" class="cycu-slim-btn">🔍 原生全螢幕</button>
                         <button id="cycu-pdf-native-toggle" class="cycu-slim-btn cycu-pdf-btn-active">⚙️ 顯示原廠</button>
                         <button id="cycu-pdf-note-toggle" class="cycu-slim-btn">📝 隨堂筆記</button>
                     </div>
                     <div>
-                        <a id="cycu-pdf-direct-download" href="${escapeHtml(fullUrl)}" download target="_blank" style="text-align:center; display:block; padding:9px; border-radius:8px; background:#10b981; color:white !important; font-weight:700; font-size:11px; text-decoration:none; box-shadow:0 2px 8px rgba(16,185,129,0.2);">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
+                        <a id="cycu-pdf-direct-download" href="${fullUrl}" download target="_blank" style="text-align:center; display:block; padding:9px; border-radius:8px; background:#10b981; color:white !important; font-weight:700; font-size:11px; text-decoration:none; box-shadow:0 2px 8px rgba(16,185,129,0.2);">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
                     </div>
 
                     <div style="border-top:1px solid #e2e8f0; padding-top:8px; display:grid; grid-template-columns:1fr 2fr 1fr; align-items:center; text-align:center;">
@@ -2078,6 +2195,9 @@
         `;
         container.insertBefore(assistantCard, container.firstChild);
 
+        // 🌟 阻斷整個卡片的冒泡，徹底解決 Moodle handleDocumentClick 的 indexOf 報錯
+        assistantCard.addEventListener('click', (e) => e.stopPropagation());
+
         const btnDark = document.getElementById('cycu-pdf-dark-toggle');
         const btnFocus = document.getElementById('cycu-pdf-focus-toggle');
         const btnNative = document.getElementById('cycu-pdf-native-toggle');
@@ -2088,9 +2208,10 @@
         const pdfCollapseBtn = document.getElementById('cycu-pdf-collapse-btn');
         const pdfAssistantBody = document.getElementById('cycu-pdf-assistant-body');
 
-        // PDF 助理本體收折／展開
+        // 面板收折
         pdfCollapseBtn.onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (pdfAssistantBody.style.display === 'none') {
                 pdfAssistantBody.style.display = 'flex';
                 pdfCollapseBtn.innerText = '收折 －';
@@ -2100,65 +2221,133 @@
             }
         };
 
-        // 深色護眼模式控制
+        // 護眼深色模式控制
         let isDarkMode = localStorage.getItem('cycu_pdf_dark_mode') === 'true';
         const applyDarkMode = () => {
             if (isDarkMode) {
                 btnDark.classList.add('cycu-pdf-btn-active');
                 document.body.classList.add('cycu-pdf-dark-mode');
-                sendPdfIframeAction('applyDarkOn');
-                applyDarkToIframe(true);
             } else {
                 btnDark.classList.remove('cycu-pdf-btn-active');
                 document.body.classList.remove('cycu-pdf-dark-mode');
-                sendPdfIframeAction('applyDarkOff');
-                applyDarkToIframe(false);
             }
         };
-
         applyDarkMode();
-        document.querySelectorAll('iframe').forEach(iframe => {
-            iframe.addEventListener('load', () => {
-                applyDarkMode();
-                if (isNativeHidden) toggleIframeNativeToolbar(true);
-            });
-        });
-
-        // 輪詢檢測延遲載入的 PDF iframe
-        let pollCount = 0;
-        const iframePoller = setInterval(() => {
-            pollCount++;
-            if (document.querySelector('iframe')) {
-                applyDarkMode();
-                if (isNativeHidden) toggleIframeNativeToolbar(true);
-            }
-            if (pollCount > 15) clearInterval(iframePoller);
-        }, 800);
 
         btnDark.onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation();
             isDarkMode = !isDarkMode;
             localStorage.setItem('cycu_pdf_dark_mode', isDarkMode);
             applyDarkMode();
             showToast(isDarkMode ? "🌓 已開啟 PDF 護眼深色模式" : "☀️ 已關閉護眼深色模式");
         };
 
-        let isFocusMode = false;
+        // 🎬 YouTube 劇院級原生全螢幕切換
+        let theaterIdleTimer = null;
+        function toggleTheaterFullscreen() {
+            const isTheater = document.body.classList.toggle('cycu-pdf-theater-mode');
+            let hud = document.getElementById('cycu-pdf-theater-hud');
+
+            if (isTheater) {
+                // 呼叫原生 Fullscreen API
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
+                else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(() => {});
+
+                // 產生/顯示懸浮膠囊
+                if (!hud) {
+                    hud = document.createElement('div');
+                    hud.id = 'cycu-pdf-theater-hud';
+                    hud.innerHTML = `
+                        <button id="cycu-hud-prev" class="cycu-hud-btn">◀ 上頁</button>
+                        <span id="cycu-hud-page" style="font-family:monospace; font-weight:700; padding:0 6px; color:#38bdf8;">Page 1 / --</span>
+                        <button id="cycu-hud-next" class="cycu-hud-btn">下頁 ▶</button>
+                        <span style="opacity:0.3; margin:0 2px;">|</span>
+                        <button id="cycu-hud-fit" class="cycu-hud-btn">🔄 滿版寬度</button>
+                        <button id="cycu-hud-in" class="cycu-hud-btn">➕</button>
+                        <button id="cycu-hud-out" class="cycu-hud-btn">➖</button>
+                        <span style="opacity:0.3; margin:0 2px;">|</span>
+                        <button id="cycu-hud-dark" class="cycu-hud-btn">🌓 深色</button>
+                        <button id="cycu-hud-exit" class="cycu-hud-btn" style="background:#ef4444; border-color:#ef4444;">✕ 退出全螢幕</button>
+                    `;
+                    document.body.appendChild(hud);
+
+                    hud.addEventListener('click', (ev) => ev.stopPropagation());
+                    hud.querySelector('#cycu-hud-prev').onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); nativeGoPrevPage(); };
+                    hud.querySelector('#cycu-hud-next').onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); nativeGoNextPage(); };
+                    hud.querySelector('#cycu-hud-fit').onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); nativeZoomFit(); };
+                    hud.querySelector('#cycu-hud-in').onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); nativeZoomIn(); };
+                    hud.querySelector('#cycu-hud-out').onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); nativeZoomOut(); };
+                    hud.querySelector('#cycu-hud-dark').onclick = (ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        isDarkMode = !isDarkMode;
+                        localStorage.setItem('cycu_pdf_dark_mode', isDarkMode);
+                        applyDarkMode();
+                    };
+                    hud.querySelector('#cycu-hud-exit').onclick = (ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        toggleTheaterFullscreen();
+                    };
+
+                    // 滑鼠閒置 3 秒自動半透明
+                    window.addEventListener('mousemove', () => {
+                        hud.classList.remove('cycu-hud-idle');
+                        clearTimeout(theaterIdleTimer);
+                        if (document.body.classList.contains('cycu-pdf-theater-mode')) {
+                            theaterIdleTimer = setTimeout(() => hud.classList.add('cycu-hud-idle'), 3000);
+                        }
+                    });
+                }
+
+                hud.style.display = 'flex';
+                hud.classList.remove('cycu-hud-idle');
+                const pageInd = document.getElementById('cycu-pdf-page-indicator');
+                if (pageInd) hud.querySelector('#cycu-hud-page').innerText = pageInd.innerText;
+
+                btnFocus.innerHTML = "🔍 還原";
+                btnFocus.classList.add('cycu-pdf-btn-active');
+                showToast("🎬 已進入 YouTube 劇院全螢幕（可按鍵盤 F 或 Esc 退出）");
+
+                setTimeout(() => {
+                    nativeZoomFit();
+                    window.dispatchEvent(new Event('resize'));
+                }, 300);
+            } else {
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => {});
+                }
+                if (hud) hud.style.display = 'none';
+                clearTimeout(theaterIdleTimer);
+                btnFocus.innerHTML = "🔍 原生全螢幕";
+                btnFocus.classList.remove('cycu-pdf-btn-active');
+                showToast("🔍 已退出全螢幕");
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 200);
+            }
+        }
+
         btnFocus.onclick = (e) => {
             e.preventDefault();
-            isFocusMode = !isFocusMode;
-            if (isFocusMode) {
-                document.body.classList.add('cycu-pdf-focus-mode');
-                btnFocus.classList.add('cycu-pdf-btn-active');
-                btnFocus.innerHTML = "🔍 還原";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                document.body.classList.remove('cycu-pdf-focus-mode');
-                btnFocus.classList.remove('cycu-pdf-btn-active');
-                btnFocus.innerHTML = "🔍 全螢幕";
-            }
-            window.dispatchEvent(new Event('resize'));
+            e.stopPropagation();
+            toggleTheaterFullscreen();
         };
+
+        // 鍵盤快捷鍵：F 鍵全螢幕、Esc 還原、左右方向鍵翻頁
+        window.addEventListener('keydown', (e) => {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleTheaterFullscreen();
+            } else if (e.key === 'Escape' && document.body.classList.contains('cycu-pdf-theater-mode')) {
+                toggleTheaterFullscreen();
+            } else if (document.body.classList.contains('cycu-pdf-theater-mode')) {
+                if (e.key === 'ArrowLeft') { e.preventDefault(); nativeGoPrevPage(); }
+                if (e.key === 'ArrowRight') { e.preventDefault(); nativeGoNextPage(); }
+            }
+        });
 
         // 原廠工具列／邊欄顯示與隱藏
         let isNativeHidden = true;
@@ -2167,42 +2356,46 @@
                 document.body.classList.add('cycu-pdf-hide-native');
                 btnNative.classList.add('cycu-pdf-btn-active');
                 btnNative.innerHTML = "⚙️ 顯示原廠";
-                btnNative.title = "目前已隱藏原廠列，點擊可還原原廠工具列與邊欄";
-                toggleIframeNativeToolbar(true);
             } else {
                 document.body.classList.remove('cycu-pdf-hide-native');
                 btnNative.classList.remove('cycu-pdf-btn-active');
                 btnNative.innerHTML = "⚙️ 隱藏原廠";
-                btnNative.title = "目前原廠列已重現，點擊可隱藏以獲得更大閱讀視野";
-                toggleIframeNativeToolbar(false);
             }
+            window.dispatchEvent(new Event('resize'));
         };
         updateNativeBtnUI();
 
         btnNative.onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation();
             isNativeHidden = !isNativeHidden;
             updateNativeBtnUI();
             showToast(isNativeHidden ? "⚙️ 已隱藏原廠列（擴大閱讀視野）" : "⚙️ 已還原原廠工具列與側欄");
         };
 
+        // 頁碼與縮放事件
         window.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'CYCU_PDF_STATUS') {
-                document.getElementById('cycu-pdf-page-indicator').innerText = `Page ${event.data.current} / ${event.data.total}`;
+                const text = `Page ${event.data.current} / ${event.data.total}`;
+                document.getElementById('cycu-pdf-page-indicator').innerText = text;
+                const hudPage = document.querySelector('#cycu-hud-page');
+                if (hudPage) hudPage.innerText = text;
             }
         });
 
-        document.getElementById('cycu-pdf-prev').onclick = (e) => { e.preventDefault(); nativeGoPrevPage(); };
-        document.getElementById('cycu-pdf-next').onclick = (e) => { e.preventDefault(); nativeGoNextPage(); };
-        document.getElementById('cycu-pdf-zoom-in').onclick = (e) => { e.preventDefault(); nativeZoomIn(); };
-        document.getElementById('cycu-pdf-zoom-out').onclick = (e) => { e.preventDefault(); nativeZoomOut(); };
-        document.getElementById('cycu-pdf-zoom-fit').onclick = (e) => { e.preventDefault(); nativeZoomFit(); };
+        document.getElementById('cycu-pdf-prev').onclick = (e) => { e.preventDefault(); e.stopPropagation(); nativeGoPrevPage(); };
+        document.getElementById('cycu-pdf-next').onclick = (e) => { e.preventDefault(); e.stopPropagation(); nativeGoNextPage(); };
+        document.getElementById('cycu-pdf-zoom-in').onclick = (e) => { e.preventDefault(); e.stopPropagation(); nativeZoomIn(); };
+        document.getElementById('cycu-pdf-zoom-out').onclick = (e) => { e.preventDefault(); e.stopPropagation(); nativeZoomOut(); };
+        document.getElementById('cycu-pdf-zoom-fit').onclick = (e) => { e.preventDefault(); e.stopPropagation(); nativeZoomFit(); };
 
+        // 隨堂筆記
         const savedNoteKey = `cycu_note_${pdfId}`;
         noteArea.value = localStorage.getItem(savedNoteKey) || '';
 
         btnNote.onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (notebook.style.display === 'none') {
                 notebook.style.display = 'block';
                 btnNote.classList.add('cycu-pdf-btn-active');
@@ -2222,17 +2415,20 @@
             }, 350);
         };
 
-        document.getElementById('cycu-pdf-note-copy').onclick = async (e) => {
+        document.getElementById('cycu-pdf-note-copy').onclick = (e) => {
             e.preventDefault();
-            const success = await copyToClipboard(noteArea.value);
+            e.stopPropagation();
+            noteArea.select();
+            document.execCommand('copy');
             const btn = e.target;
             const old = btn.innerText;
-            btn.innerText = success ? "✅ 已複製！" : "❌ 複製失敗";
+            btn.innerText = "✅ 已複製！";
             setTimeout(() => btn.innerText = old, 1500);
         };
 
         document.getElementById('cycu-pdf-note-export').onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (!noteArea.value.trim()) {
                 showToast("筆記內容不能為空唷！", true);
                 return;
@@ -2243,7 +2439,6 @@
             link.click();
         };
     }
-
     function init() {
         const url = window.location.href;
         if (url.includes('/mod/')) document.body.classList.add('cycu-clean-mod-header');
@@ -2253,7 +2448,32 @@
             if (fullUrl) {
                 createPDFSmartAssistant(fullUrl);
                 initParentCleaningRoutine();
+
+                // 🌟 新增：仿照 YouTube 的快速鍵監聽
+                window.addEventListener('keydown', (e) => {
+                    // 若在筆記區或輸入框打字則不觸發
+                    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+                    if (e.key === 'f' || e.key === 'F') {
+                        e.preventDefault();
+                        toggleTheaterFullscreen();
+                    } else if (e.key === 'Escape' && document.body.classList.contains('cycu-pdf-theater-mode')) {
+                        toggleTheaterFullscreen();
+                    } else if (document.body.classList.contains('cycu-pdf-theater-mode')) {
+                        if (e.key === 'ArrowLeft') { e.preventDefault(); nativeGoPrevPage(); }
+                        if (e.key === 'ArrowRight') { e.preventDefault(); nativeGoNextPage(); }
+                    }
+                });
+
+                // 同步頁碼至劇院 HUD
+                window.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'CYCU_PDF_STATUS') {
+                        const hudPage = document.querySelector('#cycu-hud-page');
+                        if (hudPage) hudPage.innerText = `Page ${event.data.current} / ${event.data.total}`;
+                    }
+                });
             }
+        }
         } else if (url.includes('/mod/pdfannotator/viewer/')) {
             initIframeContext();
         } else if (url.includes('/mod/supervideo/') || url.includes('/mod/resource/')) {
