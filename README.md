@@ -1,6 +1,6 @@
 #  中原 iLearning 2.0 頁面addon (CYCU iLearning Enhancer-page-addon)
 
-[![Greasy Fork Version](https://img.shields.io/badge/Greasy%20Fork-v2.1.4-red?logo=greasemonkey&style=flat-square)]((https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon))
+[![Greasy Fork Version](https://img.shields.io/badge/Greasy%20Fork-v2.1.5-red?logo=greasemonkey&style=flat-square)]((https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon))
 [![Auto Update](https://img.shields.io/badge/Auto%20Update-Supported-brightgreen?style=flat-square&logo=git)](https://update.greasyfork.org/scripts/597066/%E4%B8%AD%E5%8E%9F%20iLearning%2020%20%E9%A0%81%E9%9D%A2%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7.meta.js)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Platform Support](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20iPadOS%20%7C%20iOS%20%7C%20Android-blue?style=flat-square)](#-跨平台安裝指南)
