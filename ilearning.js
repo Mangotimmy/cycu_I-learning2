@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.1.3
+// @version      2.1.4
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP，並支援 Web Audio 600% 爆音引擎與 PDF 護眼深色模式。
 // @author       Mangotimmy
 // @license      MIT
@@ -164,7 +164,7 @@
         }
     }
 
-   function showToast(message, isError = false) {
+    function showToast(message, isError = false) {
         let toast = document.getElementById('dl-toast');
         if (!toast) {
             toast = document.createElement('div');
@@ -190,7 +190,7 @@
         return toast;
     }
 
-    // 全域 CSS 注入（包含修復後的深色模式、原廠列隱藏與 YouTube 劇院全螢幕）
+    // 全域 CSS 注入
     const style = document.createElement('style');
     style.id = 'cycu-global-style';
     style.innerHTML = `
@@ -253,42 +253,21 @@
 
         /* 超薄極簡漂浮控制面板 */
         #cycu-video-assistant {
-            position: fixed !important;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 20px);
-            max-width: 820px;
-            z-index: 99999 !important;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
-            border-radius: 12px !important;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.98);
-            border: 1px solid #cbd5e1;
-            backdrop-filter: blur(8px);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 11px;
-            transition: max-width 0.2s;
+            position: fixed !important; top: 12px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 20px); max-width: 820px; z-index: 99999 !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16); border-radius: 12px !important;
+            overflow: hidden; background: rgba(255, 255, 255, 0.98); border: 1px solid #cbd5e1;
+            backdrop-filter: blur(8px); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 11px; transition: max-width 0.2s;
         }
 
         .cycu-slim-btn {
-            padding: 4px 8px !important;
-            border-radius: 6px !important;
-            border: 1px solid #cbd5e1 !important;
-            background: #ffffff !important;
-            color: #334155 !important;
-            font-weight: 700 !important;
-            font-size: 11px !important;
-            cursor: pointer !important;
-            outline: none !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 3px !important;
-            height: 26px !important;
-            white-space: nowrap !important;
-            -webkit-tap-highlight-color: transparent !important;
-            transition: all 0.15s !important;
+            padding: 4px 8px !important; border-radius: 6px !important; border: 1px solid #cbd5e1 !important;
+            background: #ffffff !important; color: #334155 !important; font-weight: 700 !important;
+            font-size: 11px !important; cursor: pointer !important; outline: none !important;
+            display: inline-flex !important; align-items: center !important; justify-content: center !important;
+            gap: 3px !important; height: 26px !important; white-space: nowrap !important;
+            -webkit-tap-highlight-color: transparent !important; transition: all 0.15s !important;
         }
         .cycu-slim-btn:active { background: #f1f5f9 !important; transform: scale(0.97); }
 
@@ -337,7 +316,7 @@
             padding: 0 !important;
         }
 
-        /* 徹底抹除頂部紫色導航列、章節分頁列(Overview/Chap/Statistics)、麵包屑與舊助理面板 */
+        /* 徹底抹除頂部紫色導航列、章節分頁列(Overview/Chap/Statistics)、原廠灰色工具列與助理面板 */
         body.cycu-pdf-theater-mode .navbar,
         body.cycu-pdf-theater-mode header,
         body.cycu-pdf-theater-mode .fixed-top,
@@ -348,9 +327,18 @@
         body.cycu-pdf-theater-mode .nav-tabs,
         body.cycu-pdf-theater-mode ul.nav,
         body.cycu-pdf-theater-mode .nav-line-tabs,
+        body.cycu-pdf-theater-mode [role="tablist"],
         body.cycu-pdf-theater-mode #theme_boost-drawers-courseindex,
         body.cycu-pdf-theater-mode #cycu-floating-drawer-toggle,
-        body.cycu-pdf-theater-mode #cycu-pdf-assistant {
+        body.cycu-pdf-theater-mode #cycu-pdf-assistant,
+        body.cycu-pdf-theater-mode #pdfannotator-toolbar,
+        body.cycu-pdf-theater-mode #pdfannotator_toolbar,
+        body.cycu-pdf-theater-mode .pdfannotator-toolbar,
+        body.cycu-pdf-theater-mode #ann-toolbar,
+        body.cycu-pdf-theater-mode #comments-wrapper,
+        body.cycu-pdf-theater-mode #comment-list-wrapper,
+        body.cycu-pdf-theater-mode .annotator-sidebar,
+        body.cycu-pdf-theater-mode #annotation-view {
             display: none !important;
             visibility: hidden !important;
             height: 0 !important;
@@ -979,7 +967,7 @@
         slider.addEventListener('input', () => { userIsDragging = true; });
         slider.addEventListener('change', () => { const dest = parseFloat(slider.value); setVideoTime(dest); userIsDragging = false; });
 
-        // 統一使用 click 事件，避免行動端同時綁定 touchstart 與 click 造成的連鎖雙重切換問題
+        // 統一使用 click 事件
         const btnPlay = document.getElementById('cycu-v-play');
         btnPlay.addEventListener('click', (e) => {
             e.preventDefault();
@@ -2110,28 +2098,34 @@
         if (localStorage.getItem('cycu_pdf_dark_mode') === 'true') document.body.classList.add('cycu-iframe-dark-mode');
     }
 
+    // PDF 排版定時監控維護（已支援劇院全螢幕模式 100vh 覆蓋）
     function initParentCleaningRoutine() {
         document.body.classList.add('cycu-pdf-hide-native');
         setInterval(() => {
             const docBody = document.body;
             const hasHideNativeClass = docBody.classList.contains('cycu-pdf-hide-native');
             const isFocusModeActive = docBody.classList.contains('cycu-pdf-focus-mode');
+            const isTheaterModeActive = docBody.classList.contains('cycu-pdf-theater-mode');
 
             const bodyWrapper = document.getElementById('body-wrapper');
             if (bodyWrapper) {
-                const targetHeight = isFocusModeActive ? 'calc(100vh - 50px)' : '84vh';
-                bodyWrapper.style.setProperty('height', targetHeight, 'important');
-                bodyWrapper.style.setProperty('min-height', targetHeight, 'important');
+                if (isTheaterModeActive) {
+                    bodyWrapper.style.setProperty('height', '100vh', 'important');
+                    bodyWrapper.style.setProperty('min-height', '100vh', 'important');
+                } else {
+                    const targetHeight = isFocusModeActive ? 'calc(100vh - 50px)' : '84vh';
+                    bodyWrapper.style.setProperty('height', targetHeight, 'important');
+                    bodyWrapper.style.setProperty('min-height', targetHeight, 'important');
+                }
             }
 
             const contentWrapper = document.getElementById('content-wrapper');
             if (contentWrapper) {
-                if (hasHideNativeClass || isFocusModeActive) {
+                if (isTheaterModeActive || hasHideNativeClass || isFocusModeActive) {
                     contentWrapper.style.setProperty('width', '100%', 'important');
                     contentWrapper.style.setProperty('max-width', '100%', 'important');
-                    contentWrapper.style.flex = '0 0 100%', 'important';
+                    contentWrapper.style.setProperty('flex', '0 0 100%', 'important');
                 } else {
-                    // 恢復原廠排版時清除 !important 覆寫，確保原廠側邊欄與工具列重現
                     contentWrapper.style.removeProperty('width');
                     contentWrapper.style.removeProperty('max-width');
                     contentWrapper.style.removeProperty('flex');
@@ -2180,7 +2174,7 @@
                         <button id="cycu-pdf-note-toggle" class="cycu-slim-btn">📝 隨堂筆記</button>
                     </div>
                     <div>
-                        <a id="cycu-pdf-direct-download" href="${fullUrl}" download target="_blank" style="text-align:center; display:block; padding:9px; border-radius:8px; background:#10b981; color:white !important; font-weight:700; font-size:11px; text-decoration:none; box-shadow:0 2px 8px rgba(16,185,129,0.2);">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
+                        <a id="cycu-pdf-direct-download" href="${escapeHtml(fullUrl)}" download target="_blank" style="text-align:center; display:block; padding:9px; border-radius:8px; background:#10b981; color:white !important; font-weight:700; font-size:11px; text-decoration:none; box-shadow:0 2px 8px rgba(16,185,129,0.2);">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
                     </div>
 
                     <div style="border-top:1px solid #e2e8f0; padding-top:8px; display:grid; grid-template-columns:1fr 2fr 1fr; align-items:center; text-align:center;">
@@ -2243,9 +2237,13 @@
             if (isDarkMode) {
                 btnDark.classList.add('cycu-pdf-btn-active');
                 document.body.classList.add('cycu-pdf-dark-mode');
+                sendPdfIframeAction('applyDarkOn');
+                applyDarkToIframe(true);
             } else {
                 btnDark.classList.remove('cycu-pdf-btn-active');
                 document.body.classList.remove('cycu-pdf-dark-mode');
+                sendPdfIframeAction('applyDarkOff');
+                applyDarkToIframe(false);
             }
         };
         applyDarkMode();
@@ -2266,12 +2264,12 @@
             let hud = document.getElementById('cycu-pdf-theater-hud');
 
             if (isTheater) {
-                // 呼叫原生 Fullscreen API
                 const docEl = document.documentElement;
                 if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
                 else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(() => {});
 
-                // 產生/顯示懸浮膠囊
+                toggleIframeNativeToolbar(true);
+
                 if (!hud) {
                     hud = document.createElement('div');
                     hud.id = 'cycu-pdf-theater-hud';
@@ -2308,7 +2306,6 @@
                         toggleTheaterFullscreen();
                     };
 
-                    // 滑鼠閒置 3 秒自動半透明
                     window.addEventListener('mousemove', () => {
                         hud.classList.remove('cycu-hud-idle');
                         clearTimeout(theaterIdleTimer);
@@ -2338,6 +2335,7 @@
                 }
                 if (hud) hud.style.display = 'none';
                 clearTimeout(theaterIdleTimer);
+                if (!isNativeHidden) toggleIframeNativeToolbar(false);
                 btnFocus.innerHTML = "🔍 原生全螢幕";
                 btnFocus.classList.remove('cycu-pdf-btn-active');
                 showToast("🔍 已退出全螢幕");
@@ -2372,10 +2370,12 @@
                 document.body.classList.add('cycu-pdf-hide-native');
                 btnNative.classList.add('cycu-pdf-btn-active');
                 btnNative.innerHTML = "⚙️ 顯示原廠";
+                toggleIframeNativeToolbar(true);
             } else {
                 document.body.classList.remove('cycu-pdf-hide-native');
                 btnNative.classList.remove('cycu-pdf-btn-active');
                 btnNative.innerHTML = "⚙️ 隱藏原廠";
+                toggleIframeNativeToolbar(false);
             }
             window.dispatchEvent(new Event('resize'));
         };
@@ -2431,14 +2431,13 @@
             }, 350);
         };
 
-        document.getElementById('cycu-pdf-note-copy').onclick = (e) => {
+        document.getElementById('cycu-pdf-note-copy').onclick = async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            noteArea.select();
-            document.execCommand('copy');
+            const success = await copyToClipboard(noteArea.value);
             const btn = e.target;
             const old = btn.innerText;
-            btn.innerText = "✅ 已複製！";
+            btn.innerText = success ? "✅ 已複製！" : "❌ 複製失敗";
             setTimeout(() => btn.innerText = old, 1500);
         };
 
@@ -2455,6 +2454,7 @@
             link.click();
         };
     }
+
     function init() {
         const url = window.location.href;
         if (url.includes('/mod/')) document.body.classList.add('cycu-clean-mod-header');
@@ -2464,32 +2464,7 @@
             if (fullUrl) {
                 createPDFSmartAssistant(fullUrl);
                 initParentCleaningRoutine();
-
-                // 🌟 新增：仿照 YouTube 的快速鍵監聽
-                window.addEventListener('keydown', (e) => {
-                    // 若在筆記區或輸入框打字則不觸發
-                    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-
-                    if (e.key === 'f' || e.key === 'F') {
-                        e.preventDefault();
-                        toggleTheaterFullscreen();
-                    } else if (e.key === 'Escape' && document.body.classList.contains('cycu-pdf-theater-mode')) {
-                        toggleTheaterFullscreen();
-                    } else if (document.body.classList.contains('cycu-pdf-theater-mode')) {
-                        if (e.key === 'ArrowLeft') { e.preventDefault(); nativeGoPrevPage(); }
-                        if (e.key === 'ArrowRight') { e.preventDefault(); nativeGoNextPage(); }
-                    }
-                });
-
-                // 同步頁碼至劇院 HUD
-                window.addEventListener('message', (event) => {
-                    if (event.data && event.data.type === 'CYCU_PDF_STATUS') {
-                        const hudPage = document.querySelector('#cycu-hud-page');
-                        if (hudPage) hudPage.innerText = `Page ${event.data.current} / ${event.data.total}`;
-                    }
-                });
             }
-        }
         } else if (url.includes('/mod/pdfannotator/viewer/')) {
             initIframeContext();
         } else if (url.includes('/mod/supervideo/') || url.includes('/mod/resource/')) {
