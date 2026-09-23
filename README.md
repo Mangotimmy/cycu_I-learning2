@@ -64,7 +64,7 @@
 
 #### 【方式 B：Safari 一鍵直接安裝（使用 Stay 2 / Orion）】
 1. **安裝管理工具**：
-   - Safari 使用者：App Store 安裝 **[Stay 2]([https://apps.apple.com/app/stay-for-safari/id1591620924](https://apps.apple.com/tw/app/stay-for-safari-%E4%BD%BF%E7%94%A8%E8%80%85%E8%85%B3%E6%9C%AC%E8%88%87%E5%BB%A3%E5%91%8A%E6%94%94%E6%88%AA%E6%93%B4%E5%85%85/id1591620171))**。
+   - Safari 使用者：App Store 安裝 **[Stay 2](https://apps.apple.com/tw/app/stay-for-safari-%E4%BD%BF%E7%94%A8%E8%80%85%E8%85%B3%E6%9C%AC%E8%88%87%E5%BB%A3%E5%91%8A%E6%94%94%E6%88%AA%E6%93%B4%E5%85%85/id1591620171)**。
    - 或使用內建擴充功能的 **[Orion Browser](https://kagi.com/orion/)**。
 2. **一鍵安裝**：
    - 進入 **[Greasy Fork 腳本頁面](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-ilearning-2-0-%E9%AB%94%E9%A9%97%E5%A2%9E%E5%BC%B7)**。
