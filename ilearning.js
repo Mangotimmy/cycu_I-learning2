@@ -640,12 +640,12 @@
                 <h3 style="margin:0 0 12px 0; color:#059669; font-size:18px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>💬</span> 開啟 AI 即時字幕與翻譯</h3>
                 <p style="font-size:13px; color:#475569; line-height:1.6; text-align:left; margin-bottom:12px;">iLearning 影片本身無字幕，但您可直接喚醒瀏覽器內建的免費 AI 引擎，將老師的聲音即時轉為中文字幕！</p>
                 <div style="background:#ecfdf5; padding:12px; border-radius:8px; text-align:left; font-size:12px; color:#064e3b; margin-bottom:16px; border:1px solid #a7f3d0;">
-                    <b style="font-size:13px;">💻 電腦版 (Chrome / Edge)：</b><br>
+                    <b style="font-size:13px;"> 電腦版 (Chrome / Edge)：</b><br>
                     1. 點擊瀏覽器視窗右上角的 <b>🎵 (媒體控制)</b> 圖示。<br>
                     2. 開啟 <b>「即時字幕 (Live Caption)」</b> 開關。<br>
                     3. 點開設定，勾選 <b>「即時翻譯」</b> 並選擇繁體中文。<br>
                     <br>
-                    <b style="font-size:13px;">📱 手機版 (iOS / Android)：</b><br>
+                    <b style="font-size:13px;">手機版 (iOS / Android)：</b><br>
                     - iOS: 系統設定 > 輔助使用 > 即時字幕 (Beta)<br>
                     - Android: 按一下實體音量鍵 > 點擊字幕圖示
                 </div>
@@ -663,7 +663,7 @@
             e.preventDefault();
             const videoUrl = findCurrentVideoDownloadUrl();
             if (videoUrl) {
-                showToast("🚀 已取得影片來源，正在為您開啟下載...");
+                showToast(" 已取得影片來源，正在為您開啟下載...");
                 const titleMatch = document.title.split('|')[0].trim() || '課程影片';
                 const a = document.createElement('a');
                 a.href = videoUrl;
@@ -850,7 +850,7 @@
             currentVolume = 600;
             setMediaVolume(currentVolume);
             updateVolumeUI();
-            showToast("📢 已啟動 600% 超級音量引擎！");
+            showToast(" 已啟動 600% 超級音量引擎！");
         });
 
         setTimeout(() => {
@@ -877,7 +877,7 @@
             if (v && typeof v.webkitEnterFullscreen === 'function') {
                 try {
                     v.webkitEnterFullscreen();
-                    showToast("🎬 已喚醒 HTML5 原生播放器全螢幕（已徹底移除上方網址列）！");
+                    showToast(" 已喚醒原生播放器全螢幕！");
                     return;
                 } catch(err) {
                     console.warn("webkitEnterFullscreen 失敗，轉為標準全螢幕模式", err);
@@ -898,8 +898,8 @@
 
             if (isVideoFocus) {
                 document.body.classList.add('cycu-video-focus-mode');
-                btnFocus.innerHTML = "🔍 還原";
-                showToast("已啟動極限專注模式 🎥 橫向螢幕即可滿版享受！");
+                btnFocus.innerHTML = "🔍還原";
+                showToast("已啟動極限專注模式");
 
                 if (videoWrapper) {
                     videoWrapper.appendChild(assistantCard);
@@ -913,7 +913,7 @@
                 }
             } else {
                 document.body.classList.remove('cycu-video-focus-mode');
-                btnFocus.innerHTML = "🔍 原生全螢幕";
+                btnFocus.innerHTML = " 原生全螢幕";
                 try {
                     if (document.fullscreenElement || document.webkitFullscreenElement) {
                         if (document.exitFullscreen) document.exitFullscreen();
@@ -936,7 +936,7 @@
                 setVideoSpeed(speed);
                 speedButtons.forEach(b => b.style.cssText = "border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;");
                 btn.style.cssText = "border:1px solid #f97316; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;";
-                showToast('🚀 播放速度已調整為: ' + String(speed) + 'x');
+                showToast(' 播放速度已調整為: ' + String(speed) + 'x');
             });
         });
 
