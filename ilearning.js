@@ -1005,7 +1005,7 @@
                 <div style="border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 4px 14px rgba(0,0,0,0.03); background:#ffffff; overflow:hidden;">
                     <div style="background:linear-gradient(135deg, #6366f1, #4f46e5); padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
                         <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:16px;">⚡</span><span style="font-weight:700; font-size:13px; color:white !important;">iLearning 體驗增強工具箱</span></div>
-                        <span style="font-size:10px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 6px; border-radius:10px; font-weight:bold;">v6.8.5 極簡修復版</span>
+                        <span style="font-size:10px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 6px; border-radius:10px; font-weight:bold;">v2</span>
                     </div>
                     <div style="padding:14px; display:flex; flex-direction:column; gap:12px;">
                         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
