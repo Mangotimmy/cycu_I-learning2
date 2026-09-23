@@ -164,7 +164,7 @@
         }
     }
 
-    function showToast(message, isError = false) {
+   function showToast(message, isError = false) {
         let toast = document.getElementById('dl-toast');
         if (!toast) {
             toast = document.createElement('div');
@@ -190,7 +190,7 @@
         return toast;
     }
 
-    // 全域 CSS 注入（包含修復後的深色模式與排版支援）
+    // 全域 CSS 注入（包含修復後的深色模式、原廠列隱藏與 YouTube 劇院全螢幕）
     const style = document.createElement('style');
     style.id = 'cycu-global-style';
     style.innerHTML = `
@@ -214,6 +214,15 @@
         .cycu-pdf-btn-active { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; }
 
         /* PDF 護眼深色濾鏡與外層容器支援 */
+        body.cycu-pdf-dark-mode,
+        body.cycu-pdf-dark-mode #page,
+        body.cycu-pdf-dark-mode #page-content,
+        body.cycu-pdf-dark-mode #region-main,
+        body.cycu-pdf-dark-mode #body-wrapper,
+        body.cycu-pdf-dark-mode #viewerContainer {
+            background-color: #121214 !important;
+            color: #d1d5db !important;
+        }
         body.cycu-pdf-dark-mode iframe:not(.cycu-styled-dark) {
             filter: invert(0.88) hue-rotate(180deg) brightness(0.95) contrast(1.1) !important;
             background-color: #1e293b !important;
@@ -289,6 +298,10 @@
         body.cycu-pdf-hide-native #pdfannotator_toolbar,
         body.cycu-pdf-hide-native #sidebar-wrapper,
         body.cycu-pdf-hide-native .pdfannotator-sidebar,
+        body.cycu-pdf-hide-native #comments-wrapper,
+        body.cycu-pdf-hide-native #comment-list-wrapper,
+        body.cycu-pdf-hide-native .annotator-sidebar,
+        body.cycu-pdf-hide-native #annotation-view,
         body.cycu-pdf-hide-native #page-header,
         body.cycu-pdf-hide-native .activity-header { display: none !important; }
         body.path-mod-pdfannotator #body-wrapper { height: 84vh !important; min-height: 680px !important; padding: 0 10px !important; }
@@ -315,7 +328,7 @@
         .cycu-fs-filter-chip.active { background: #4f46e5; color: white; border-color: #4f46e5; }
         .cycu-fs-item-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
         .cycu-fs-item-row:hover { background: #f1f5f9; }
-    `
+
         /* ================= 劇院全螢幕模式 (YouTube Style) ================= */
         body.cycu-pdf-theater-mode {
             overflow: hidden !important;
@@ -327,12 +340,14 @@
         /* 徹底抹除頂部紫色導航列、章節分頁列(Overview/Chap/Statistics)、麵包屑與舊助理面板 */
         body.cycu-pdf-theater-mode .navbar,
         body.cycu-pdf-theater-mode header,
+        body.cycu-pdf-theater-mode .fixed-top,
         body.cycu-pdf-theater-mode #usernavigation,
         body.cycu-pdf-theater-mode #page-header,
         body.cycu-pdf-theater-mode #page-footer,
         body.cycu-pdf-theater-mode .breadcrumb,
         body.cycu-pdf-theater-mode .nav-tabs,
         body.cycu-pdf-theater-mode ul.nav,
+        body.cycu-pdf-theater-mode .nav-line-tabs,
         body.cycu-pdf-theater-mode #theme_boost-drawers-courseindex,
         body.cycu-pdf-theater-mode #cycu-floating-drawer-toggle,
         body.cycu-pdf-theater-mode #cycu-pdf-assistant {
@@ -432,7 +447,8 @@
         }
         .cycu-hud-btn.danger:hover {
             background: #dc2626;
-        };
+        }
+    `;
     document.head.appendChild(style);
 
     // 任意漂浮拖曳引擎（支援 PC 滑鼠/iPad 觸控、防出界、座標與旋轉螢幕自適應）
