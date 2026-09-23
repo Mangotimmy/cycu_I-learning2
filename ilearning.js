@@ -2,7 +2,7 @@
 // @name         中原 iLearning 2.0 頁面體驗增強 (v6.8.1 HTML5原生全螢幕極限版)
 // @namespace    http://ilearning.cycu.edu.tw/
 // @version      6.8.1
-// @description  修復 CRC_TABLE 與打包日期。提供直接調用 HTML5 Video 原生全螢幕（徹底隱藏 iPadOS Safari 網址列/分頁列，與 YouTube 完全一致）、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP，並支援 Web Audio 600% 爆音引擎。
+// @description  直接調用 HTML5 Video 原生全螢幕（徹底隱藏 iPadOS Safari 網址列/分頁列，與 YouTube 完全一致）、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
