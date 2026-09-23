@@ -138,21 +138,20 @@
             toast = document.createElement('div');
             toast.id = 'dl-toast';
             Object.assign(toast.style, {
-                position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)', padding: '14px 20px',
-                borderRadius: '16px', color: 'white', fontSize: '13px', fontWeight: '500', zIndex: '1000002',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.15)', display: 'flex',
-                alignItems: 'center', gap: '12px', width: 'calc(100% - 32px)', maxWidth: '420px',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', opacity: '0'
+                position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', padding: '10px 16px',
+                borderRadius: '12px', color: 'white', fontSize: '12px', fontWeight: '600', zIndex: '1000002',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', gap: '10px',
+                width: 'calc(100% - 32px)', maxWidth: '400px', transition: 'all 0.3s ease', opacity: '0'
             });
             document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '1'; toast.style.bottom = '40px'; }, 10);
+            setTimeout(() => { toast.style.opacity = '1'; toast.style.bottom = '30px'; }, 10);
         }
         toast.style.backgroundColor = isError ? '#ef4444' : '#0f172a';
         toast.innerHTML = `<span style="flex-grow:1; line-height:1.4;">${message}</span>`;
         if (isError) {
             const closeBtn = document.createElement('span');
             closeBtn.innerHTML = '✕';
-            closeBtn.style.cssText = 'cursor:pointer; font-weight:bold; opacity:0.8; margin-left:12px; font-size:16px; padding:4px;';
+            closeBtn.style.cssText = 'cursor:pointer; font-weight:bold; opacity:0.8; margin-left:8px; font-size:14px;';
             closeBtn.onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
             toast.appendChild(closeBtn);
         }
@@ -164,12 +163,12 @@
     style.innerHTML = `
         #at-bubble, .at-bubble, .at-btn, .at-bubble-container, #at-popup, #userwayAccessibilityIcon, .userway-accessibility-icon { display: none !important; visibility: hidden !important; pointer-events: none !important; opacity: 0 !important; }
         .dashboard-card-deck .dashboard-card { border-radius: 16px !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important; margin-bottom: 16px !important; }
-        select.form-select, .form-control, .btn-secondary { border-radius: 10px !important; border: 1px solid #cbd5e1 !important; font-size: 13px !important; padding: 8px 12px !important; background-color: #ffffff !important; color: #334155 !important; -webkit-appearance: auto !important; }
+        select.form-select, .form-control, .btn-secondary { border-radius: 8px !important; border: 1px solid #cbd5e1 !important; font-size: 12px !important; padding: 6px 10px !important; background-color: #ffffff !important; color: #334155 !important; }
         .cycu-collapse-content.collapse:not(.show) { display: none !important; }
-        .cycu-collapse-content.collapse.show { display: block !important; animation: fadeIn 0.25s ease; }
-        .cycu-accordion-header { cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 12px; transition: background 0.2s; padding: 4px; }
+        .cycu-collapse-content.collapse.show { display: block !important; animation: fadeIn 0.2s ease; }
+        .cycu-accordion-header { cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 10px; transition: background 0.2s; padding: 4px; }
         .cycu-accordion-header:active { background: #f1f5f9; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
         body.cycu-clean-mod-header #page-header, body.cycu-clean-mod-header .activity-header, body.cycu-clean-mod-header .page-context-header, body.cycu-clean-mod-header .breadcrumb { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; margin: 0 !important; padding: 0 !important; pointer-events: none !important; overflow: hidden !important; }
         body.cycu-clean-mod-header #page { margin-top: 15px !important; }
@@ -181,81 +180,84 @@
         body.cycu-pdf-focus-mode #region-main { padding: 0 !important; margin: 0 !important; border: none !important; }
         .cycu-pdf-btn-active { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; }
 
-        /* Video Pseudo-Fullscreen Fallback */
+        /* Video Fullscreen Fallback */
         body.cycu-video-focus-mode { overflow: hidden !important; background: black !important; }
         body.cycu-video-focus-mode .cycu-pseudo-fullscreen {
             position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important;
             height: 100vh !important; height: 100dvh !important; z-index: 99998 !important;
             background: black !important; margin: 0 !important; padding: 0 !important;
             display: flex !important; align-items: center !important; justify-content: center !important;
-            max-width: none !important; max-height: none !important;
         }
         body.cycu-video-focus-mode .cycu-pseudo-fullscreen iframe,
         body.cycu-video-focus-mode .cycu-pseudo-fullscreen video {
-            width: 100% !important; height: 100% !important; max-width: 100% !important;
-            max-height: 100% !important; border: none !important;
+            width: 100% !important; height: 100% !important; border: none !important;
         }
 
+        /* 超薄極簡漂浮控制面板 */
         #cycu-video-assistant {
             position: fixed !important;
-            top: 15px;
+            top: 12px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 24px);
-            max-width: 950px;
+            width: calc(100% - 20px);
+            max-width: 820px;
             z-index: 99999 !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-            border-radius: 16px !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+            border-radius: 12px !important;
             overflow: hidden;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.98);
             border: 1px solid #cbd5e1;
+            backdrop-filter: blur(8px);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 11px;
+            transition: max-width 0.2s;
         }
 
-        body.cycu-pdf-hide-native #pdfannotator-toolbar, body.cycu-pdf-hide-native .pdfannotator-toolbar, body.cycu-pdf-hide-native .annotator-toolbar { display: none !important; height: 0 !important; overflow: hidden !important; pointer-events: none !important; opacity: 0 !important; }
-        body.cycu-pdf-hide-native .nav-tabs, body.cycu-pdf-hide-native #annotator-tabs, body.cycu-pdf-hide-native #pdfannotator-questions, body.cycu-pdf-hide-native .questions-footer, body.cycu-pdf-hide-native #questions-container, body.cycu-pdf-hide-native #pdfannotator-bottom, body.cycu-pdf-hide-native #discussion-container { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; margin: 0 !important; padding: 0 !important; }
+        .cycu-slim-btn {
+            padding: 4px 8px !important;
+            border-radius: 6px !important;
+            border: 1px solid #cbd5e1 !important;
+            background: #ffffff !important;
+            color: #334155 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            cursor: pointer !important;
+            outline: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 3px !important;
+            height: 26px !important;
+            white-space: nowrap !important;
+            -webkit-tap-highlight-color: transparent !important;
+            transition: all 0.15s !important;
+        }
+        .cycu-slim-btn:active { background: #f1f5f9 !important; transform: scale(0.97); }
 
-        body.path-mod-pdfannotator #body-wrapper { height: 82vh !important; min-height: 680px !important; padding: 0 12px !important; }
-        body.path-mod-pdfannotator #region-main-box, body.path-mod-pdfannotator #region-main { height: 100% !important; min-height: 100% !important; }
-        body.cycu-pdf-hide-native #comment-wrapper, body.cycu-pdf-hide-native .comment-wrapper { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; margin: 0 !important; padding: 0 !important; width: 0 !important; }
-        body.cycu-pdf-hide-native #content-wrapper { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; height: 100% !important; }
-
-        #cycu-pdf-assistant { position: sticky !important; top: 50px !important; z-index: 1000 !important; background: #ffffff !important; box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; transition: top 0.2s; }
-        body.cycu-pdf-focus-mode #cycu-pdf-assistant { top: 0 !important; }
-
-        .pdfannotator-viewer { position: relative !important; display: block !important; width: 100% !important; height: 100% !important; min-height: 100% !important; margin-top: 0 !important; border-top: none !important; }
-        .pdfannotator-viewer iframe, iframe[src*="viewer.html"] { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; border: none !important; z-index: 1 !important; }
-        body.cycu-pdf-focus-mode #body-wrapper { height: calc(100vh - 60px) !important; min-height: calc(100vh - 60px) !important; }
-
-        body.cycu-iframe-dark-mode { background-color: #1a1a1a !important; }
-        body.cycu-iframe-dark-mode .page, body.cycu-iframe-dark-mode .canvasWrapper { filter: invert(0.9) contrast(1.1) hue-rotate(180deg) !important; }
+        body.cycu-pdf-hide-native #pdfannotator-toolbar, body.cycu-pdf-hide-native .pdfannotator-toolbar { display: none !important; }
+        body.path-mod-pdfannotator #body-wrapper { height: 84vh !important; min-height: 680px !important; padding: 0 10px !important; }
+        #cycu-pdf-assistant { position: sticky !important; top: 45px !important; z-index: 1000 !important; background: #ffffff !important; }
 
         #theme_boost-drawers-courseindex { display: block !important; }
-        #cycu-floating-drawer-toggle { position: fixed; top: 50%; left: 0; transform: translateY(-50%); z-index: 10000; background: #0ea5e9; color: white; border: none; padding: 15px 10px; border-radius: 0 10px 10px 0; cursor: pointer; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        #cycu-floating-drawer-toggle { position: fixed; top: 50%; left: 0; transform: translateY(-50%); z-index: 10000; background: #0ea5e9; color: white; border: none; padding: 12px 8px; border-radius: 0 8px 8px 0; cursor: pointer; box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
         #cycu-floating-drawer-toggle.cycu-drawer-open { left: 315px; background: #ef4444; }
-        @media (max-width: 576px) { #cycu-floating-drawer-toggle.cycu-drawer-open { left: 285px; } }
 
         #cycu-file-select-modal {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            z-index: 100002; display: none; align-items: center; justify-content: center;
-            padding: 16px; box-sizing: border-box;
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px); z-index: 100002; display: none; align-items: center; justify-content: center;
+            padding: 14px; box-sizing: border-box;
         }
         #cycu-fs-card {
-            background: #ffffff; width: 100%; max-width: 720px; max-height: 88vh;
-            border-radius: 20px; display: flex; flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden;
-            animation: fadeIn 0.2s ease-out;
+            background: #ffffff; width: 100%; max-width: 720px; max-height: 86vh;
+            border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
         .cycu-fs-filter-chip {
-            padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
-            border: 1px solid #cbd5e1; background: #f8fafc; color: #475569;
-            cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+            padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 600;
+            border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; cursor: pointer;
         }
         .cycu-fs-filter-chip.active { background: #4f46e5; color: white; border-color: #4f46e5; }
-        .cycu-fs-item-row {
-            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-            border-radius: 10px; transition: background 0.15s; cursor: pointer;
-        }
+        .cycu-fs-item-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
         .cycu-fs-item-row:hover { background: #f1f5f9; }
     `;
     document.head.appendChild(style);
@@ -266,7 +268,6 @@
         let startX = 0, startY = 0;
         let initialLeft = 0, initialTop = 0;
 
-        // 恢復上次存放位置
         const savedLeft = localStorage.getItem('cycu_assistant_left');
         const savedTop = localStorage.getItem('cycu_assistant_top');
         if (savedLeft !== null && savedTop !== null) {
@@ -308,11 +309,8 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-            const deltaX = clientX - startX;
-            const deltaY = clientY - startY;
-
-            let newLeft = initialLeft + deltaX;
-            let newTop = initialTop + deltaY;
+            let newLeft = initialLeft + (clientX - startX);
+            let newTop = initialTop + (clientY - startY);
 
             const maxLeft = window.innerWidth - element.offsetWidth - 10;
             const maxTop = window.innerHeight - element.offsetHeight - 10;
@@ -511,17 +509,10 @@
         const btn = document.getElementById('cycu-v-play');
         if (btn) {
             btn.setAttribute('data-playing', isPlaying ? 'true' : 'false');
-            if (isPlaying) {
-                btn.innerHTML = "⏸️ 暫停";
-                btn.style.backgroundColor = "#fee2e2";
-                btn.style.color = "#ef4444";
-                btn.style.borderColor = "#fecaca";
-            } else {
-                btn.innerHTML = "▶️ 播放";
-                btn.style.backgroundColor = "#fff";
-                btn.style.color = "#3b82f6";
-                btn.style.borderColor = "#e2e8f0";
-            }
+            btn.innerHTML = isPlaying ? "⏸️ 暫停" : "▶️ 播放";
+            btn.style.backgroundColor = isPlaying ? "#fee2e2" : "#ffffff";
+            btn.style.color = isPlaying ? "#ef4444" : "#2563eb";
+            btn.style.borderColor = isPlaying ? "#fecaca" : "#cbd5e1";
         }
     }
 
@@ -535,7 +526,7 @@
                 window.cycuGainNode.connect(window.cycuAudioCtx.destination);
                 window.cycuGainNode.gain.value = 1.0;
             } catch (e) {
-                console.warn("iLearning Audio Booster 初始化失敗:", e);
+                console.warn("Audio Booster 初始化失敗:", e);
             }
         }
         if (window.cycuAudioCtx && window.cycuAudioCtx.state === 'suspended') {
@@ -566,6 +557,7 @@
 
     setInterval(() => { sendCommandToYTIframes('addEventListener', ['onStateChange']); }, 2000);
 
+    // 建立極簡超薄控制面板
     function createVideoAssistant() {
         if (document.getElementById('cycu-video-assistant')) return;
 
@@ -575,81 +567,84 @@
         const toggleFab = document.createElement('button');
         toggleFab.id = 'cycu-video-assistant-toggle';
         toggleFab.innerHTML = "🎬";
-        toggleFab.style.cssText = "position:fixed; bottom:20px; left:20px; width:48px; height:48px; border-radius:24px; background:#4f46e5; color:white; border:none; box-shadow:0 4px 15px rgba(0,0,0,0.2); font-size:24px; cursor:pointer; z-index:100000; display:none; outline:none;";
+        toggleFab.style.cssText = "position:fixed; bottom:20px; left:20px; width:44px; height:44px; border-radius:22px; background:#2563eb; color:white; border:none; box-shadow:0 4px 12px rgba(0,0,0,0.25); font-size:20px; cursor:pointer; z-index:100000; display:none; outline:none;";
         document.body.appendChild(toggleFab);
 
         const assistantCard = document.createElement('div');
         assistantCard.id = 'cycu-video-assistant';
         assistantCard.innerHTML = `
             <div style="background:#ffffff; overflow:hidden; width:100%;">
-                <div id="cycu-v-drag-header" style="background:#3b82f6; padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between; cursor:grab; user-select:none; touch-action:none;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:16px;">🎬</span>
-                        <span style="font-weight:700; font-size:14px; color:white !important;">iLearning 影片播放解鎖助理</span>
-                        <span style="font-size:10px; background:rgba(255,255,255,0.25); padding:2px 6px; border-radius:4px; margin-left:4px;">可按住拖動 ✥</span>
+                <!-- 1. 極簡標題拖動列 (高度僅 ~28px) -->
+                <div id="cycu-v-drag-header" style="background:#2563eb; padding:6px 12px; color:white; display:flex; align-items:center; justify-content:space-between; cursor:grab; user-select:none; touch-action:none;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:13px;">🎬</span>
+                        <span style="font-weight:700; font-size:12px; color:white !important;">iLearning 影片助理</span>
+                        <span style="font-size:9px; background:rgba(255,255,255,0.25); padding:1px 5px; border-radius:3px;">可拖動 ✥</span>
                     </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:11px; opacity:0.9; font-weight:bold;" class="cycu-hide-on-collapse">已自動解鎖快進跳轉 🔓</span>
-                        <button id="cycu-v-collapse-btn" style="background:rgba(255,255,255,0.25); border:none; border-radius:6px; color:white; padding:4px 10px; font-size:11px; cursor:pointer; outline:none; font-weight:bold;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:10px; opacity:0.9;" class="cycu-hide-on-collapse">🔓 已解鎖快進</span>
+                        <button id="cycu-v-collapse-btn" style="background:rgba(255,255,255,0.2); border:none; border-radius:4px; color:white; padding:2px 6px; font-size:10px; cursor:pointer; font-weight:bold;">
                             ${isCollapsed ? '展開 ＋' : '收折 －'}
                         </button>
-                        <button id="cycu-v-close-btn" style="background:#ef4444; border:none; border-radius:6px; color:white; padding:4px 10px; font-size:12px; cursor:pointer; outline:none; font-weight:bold;" title="隱藏面板">
-                            ✖
+                        <button id="cycu-v-close-btn" style="background:#ef4444; border:none; border-radius:4px; color:white; padding:2px 6px; font-size:10px; cursor:pointer; font-weight:bold;" title="隱藏面板">
+                            ✕
                         </button>
                     </div>
                 </div>
-                <div id="cycu-v-assistant-body" style="padding:16px 20px; display:${isCollapsed ? 'none' : 'flex'}; flex-direction:column; gap:14px; background:#ffffff;">
-                    <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px dashed #e2e8f0; padding-bottom:14px;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#f97316; font-weight:bold;"><span>⏱️ 拖曳調整進度</span><span id="cycu-video-time-display">00:00 / 00:00</span></div>
-                        <input type="range" id="cycu-video-slider" min="0" max="100" value="0" style="width:100%; height:6px; border-radius:4px; background:#e2e8f0; outline:none; -webkit-appearance:none; cursor:pointer;">
+
+                <!-- 2. 極簡工具箱主體 (高度僅 ~55px) -->
+                <div id="cycu-v-assistant-body" style="padding:8px 12px; display:${isCollapsed ? 'none' : 'flex'}; flex-direction:column; gap:6px; background:#ffffff;">
+                    <!-- 第一行：播放/跳轉 + 進度條 + 時間顯示 (整合於同一橫列) -->
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <button id="cycu-v-rew30" class="cycu-slim-btn" style="padding:3px 6px !important; font-size:10px !important;">⏮ 30s</button>
+                        <button id="cycu-v-rew10" class="cycu-slim-btn" style="padding:3px 6px !important; font-size:10px !important;">⏪ 10s</button>
+                        <button id="cycu-v-play" class="cycu-slim-btn" data-playing="false" style="color:#2563eb !important; min-width:62px;">▶️ 播放</button>
+                        <button id="cycu-v-fwd10" class="cycu-slim-btn" style="padding:3px 6px !important; font-size:10px !important;">10s ⏩</button>
+                        <button id="cycu-v-fwd30" class="cycu-slim-btn" style="padding:3px 6px !important; font-size:10px !important;">30s ⏭</button>
+
+                        <input type="range" id="cycu-video-slider" min="0" max="100" value="0" style="flex:1; height:5px; border-radius:3px; background:#e2e8f0; outline:none; -webkit-appearance:none; cursor:pointer; accent-color:#2563eb; margin:0 4px;">
+                        <span id="cycu-video-time-display" style="font-size:11px; font-family:monospace; color:#475569; font-weight:bold; min-width:85px; text-align:right;">00:00/00:00</span>
                     </div>
 
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1.5fr 1fr 1fr; gap:10px;">
-                        <button id="cycu-v-rew30" style="padding:10px 4px; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#3b82f6; font-weight:700; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">⏮️ 30s</button>
-                        <button id="cycu-v-rew10" style="padding:10px 4px; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#3b82f6; font-weight:700; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">⏪ 10s</button>
-                        <button id="cycu-v-play" data-playing="false" style="padding:10px 4px; border-radius:8px; border:1px solid #e2e8f0; background:white; color:#3b82f6; font-weight:700; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent; transition: all 0.2s;">▶️ 播放</button>
-                        <button id="cycu-v-fwd10" style="padding:10px 4px; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#3b82f6; font-weight:700; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">10s ⏩</button>
-                        <button id="cycu-v-fwd30" style="padding:10px 4px; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#3b82f6; font-weight:700; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">30s ⏭️</button>
-                    </div>
+                    <!-- 第二行：功能按鈕 + 音量滑桿 + 倍速 (超薄排列) -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:5px; border-top:1px dashed #e2e8f0; padding-top:6px;">
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <button id="cycu-video-focus-toggle" class="cycu-slim-btn" style="background:#4f46e5 !important; color:white !important; border-color:#4f46e5 !important;" title="HTML5 原生播放器全螢幕（徹底隱藏 iPad 網址列）">🔍 原生全螢幕</button>
+                            <button id="cycu-v-download-btn" class="cycu-slim-btn" style="background:#10b981 !important; color:white !important; border-color:#10b981 !important;">📥 下載</button>
+                            <button id="cycu-v-cc-toggle" class="cycu-slim-btn" style="background:#ecfdf5 !important; color:#059669 !important; border-color:#a7f3d0 !important;">💬 AI字幕</button>
+                        </div>
 
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-                        <span style="font-size:12px; color:#f97316; font-weight:bold;">⚡ 播放控制:</span>
-                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;" id="cycu-speed-container">
-                            <button id="cycu-video-focus-toggle" style="border:1px solid #4f46e5; background:#4f46e5; color:white; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;" title="調用 HTML5 原生播放器全螢幕（徹底隱藏 iPad 網址列）">🔍 原生全螢幕</button>
-                            <button id="cycu-v-download-btn" style="border:1px solid #059669; background:#10b981; color:white; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer; outline:none; display:flex; align-items:center; gap:4px;" title="離線下載此影片檔">📥 下載影片</button>
-                            <button id="cycu-v-cc-toggle" style="border:1px solid #10b981; background:#ecfdf5; color:#059669; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer; outline:none; margin-right: 4px;">💬 AI字幕</button>
-                            
-                            <div style="display:flex; align-items:center; gap:6px; margin-right: 6px; border:1px solid #cbd5e1; border-radius:6px; padding:4px 10px; background:#f8fafc;">
-                                <button id="cycu-v-mute-toggle" style="background:transparent; border:none; padding:0; cursor:pointer; font-size:14px; outline:none; color:#94a3b8;">🔊</button>
-                                <input type="range" id="cycu-v-volume-slider" min="0" max="600" value="100" style="width:70px; height:6px; border-radius:3px; background:#e2e8f0; outline:none; -webkit-appearance:none; cursor:pointer; accent-color:#f97316;">
-                                <span id="cycu-v-volume-display" style="font-size:11px; color:#f97316; font-weight:bold; width:36px; text-align:right;">100%</span>
-                                <button id="cycu-v-max-vol" style="background:#ef4444; border:none; border-radius:4px; color:white; padding:2px 6px; font-size:10px; cursor:pointer; font-weight:bold; margin-left:4px;" title="一鍵 600% 爆音">MAX</button>
-                            </div>
+                        <!-- 600% 音量引擎 -->
+                        <div style="display:flex; align-items:center; gap:4px; border:1px solid #cbd5e1; border-radius:6px; padding:2px 8px; background:#f8fafc; height:26px;">
+                            <button id="cycu-v-mute-toggle" style="background:transparent; border:none; padding:0; cursor:pointer; font-size:12px; outline:none; color:#64748b;">🔊</button>
+                            <input type="range" id="cycu-v-volume-slider" min="0" max="600" value="100" style="width:55px; height:4px; border-radius:2px; background:#cbd5e1; outline:none; -webkit-appearance:none; cursor:pointer; accent-color:#f97316;">
+                            <span id="cycu-v-volume-display" style="font-size:10px; color:#f97316; font-weight:bold; width:30px; text-align:right;">100%</span>
+                            <button id="cycu-v-max-vol" style="background:#ef4444; border:none; border-radius:3px; color:white; padding:1px 5px; font-size:9px; cursor:pointer; font-weight:bold;" title="一鍵 600% 爆音">MAX</button>
+                        </div>
 
-                            <button class="cycu-speed-btn" data-speed="1.0" style="border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;">1.0x</button>
-                            <button class="cycu-speed-btn" data-speed="1.25" style="border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;">1.25x</button>
-                            <button class="cycu-speed-btn" data-speed="1.5" style="border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;">1.5x</button>
-                            <button class="cycu-speed-btn" data-speed="2.0" style="border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;">2.0x</button>
+                        <!-- 播放倍速 -->
+                        <div style="display:flex; align-items:center; gap:3px;">
+                            <button class="cycu-speed-btn cycu-slim-btn" data-speed="1.0" style="padding:2px 6px !important;">1.0x</button>
+                            <button class="cycu-speed-btn cycu-slim-btn" data-speed="1.25" style="padding:2px 6px !important;">1.25x</button>
+                            <button class="cycu-speed-btn cycu-slim-btn" data-speed="1.5" style="padding:2px 6px !important;">1.5x</button>
+                            <button class="cycu-speed-btn cycu-slim-btn" data-speed="2.0" style="padding:2px 6px !important;">2.0x</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- AI 字幕引導彈窗 -->
-            <div id="cycu-cc-guide" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:1000001; background:white; padding:24px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.25); width:90%; max-width:380px; text-align:center; border: 2px solid #10b981;">
-                <h3 style="margin:0 0 12px 0; color:#059669; font-size:18px; display:flex; align-items:center; justify-content:center; gap:8px;"><span>💬</span> 開啟 AI 即時字幕與翻譯</h3>
-                <p style="font-size:13px; color:#475569; line-height:1.6; text-align:left; margin-bottom:12px;">iLearning 影片本身無字幕，但您可直接喚醒瀏覽器內建的免費 AI 引擎，將老師的聲音即時轉為中文字幕！</p>
-                <div style="background:#ecfdf5; padding:12px; border-radius:8px; text-align:left; font-size:12px; color:#064e3b; margin-bottom:16px; border:1px solid #a7f3d0;">
-                    <b style="font-size:13px;"> 電腦版 (Chrome / Edge)：</b><br>
-                    1. 點擊瀏覽器視窗右上角的 <b>🎵 (媒體控制)</b> 圖示。<br>
-                    2. 開啟 <b>「即時字幕 (Live Caption)」</b> 開關。<br>
-                    3. 點開設定，勾選 <b>「即時翻譯」</b> 並選擇繁體中文。<br>
-                    <br>
-                    <b style="font-size:13px;">手機版 (iOS / Android)：</b><br>
-                    - iOS: 系統設定 > 輔助使用 > 即時字幕 (Beta)<br>
-                    - Android: 按一下實體音量鍵 > 點擊字幕圖示
+            <div id="cycu-cc-guide" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:1000001; background:white; padding:20px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.25); width:88%; max-width:360px; text-align:center; border: 2px solid #10b981;">
+                <h3 style="margin:0 0 10px 0; color:#059669; font-size:16px;">💬 開啟 AI 即時字幕與翻譯</h3>
+                <p style="font-size:12px; color:#475569; line-height:1.5; text-align:left; margin-bottom:10px;">利用瀏覽器免費 AI 語音識別直接轉成中文字幕：</p>
+                <div style="background:#ecfdf5; padding:10px; border-radius:8px; text-align:left; font-size:11px; color:#064e3b; margin-bottom:14px; border:1px solid #a7f3d0; line-height:1.5;">
+                    <b>💻 電腦 (Chrome / Edge)：</b><br>
+                    點擊右上角 <b>🎵 圖示</b> > 開啟 <b>即時字幕 (Live Caption)</b> > 勾選即時翻譯成繁中。<br><br>
+                    <b>📱 行動端 (iOS / Android)：</b><br>
+                    - iOS: 設定 > 輔助使用 > 即時字幕 (Beta)<br>
+                    - Android: 按實體音量鍵 > 點選音量列下方字幕圖示
                 </div>
-                <button id="cycu-cc-guide-close" style="background:#10b981; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; box-shadow:0 4px 10px rgba(16,185,129,0.3);">👌 我知道了，現在去開</button>
+                <button id="cycu-cc-guide-close" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; font-size:12px;">👌 我知道了</button>
             </div>
         `;
 
@@ -663,7 +658,7 @@
             e.preventDefault();
             const videoUrl = findCurrentVideoDownloadUrl();
             if (videoUrl) {
-                showToast(" 已取得影片來源，正在為您開啟下載...");
+                showToast("🚀 正在為您開啟下載 MP4 原檔...");
                 const titleMatch = document.title.split('|')[0].trim() || '課程影片';
                 const a = document.createElement('a');
                 a.href = videoUrl;
@@ -675,10 +670,10 @@
             } else {
                 const ytMatch = document.documentElement.innerHTML.match(/https?:\/\/www\.youtube\.com\/embed\/([^?"]+)/);
                 if (ytMatch) {
-                    showToast("⚠️ 此影片為 YouTube 來源，為您開啟 YouTube 原生頁面！");
+                    showToast("⚠️ 此影片為 YouTube 嵌入源，為您開啟原生網頁！");
                     window.open(`https://www.youtube.com/watch?v=${ytMatch[1]}`, '_blank');
                 } else {
-                    showToast("❌ 找不到可直接下載的影片來源 (可能仍在緩衝中)", true);
+                    showToast("❌ 找不到可直接下載的影片檔案", true);
                 }
             }
         });
@@ -704,7 +699,7 @@
             e.preventDefault();
             document.getElementById('cycu-video-assistant').style.display = 'none';
             document.getElementById('cycu-video-assistant-toggle').style.display = 'block';
-            showToast("🎬 控制面板已隱藏，可透過左下角按鈕重新開啟！");
+            showToast("🎬 控制列已縮小至左下角按鈕！");
         });
 
         document.getElementById('cycu-v-cc-toggle').addEventListener('click', (e) => {
@@ -737,7 +732,7 @@
             if (status.duration > 0) {
                 slider.max = status.duration;
                 slider.value = status.current;
-                timeDisplay.innerText = String(formatTime(status.current)) + ' / ' + String(formatTime(status.duration));
+                timeDisplay.innerText = `${formatTime(status.current)} / ${formatTime(status.duration)}`;
                 if (status.type === 'html5') {
                     const v = document.querySelector('video');
                     if (v) updatePlayButtonUI(!v.paused);
@@ -850,7 +845,7 @@
             currentVolume = 600;
             setMediaVolume(currentVolume);
             updateVolumeUI();
-            showToast(" 已啟動 600% 超級音量引擎！");
+            showToast("📢 已啟動 600% 超級音量引擎！");
         });
 
         setTimeout(() => {
@@ -865,7 +860,7 @@
             }
         }, 1500);
 
-        // 全螢幕切換控制（優先調用 HTML5 Video 原生全螢幕）
+        // 全螢幕控制（優先調用 HTML5 原生播放器以徹底消除 iPad 網址列）
         const btnFocus = document.getElementById('cycu-video-focus-toggle');
         let isVideoFocus = false;
 
@@ -873,18 +868,14 @@
             e.preventDefault();
             const v = document.querySelector('video');
 
-            // 1. 優先使用 HTML5 原生播放器全螢幕 (iPadOS / iOS Safari 徹底消除網址列的唯一解法，同 YouTube 機制)
             if (v && typeof v.webkitEnterFullscreen === 'function') {
                 try {
                     v.webkitEnterFullscreen();
-                    showToast(" 已喚醒原生播放器全螢幕！");
+                    showToast("🎬 已呼叫原生全螢幕播放器（頂部網址列已隱藏）！");
                     return;
-                } catch(err) {
-                    console.warn("webkitEnterFullscreen 失敗，轉為標準全螢幕模式", err);
-                }
+                } catch(err) {}
             }
 
-            // 2. PC / Android / 標準瀏覽器原生全螢幕
             if (v && !isVideoFocus) {
                 try {
                     if (v.requestFullscreen) { v.requestFullscreen(); return; }
@@ -892,35 +883,22 @@
                 } catch(err) {}
             }
 
-            // 3. 備援偽全螢幕模式 (Pseudo-Fullscreen)
+            // 備援偽全螢幕
             isVideoFocus = !isVideoFocus;
             const videoWrapper = document.querySelector('.video-wrap') || document.querySelector('#videoWrap') || document.querySelector('.videocontainer');
 
             if (isVideoFocus) {
                 document.body.classList.add('cycu-video-focus-mode');
-                btnFocus.innerHTML = "🔍還原";
-                showToast("已啟動極限專注模式");
-
+                btnFocus.innerHTML = "🔍 還原";
                 if (videoWrapper) {
                     videoWrapper.appendChild(assistantCard);
-                    try {
-                        if (videoWrapper.requestFullscreen) videoWrapper.requestFullscreen();
-                        else if (videoWrapper.webkitRequestFullscreen) videoWrapper.webkitRequestFullscreen();
-                    } catch(err) {}
                     videoWrapper.classList.add('cycu-pseudo-fullscreen');
                 } else if (v && v.parentElement) {
                     v.parentElement.classList.add('cycu-pseudo-fullscreen');
                 }
             } else {
                 document.body.classList.remove('cycu-video-focus-mode');
-                btnFocus.innerHTML = " 原生全螢幕";
-                try {
-                    if (document.fullscreenElement || document.webkitFullscreenElement) {
-                        if (document.exitFullscreen) document.exitFullscreen();
-                        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                    }
-                } catch(err) {}
-
+                btnFocus.innerHTML = "🔍 原生全螢幕";
                 document.body.appendChild(assistantCard);
                 const activeFullscreenWrapper = document.querySelector('.cycu-pseudo-fullscreen');
                 if (activeFullscreenWrapper) activeFullscreenWrapper.classList.remove('cycu-pseudo-fullscreen');
@@ -934,9 +912,15 @@
                 e.preventDefault();
                 const speed = parseFloat(btn.getAttribute('data-speed'));
                 setVideoSpeed(speed);
-                speedButtons.forEach(b => b.style.cssText = "border:1px solid #cbd5e1; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;");
-                btn.style.cssText = "border:1px solid #f97316; background:white; color:#f97316; border-radius:6px; padding:6px 10px; font-size:12px; font-weight:bold; cursor:pointer; outline:none;";
-                showToast(' 播放速度已調整為: ' + String(speed) + 'x');
+                speedButtons.forEach(b => {
+                    b.style.borderColor = "#cbd5e1";
+                    b.style.color = "#334155";
+                    b.style.background = "#ffffff";
+                });
+                btn.style.borderColor = "#f97316";
+                btn.style.color = "#f97316";
+                btn.style.background = "#fff7ed";
+                showToast(`🚀 播放速度: ${speed}x`);
             });
         });
 
@@ -976,29 +960,29 @@
         if (container) {
             const card = document.createElement('div');
             card.id = 'cycu-enhanced-toolbox';
-            card.style.cssText = "margin-bottom:24px; padding:0;";
+            card.style.cssText = "margin-bottom:20px; padding:0;";
             card.innerHTML = `
-                <div style="border-radius:16px; border:1px solid #e2e8f0; box-shadow:0 4px 15px rgba(0,0,0,0.04); background:#ffffff; overflow:hidden;">
-                    <div style="background:linear-gradient(135deg, #6366f1, #4f46e5); padding:14px 20px; color:white; display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:18px;">⚡</span><span style="font-weight:700; font-size:14px; color:white !important;">iLearning 體驗增強工具箱</span></div>
-                        <span style="font-size:11px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 8px; border-radius:12px; font-weight:bold;">v6.8.3 自由漂浮版</span>
+                <div style="border-radius:14px; border:1px solid #e2e8f0; box-shadow:0 4px 14px rgba(0,0,0,0.03); background:#ffffff; overflow:hidden;">
+                    <div style="background:linear-gradient(135deg, #6366f1, #4f46e5); padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:16px;">⚡</span><span style="font-weight:700; font-size:13px; color:white !important;">iLearning 體驗增強工具箱</span></div>
+                        <span style="font-size:10px; opacity:0.9; background:rgba(255,255,255,0.22); padding:2px 6px; border-radius:10px; font-weight:bold;">v6.8.4 極簡版</span>
                     </div>
-                    <div style="padding:18px; display:flex; flex-direction:column; gap:14px;">
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
-                            <button id="cycu-btn-simplify" style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; border-radius:12px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; font-weight:700; font-size:13px; cursor:pointer; outline:none;">✨ 介面精簡化</button>
-                            <button id="cycu-btn-file-select" style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; border-radius:12px; border:none; background:#4f46e5; color:white; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 10px rgba(79,70,229,0.28); outline:none;">📋 勾選個別檔案</button>
-                            <button id="cycu-btn-pack-menu" style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; border-radius:12px; border:none; background:#10b981; color:white; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 10px rgba(16,185,129,0.25); outline:none;">📦 依類型快打</button>
+                    <div style="padding:14px; display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
+                            <button id="cycu-btn-simplify" style="display:flex; align-items:center; justify-content:center; gap:5px; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; font-weight:700; font-size:12px; cursor:pointer;">✨ 介面精簡化</button>
+                            <button id="cycu-btn-file-select" style="display:flex; align-items:center; justify-content:center; gap:5px; padding:10px; border-radius:10px; border:none; background:#4f46e5; color:white; font-weight:700; font-size:12px; cursor:pointer; box-shadow:0 3px 8px rgba(79,70,229,0.25);">📋 勾選個別檔案</button>
+                            <button id="cycu-btn-pack-menu" style="display:flex; align-items:center; justify-content:center; gap:5px; padding:10px; border-radius:10px; border:none; background:#10b981; color:white; font-weight:700; font-size:12px; cursor:pointer; box-shadow:0 3px 8px rgba(16,185,129,0.22);">📦 依類型快打</button>
                         </div>
                         
-                        <div id="cycu-pack-options" style="display:none; flex-direction:column; gap:10px; background:#f1f5f9; padding:14px; border-radius:12px; border:1px solid #cbd5e1;">
-                            <span style="font-size:13px; font-weight:bold; color:#334155;">請勾選要打包的教材類型：</span>
-                            <div style="display:flex; flex-wrap:wrap; gap:12px; font-size:13px; color:#475569;">
-                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="檔案" checked> 📝 文件檔案 (PPT/Doc)</label>
+                        <div id="cycu-pack-options" style="display:none; flex-direction:column; gap:8px; background:#f1f5f9; padding:12px; border-radius:10px; border:1px solid #cbd5e1;">
+                            <span style="font-size:12px; font-weight:bold; color:#334155;">請勾選要打包的教材類型：</span>
+                            <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:#475569;">
+                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="檔案" checked> 📝 文件 (PPT/Doc)</label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="資料夾" checked> 📁 資料夾</label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="PDF Annotation" checked> 📖 PDF 講義</label>
-                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="超級影片"> 🎬 影片檔 <span style="color:#ef4444; font-size:11px; font-weight:bold;">(iOS 易閃退請勿勾)</span></label>
+                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="超級影片"> 🎬 影片檔 <span style="color:#ef4444; font-size:10px; font-weight:bold;">(iOS 易閃退請勿勾)</span></label>
                             </div>
-                            <button id="cycu-btn-start-pack" style="margin-top:4px; padding:10px; border-radius:10px; border:none; background:#0ea5e9; color:white; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 10px rgba(14,165,233,0.25);">🚀 確定，開始打包</button>
+                            <button id="cycu-btn-start-pack" style="margin-top:2px; padding:8px; border-radius:8px; border:none; background:#0ea5e9; color:white; font-weight:700; font-size:12px; cursor:pointer;">🚀 確定，開始打包</button>
                         </div>
                     </div>
                 </div>
@@ -1061,25 +1045,25 @@
             modal.id = 'cycu-file-select-modal';
             modal.innerHTML = `
                 <div id="cycu-fs-card">
-                    <div style="background:linear-gradient(135deg, #4f46e5, #4338ca); padding:16px 22px; color:white; display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:20px;">📋</span>
+                    <div style="background:linear-gradient(135deg, #4f46e5, #4338ca); padding:14px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:18px;">📋</span>
                             <div>
-                                <div style="font-weight:700; font-size:15px; color:white;">選擇要打包的教材檔案</div>
-                                <div style="font-size:11px; opacity:0.85;">支援跨週個別挑選、即時搜尋與全選</div>
+                                <div style="font-weight:700; font-size:14px; color:white;">選擇要打包的教材檔案</div>
+                                <div style="font-size:10px; opacity:0.85;">支援跨週個別挑選、即時搜尋與全選</div>
                             </div>
                         </div>
-                        <button id="cycu-fs-close-btn" style="background:rgba(255,255,255,0.2); border:none; border-radius:50%; width:32px; height:32px; color:white; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; outline:none;">✕</button>
+                        <button id="cycu-fs-close-btn" style="background:rgba(255,255,255,0.2); border:none; border-radius:50%; width:28px; height:28px; color:white; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
                     </div>
 
-                    <div style="padding:14px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; flex-direction:column; gap:10px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <input type="text" id="cycu-fs-search" placeholder="🔍 搜尋教材名稱..." style="flex:1; border:1px solid #cbd5e1; border-radius:10px; padding:8px 12px; font-size:13px; outline:none; background:white;">
-                            <button id="cycu-fs-select-all" style="padding:8px 12px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-size:12px; font-weight:700; color:#334155; cursor:pointer;">全選</button>
-                            <button id="cycu-fs-deselect-all" style="padding:8px 12px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-size:12px; font-weight:700; color:#334155; cursor:pointer;">全不選</button>
+                    <div style="padding:12px 16px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <input type="text" id="cycu-fs-search" placeholder="🔍 搜尋教材名稱..." style="flex:1; border:1px solid #cbd5e1; border-radius:8px; padding:6px 10px; font-size:12px; outline:none; background:white;">
+                            <button id="cycu-fs-select-all" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; background:white; font-size:11px; font-weight:700; color:#334155; cursor:pointer;">全選</button>
+                            <button id="cycu-fs-deselect-all" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; background:white; font-size:11px; font-weight:700; color:#334155; cursor:pointer;">全不選</button>
                         </div>
-                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <span style="font-size:11px; font-weight:700; color:#64748b;">類型篩選:</span>
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <span style="font-size:10px; font-weight:700; color:#64748b;">類型篩選:</span>
                             <button class="cycu-fs-filter-chip active" data-filter="all">全部</button>
                             <button class="cycu-fs-filter-chip" data-filter="PDF Annotation">📖 PDF</button>
                             <button class="cycu-fs-filter-chip" data-filter="檔案">📝 文件</button>
@@ -1088,15 +1072,15 @@
                         </div>
                     </div>
 
-                    <div id="cycu-fs-list" style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:14px;"></div>
+                    <div id="cycu-fs-list" style="flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px;"></div>
 
-                    <div style="padding:14px 20px; background:#ffffff; border-top:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                        <div style="font-size:13px; color:#475569; font-weight:600;">
-                            已選擇 <span id="cycu-fs-selected-count" style="color:#4f46e5; font-size:16px; font-weight:700;">0</span> / <span id="cycu-fs-total-count">0</span> 個檔案
+                    <div style="padding:12px 16px; background:#ffffff; border-top:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                        <div style="font-size:12px; color:#475569; font-weight:600;">
+                            已選 <span id="cycu-fs-selected-count" style="color:#4f46e5; font-size:14px; font-weight:700;">0</span> / <span id="cycu-fs-total-count">0</span> 檔
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <button id="cycu-fs-cancel" style="padding:10px 16px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-size:13px; font-weight:700; color:#64748b; cursor:pointer;">取消</button>
-                            <button id="cycu-fs-download-btn" style="padding:10px 20px; border-radius:10px; border:none; background:#10b981; color:white; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3);">🚀 打包下載選中檔案</button>
+                        <div style="display:flex; gap:6px;">
+                            <button id="cycu-fs-cancel" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; background:white; font-size:12px; font-weight:700; color:#64748b; cursor:pointer;">取消</button>
+                            <button id="cycu-fs-download-btn" style="padding:8px 16px; border-radius:8px; border:none; background:#10b981; color:white; font-size:12px; font-weight:700; cursor:pointer; box-shadow:0 3px 8px rgba(16,185,129,0.25);">🚀 打包選中檔案</button>
                         </div>
                     </div>
                 </div>
@@ -1163,7 +1147,7 @@
         });
 
         if (allDownloadableFiles.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:30px; font-size:14px;">找不到可下載的教材檔案！</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:24px; font-size:13px;">找不到可下載的教材檔案！</div>`;
             document.getElementById('cycu-fs-total-count').innerText = '0';
             document.getElementById('cycu-fs-selected-count').innerText = '0';
             return;
@@ -1186,20 +1170,20 @@
             secBlock.dataset.secNum = secNum;
 
             const secHeader = document.createElement('div');
-            secHeader.style.cssText = "display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid #e2e8f0; font-size:13px; font-weight:700; color:#334155;";
+            secHeader.style.cssText = "display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding-bottom:3px; border-bottom:1px solid #e2e8f0; font-size:12px; font-weight:700; color:#334155;";
             secHeader.innerHTML = `
-                <div style="display:flex; align-items:center; gap:6px;">
+                <div style="display:flex; align-items:center; gap:5px;">
                     <span>📌 ${secNum === 0 ? "課程公告" : `第 ${secNum} 週`}</span>
-                    <span style="font-size:11px; color:#64748b; font-weight:500;">(${files.length} 個檔案)</span>
+                    <span style="font-size:10px; color:#64748b; font-weight:500;">(${files.length} 檔)</span>
                 </div>
-                <label style="font-size:11px; color:#4f46e5; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:4px;">
+                <label style="font-size:10px; color:#4f46e5; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:3px;">
                     <input type="checkbox" class="cycu-fs-sec-all-cb" data-sec="${secNum}" checked> 本週全選
                 </label>
             `;
             secBlock.appendChild(secHeader);
 
             const itemsWrap = document.createElement('div');
-            itemsWrap.style.cssText = "display:flex; flex-direction:column; gap:4px;";
+            itemsWrap.style.cssText = "display:flex; flex-direction:column; gap:3px;";
 
             files.forEach(file => {
                 totalRendered++;
@@ -1213,9 +1197,9 @@
                 const badgeLabel = file.modname === "PDF Annotation" ? "PDF" : (file.modname === "資料夾" ? "DIR" : (isVideo ? "MP4" : "FILE"));
 
                 row.innerHTML = `
-                    <input type="checkbox" class="cycu-fs-item-checkbox" data-sec="${secNum}" data-file-info="${encodeURIComponent(JSON.stringify(file))}" ${isVideo ? '' : 'checked'} style="width:16px; height:16px; cursor:pointer; accent-color:#4f46e5;">
-                    <span style="font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; background:${badgeColor}18; color:${badgeColor}; border:1px solid ${badgeColor}40;">${badgeLabel}</span>
-                    <span style="font-size:13px; color:#1e293b; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${file.name}">${file.name}</span>
+                    <input type="checkbox" class="cycu-fs-item-checkbox" data-sec="${secNum}" data-file-info="${encodeURIComponent(JSON.stringify(file))}" ${isVideo ? '' : 'checked'} style="width:15px; height:15px; cursor:pointer; accent-color:#4f46e5;">
+                    <span style="font-size:9px; font-weight:700; padding:1px 5px; border-radius:4px; background:${badgeColor}18; color:${badgeColor}; border:1px solid ${badgeColor}40;">${badgeLabel}</span>
+                    <span style="font-size:12px; color:#1e293b; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${file.name}">${file.name}</span>
                 `;
 
                 row.querySelector('.cycu-fs-item-checkbox').addEventListener('change', updateFileSelectCount);
@@ -1391,7 +1375,7 @@
 
             const sortContainer = document.createElement('div');
             sortContainer.className = 'mb-3 cycu-sort-container';
-            sortContainer.innerHTML = `<select class="form-select" id="week-sort-order" style="cursor:pointer; max-width: 150px;"><option value="desc">降序</option><option value="asc">升序</option></select>`;
+            sortContainer.innerHTML = `<select class="form-select" id="week-sort-order" style="cursor:pointer; max-width: 140px;"><option value="desc">降序</option><option value="asc">升序</option></select>`;
             sortContainer.querySelector('#week-sort-order').value = getCookie('weekSortOrder') || 'desc';
             sortContainer.querySelector('#week-sort-order').addEventListener('change', function () { setCookie('weekSortOrder', this.value); showMenu(); });
 
@@ -1418,11 +1402,11 @@
                 <div class="section-item">
                     <div class="course-section-header d-flex cycu-accordion-header">
                         <div class="d-flex align-items-center position-relative w-100" style="pointer-events:none;">
-                            <a role="button" class="btn btn-icon me-3 icons-collapse-expand justify-content-center collapsed cycu-toggle-btn" href="#side-coursecontentcollapse${sectionNum}">
-                                <span class="collapsed-icon p-2"><i class="icon fa fa-chevron-right fa-fw"></i></span>
-                                <span class="expanded-icon p-2"><i class="icon fa fa-chevron-down fa-fw"></i></span>
+                            <a role="button" class="btn btn-icon me-2 icons-collapse-expand justify-content-center collapsed cycu-toggle-btn" href="#side-coursecontentcollapse${sectionNum}">
+                                <span class="collapsed-icon p-1"><i class="icon fa fa-chevron-right fa-fw"></i></span>
+                                <span class="expanded-icon p-1"><i class="icon fa fa-chevron-down fa-fw"></i></span>
                             </a>
-                            <h3 class="h4 sectionname mb-0 w-100" style="margin-left: 8px;">${config[modname]?.title || modname}</h3>
+                            <h3 class="h5 sectionname mb-0 w-100" style="margin-left: 6px;">${config[modname]?.title || modname}</h3>
                         </div>
                     </div>
                     <div id="side-coursecontentcollapse${sectionNum}" class="content collapse cycu-collapse-content">
@@ -1432,10 +1416,10 @@
                     const weekItemsList = weekItems[week];
                     if (!weekItemsList) continue;
                     let isCurrent = currentWeekSection && currentWeekSection.id == weekItemsList[0].sectionid;
-                    sectionHTML += `<li class="activity activity-wrapper" style="margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 8px;"><div class="week-title fw-bold fs-5 mb-2">${week === 0 ? "公告" : `第${week}週`}${isCurrent ? ' <span class="badge bg-primary">本週</span>' : ''}</div><div class="${isCurrent ? 'course-content current' : ''}">`;
+                    sectionHTML += `<li class="activity activity-wrapper" style="margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 6px;"><div class="week-title fw-bold fs-6 mb-1">${week === 0 ? "公告" : `第${week}週`}${isCurrent ? ' <span class="badge bg-primary">本週</span>' : ''}</div><div class="${isCurrent ? 'course-content current' : ''}">`;
                     for (const item of weekItemsList) {
                         let logoUrl = config[modname]?.logo;
-                        sectionHTML += `<div class="activity-item mb-2"><div class="d-flex align-items-center"><div class="activity-icon me-2">${logoUrl ? `<img src="${logoUrl}" width="20" height="20">` : ''}</div><div class="activityname"><a href="${item.url}" class="aalink" style="position:relative; z-index:10; text-decoration: none; font-weight: 500;">${item.name}</a></div></div></div>`;
+                        sectionHTML += `<div class="activity-item mb-1"><div class="d-flex align-items-center"><div class="activity-icon me-2">${logoUrl ? `<img src="${logoUrl}" width="18" height="18">` : ''}</div><div class="activityname"><a href="${item.url}" class="aalink" style="position:relative; z-index:10; text-decoration: none; font-weight: 500; font-size:13px;">${item.name}</a></div></div></div>`;
                     }
                     sectionHTML += `</div></li>`;
                 }
@@ -1580,19 +1564,19 @@
 
             toast.style.backgroundColor = '#0f172a';
             toast.innerHTML = `
-                <div style="width:100%; display:flex; flex-direction:column; gap:8px;">
+                <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:700; font-size:13px; color:#38bdf8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:240px;" title="${currentFileName}">
+                        <span style="font-weight:700; font-size:12px; color:#38bdf8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:240px;" title="${currentFileName}">
                             📥 ${currentFileName}
                         </span>
-                        <span style="font-size:12px; font-weight:700; color:#10b981; font-family:monospace;">
+                        <span style="font-size:11px; font-weight:700; color:#10b981; font-family:monospace;">
                             ${overallPercent.toFixed(0)}%
                         </span>
                     </div>
-                    <div style="width:100%; height:7px; background:#334155; border-radius:4px; overflow:hidden;">
-                        <div style="width:${overallPercent}%; height:100%; background:linear-gradient(90deg, #38bdf8, #6366f1, #10b981); border-radius:4px; transition:width 0.2s ease;"></div>
+                    <div style="width:100%; height:5px; background:#334155; border-radius:3px; overflow:hidden;">
+                        <div style="width:${overallPercent}%; height:100%; background:linear-gradient(90deg, #38bdf8, #6366f1, #10b981); border-radius:3px; transition:width 0.2s ease;"></div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#cbd5e1;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#cbd5e1;">
                         <span>進度: ${fileIndex + 1}/${total} 檔 (${formatBytes(fileProgress.loaded)}${fileProgress.total > 0 ? ' / ' + formatBytes(fileProgress.total) : ''})</span>
                         <span>⚡ <b style="color:#f59e0b;">${formatSpeed(fileProgress.currentSpeed)}</b> | ⏳ <b style="color:#38bdf8;">${formatETA(fileProgress.eta)}</b></span>
                     </div>
@@ -1693,7 +1677,7 @@
             }
 
             if (successCount === 0) throw new Error("無成功檔案。");
-            toast.innerHTML = `<div style="display:flex; align-items:center; gap:8px;"><span>⚡</span><span>壓縮打包 ZIP 封裝中，請稍候...</span></div>`;
+            toast.innerHTML = `<div style="display:flex; align-items:center; gap:6px;"><span>⚡</span><span>壓縮打包 ZIP 封裝中，請稍候...</span></div>`;
 
             const zipBlob = zip.generateBlob();
             const blobUrl = URL.createObjectURL(zipBlob);
@@ -1701,13 +1685,13 @@
 
             toast.style.backgroundColor = '#0f172a';
             toast.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
-                    <span style="font-weight:700; font-size:15px; color:#10b981;">🎉 打包完成！(${successCount}/${total})</span>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;">
-                        <a href="${blobUrl}" download="${fileName}" id="cycu-dl-btn" style="background:#10b981; color:white; padding:10px; border-radius:10px; text-decoration:none; font-weight:bold; text-align:center; font-size:12px;">直接下載</a>
-                        <button id="dl-ios-tab" style="background:#f59e0b; color:white; padding:10px; border-radius:10px; border:none; font-weight:bold; text-align:center; font-size:12px; cursor:pointer;">iOS 開啟分頁儲存</button>
+                <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                    <span style="font-weight:700; font-size:14px; color:#10b981;">🎉 打包完成！(${successCount}/${total})</span>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px;">
+                        <a href="${blobUrl}" download="${fileName}" id="cycu-dl-btn" style="background:#10b981; color:white; padding:8px; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:12px;">直接下載</a>
+                        <button id="dl-ios-tab" style="background:#f59e0b; color:white; padding:8px; border-radius:8px; border:none; font-weight:bold; text-align:center; font-size:12px; cursor:pointer;">iOS 開啟分頁儲存</button>
                     </div>
-                    <span id="dl-close" style="font-size:11px; text-align:center; cursor:pointer; text-decoration:underline; color:#94a3b8; margin-top:4px;">關閉通知視窗</span>
+                    <span id="dl-close" style="font-size:10px; text-align:center; cursor:pointer; text-decoration:underline; color:#94a3b8; margin-top:2px;">關閉通知視窗</span>
                 </div>`;
 
             document.getElementById('dl-ios-tab').onclick = (e) => {
@@ -1744,38 +1728,36 @@
     }
 
     function nativeGoPrevPage() {
-        const btn = document.querySelector('#previous') || document.querySelector('#pdfannotator_prev') || document.querySelector('.pdfannotator-prev') || document.querySelector('.pdfannotator_prev') || document.querySelector('button[class*="prev" i]') || document.querySelector('[title*="previous" i]') || document.getElementById('pdfannotator-prev');
+        const btn = document.querySelector('#previous') || document.querySelector('#pdfannotator_prev') || document.querySelector('.pdfannotator-prev') || document.querySelector('button[class*="prev" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
         if (info.pageInput && info.current > 1) {
             info.pageInput.value = info.current - 1;
             info.pageInput.dispatchEvent(new Event('change', { bubbles: true }));
-            info.pageInput.dispatchEvent(new Event('input', { bubbles: true }));
             return true;
         }
         return false;
     }
 
     function nativeGoNextPage() {
-        const btn = document.querySelector('#next') || document.querySelector('#pdfannotator_next') || document.querySelector('.pdfannotator-next') || document.querySelector('.pdfannotator_next') || document.querySelector('button[class*="next" i]') || document.querySelector('[title*="next" i]') || document.getElementById('pdfannotator-next');
+        const btn = document.querySelector('#next') || document.querySelector('#pdfannotator_next') || document.querySelector('.pdfannotator-next') || document.querySelector('button[class*="next" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
         if (info.pageInput && info.current < info.total) {
             info.pageInput.value = info.current + 1;
             info.pageInput.dispatchEvent(new Event('change', { bubbles: true }));
-            info.pageInput.dispatchEvent(new Event('input', { bubbles: true }));
             return true;
         }
         return false;
     }
 
     function nativeZoomIn() {
-        const btn = document.getElementById('zoomIn') || document.querySelector('#pdfannotator_zoomin') || document.querySelector('button[class*="zoomin" i]') || document.querySelector('[title*="zoom in" i]');
+        const btn = document.getElementById('zoomIn') || document.querySelector('#pdfannotator_zoomin') || document.querySelector('button[class*="zoomin" i]');
         if (btn) btn.click();
     }
 
     function nativeZoomOut() {
-        const btn = document.getElementById('zoomOut') || document.querySelector('#pdfannotator_zoomout') || document.querySelector('button[class*="zoomout" i]') || document.querySelector('[title*="zoom out" i]');
+        const btn = document.getElementById('zoomOut') || document.querySelector('#pdfannotator_zoomout') || document.querySelector('button[class*="zoomout" i]');
         if (btn) btn.click();
     }
 
@@ -1784,9 +1766,6 @@
         if (scaleSelect) {
             scaleSelect.value = 'page-width';
             scaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
-        } else {
-            const btn = document.querySelector('button[class*="zoomfit" i]') || document.querySelector('[title*="fit" i]');
-            if (btn) btn.click();
         }
     }
 
@@ -1838,10 +1817,9 @@
 
             const bodyWrapper = document.getElementById('body-wrapper');
             if (bodyWrapper) {
-                const targetHeight = isFocusModeActive ? 'calc(100vh - 60px)' : '82vh';
-                const targetMinHeight = isFocusModeActive ? 'calc(100vh - 60px)' : '680px';
+                const targetHeight = isFocusModeActive ? 'calc(100vh - 50px)' : '84vh';
                 bodyWrapper.style.setProperty('height', targetHeight, 'important');
-                bodyWrapper.style.setProperty('min-height', targetMinHeight, 'important');
+                bodyWrapper.style.setProperty('min-height', targetHeight, 'important');
             }
 
             const contentWrapper = document.getElementById('content-wrapper');
@@ -1850,10 +1828,6 @@
                     contentWrapper.style.setProperty('width', '100%', 'important');
                     contentWrapper.style.setProperty('max-width', '100%', 'important');
                     contentWrapper.style.flex = '0 0 100%', 'important';
-                } else {
-                    contentWrapper.style.removeProperty('width');
-                    contentWrapper.style.removeProperty('max-width');
-                    contentWrapper.style.removeProperty('flex');
                 }
             }
             window.dispatchEvent(new Event('resize'));
@@ -1878,46 +1852,46 @@
 
         const assistantCard = document.createElement('div');
         assistantCard.id = 'cycu-pdf-assistant';
-        assistantCard.style.cssText = "margin-bottom: 20px; padding: 0; width:100%; z-index: 100;";
+        assistantCard.style.cssText = "margin-bottom: 16px; padding: 0; width:100%; z-index: 100;";
         assistantCard.innerHTML = `
-            <div style="border-radius:16px; border:1px solid #e2e8f0; background:#ffffff; box-shadow:0 4px 20px rgba(0,0,0,0.05); overflow:hidden; width:100%;">
-                <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:12px 18px; color:white; display:flex; align-items:center; justify-content:space-between;">
-                    <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:16px;">📖</span><span style="font-weight:700; font-size:13px; color:white !important;">iLearning PDF 智慧學習助理</span></div>
-                    <span style="font-size:11px; opacity:0.8; font-weight:bold;">中原大學專屬輔助</span>
+            <div style="border-radius:14px; border:1px solid #e2e8f0; background:#ffffff; box-shadow:0 4px 16px rgba(0,0,0,0.04); overflow:hidden; width:100%;">
+                <div style="background:linear-gradient(135deg, #4f46e5, #3730a3); padding:10px 16px; color:white; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:6px;"><span style="font-size:15px;">📖</span><span style="font-weight:700; font-size:12px; color:white !important;">iLearning PDF 助理</span></div>
+                    <span style="font-size:10px; opacity:0.8; font-weight:bold;">中原專用</span>
                 </div>
-                <div style="padding:14px; display:flex; flex-direction:column; gap:10px; background:#fafafa;">
+                <div style="padding:10px 14px; display:flex; flex-direction:column; gap:8px; background:#fafafa;">
                     <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px;">
-                        <button id="cycu-pdf-dark-toggle" style="padding:10px 4px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#334155; font-weight:700; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">🌓 護眼深色</button>
-                        <button id="cycu-pdf-focus-toggle" style="padding:10px 4px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#334155; font-weight:700; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">🔍 全螢幕</button>
-                        <button id="cycu-pdf-native-toggle" class="cycu-pdf-btn-active" style="padding:10px 4px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#334155; font-weight:700; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">⚙️ 隱藏原廠</button>
-                        <button id="cycu-pdf-note-toggle" style="padding:10px 4px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#334155; font-weight:700; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">📝 隨堂筆記</button>
+                        <button id="cycu-pdf-dark-toggle" class="cycu-slim-btn">🌓 護眼深色</button>
+                        <button id="cycu-pdf-focus-toggle" class="cycu-slim-btn">🔍 全螢幕</button>
+                        <button id="cycu-pdf-native-toggle" class="cycu-slim-btn cycu-pdf-btn-active">⚙️ 隱藏原廠</button>
+                        <button id="cycu-pdf-note-toggle" class="cycu-slim-btn">📝 隨堂筆記</button>
                     </div>
-                    <div style="margin-top: 2px;">
-                        <a id="cycu-pdf-direct-download" href="${fullUrl}" download target="_blank" style="text-align:center; display:block; padding:11px; border-radius:10px; background:#10b981; color:white !important; font-weight:700; font-size:12px; text-decoration:none; box-shadow:0 3px 10px rgba(16,185,129,0.22); -webkit-tap-highlight-color:transparent;">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
-                    </div>
-
-                    <div style="border-top:1px solid #e2e8f0; padding-top:10px; display:grid; grid-template-columns:1fr 2fr 1fr; align-items:center; text-align:center;">
-                        <button id="cycu-pdf-prev" style="border:1px solid #cbd5e1; background:white; color:#334155; border-radius:8px; padding:6px; font-weight:bold; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">◀ 上一頁</button>
-                        <span id="cycu-pdf-page-indicator" style="font-size:13px; font-weight:bold; color:#1e293b;">Page 1 / --</span>
-                        <button id="cycu-pdf-next" style="border:1px solid #cbd5e1; background:white; color:#334155; border-radius:8px; padding:6px; font-weight:bold; font-size:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">下一頁 ▶</button>
+                    <div>
+                        <a id="cycu-pdf-direct-download" href="${fullUrl}" download target="_blank" style="text-align:center; display:block; padding:9px; border-radius:8px; background:#10b981; color:white !important; font-weight:700; font-size:11px; text-decoration:none; box-shadow:0 2px 8px rgba(16,185,129,0.2);">📥 離線下載 PDF 講義 (支援 iOS 長按儲存)</a>
                     </div>
 
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:10px; display:grid; grid-template-columns:1fr 1.5fr 1fr; gap:8px;">
-                        <button id="cycu-pdf-zoom-out" style="border:1px solid #cbd5e1; background:white; color:#334155; border-radius:8px; padding:6px; font-weight:bold; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">➖ 縮小</button>
-                        <button id="cycu-pdf-zoom-fit" style="border:1px solid #cbd5e1; background:#f1f5f9; color:#334155; border-radius:8px; padding:6px; font-weight:bold; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">🔄 滿版寬度</button>
-                        <button id="cycu-pdf-zoom-in" style="border:1px solid #cbd5e1; background:white; color:#334155; border-radius:8px; padding:6px; font-weight:bold; font-size:11px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">➕ 放大</button>
+                    <div style="border-top:1px solid #e2e8f0; padding-top:8px; display:grid; grid-template-columns:1fr 2fr 1fr; align-items:center; text-align:center;">
+                        <button id="cycu-pdf-prev" class="cycu-slim-btn">◀ 上一頁</button>
+                        <span id="cycu-pdf-page-indicator" style="font-size:12px; font-weight:bold; color:#1e293b;">Page 1 / --</span>
+                        <button id="cycu-pdf-next" class="cycu-slim-btn">下一頁 ▶</button>
+                    </div>
+
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:8px; display:grid; grid-template-columns:1fr 1.5fr 1fr; gap:6px;">
+                        <button id="cycu-pdf-zoom-out" class="cycu-slim-btn">➖ 縮小</button>
+                        <button id="cycu-pdf-zoom-fit" class="cycu-slim-btn" style="background:#f1f5f9 !important;">🔄 滿版寬度</button>
+                        <button id="cycu-pdf-zoom-in" class="cycu-slim-btn">➕ 放大</button>
                     </div>
                 </div>
 
-                <div id="cycu-pdf-notebook" style="display:none; border-top:1px solid #e2e8f0; padding:14px; background:#ffffff;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-                        <span style="font-size:12px; font-weight:700; color:#334155;">✍️ 課堂重點隨寫：</span>
-                        <span id="cycu-pdf-note-status" style="font-size:10px; color:#10b981; font-weight:bold;">已存至本機 💾</span>
+                <div id="cycu-pdf-notebook" style="display:none; border-top:1px solid #e2e8f0; padding:12px; background:#ffffff;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                        <span style="font-size:11px; font-weight:700; color:#334155;">✍️ 課堂重點隨寫：</span>
+                        <span id="cycu-pdf-note-status" style="font-size:9px; color:#10b981; font-weight:bold;">已存至本機 💾</span>
                     </div>
-                    <textarea id="cycu-pdf-note-area" placeholder="在此記錄公式、老師講課重點..." style="width:100%; height:120px; border:1px solid #cbd5e1; border-radius:10px; padding:10px; font-size:12px; color:#334155; background:#fafafa; resize:none; box-sizing:border-box; line-height:1.4;"></textarea>
-                    <div style="display:flex; justify-content:space-between; margin-top:8px;">
-                        <button id="cycu-pdf-note-copy" style="border:1px solid #cbd5e1; background:white; color:#334155; font-size:11px; padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:bold;">📋 複製筆記</button>
-                        <button id="cycu-pdf-note-export" style="border:none; background:#3b82f6; color:white; font-size:11px; padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:bold;">📤 匯出 TXT</button>
+                    <textarea id="cycu-pdf-note-area" placeholder="在此記錄公式、重點..." style="width:100%; height:100px; border:1px solid #cbd5e1; border-radius:8px; padding:8px; font-size:11px; color:#334155; background:#fafafa; resize:none; box-sizing:border-box;"></textarea>
+                    <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                        <button id="cycu-pdf-note-copy" class="cycu-slim-btn" style="font-size:10px !important;">📋 複製筆記</button>
+                        <button id="cycu-pdf-note-export" class="cycu-slim-btn" style="background:#3b82f6 !important; color:white !important; border-color:#3b82f6 !important; font-size:10px !important;">📤 匯出 TXT</button>
                     </div>
                 </div>
             </div>
@@ -1931,13 +1905,6 @@
         const notebook = document.getElementById('cycu-pdf-notebook');
         const noteArea = document.getElementById('cycu-pdf-note-area');
         const noteStatus = document.getElementById('cycu-pdf-note-status');
-
-        const btnPrev = document.getElementById('cycu-pdf-prev');
-        const btnNext = document.getElementById('cycu-pdf-next');
-
-        const btnZoomIn = document.getElementById('cycu-pdf-zoom-in');
-        const btnZoomOut = document.getElementById('cycu-pdf-zoom-out');
-        const btnZoomFit = document.getElementById('cycu-pdf-zoom-fit');
 
         let isDarkMode = localStorage.getItem('cycu_pdf_dark_mode') === 'true';
         const applyDarkMode = () => {
@@ -1965,7 +1932,7 @@
             if (isFocusMode) {
                 document.body.classList.add('cycu-pdf-focus-mode');
                 btnFocus.classList.add('cycu-pdf-btn-active');
-                btnFocus.innerHTML = "🔍 還原視窗";
+                btnFocus.innerHTML = "🔍 還原";
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 document.body.classList.remove('cycu-pdf-focus-mode');
@@ -1994,12 +1961,11 @@
             }
         });
 
-        btnPrev.onclick = (e) => { e.preventDefault(); nativeGoPrevPage(); };
-        btnNext.onclick = (e) => { e.preventDefault(); nativeGoNextPage(); };
-
-        btnZoomIn.onclick = (e) => { e.preventDefault(); nativeZoomIn(); };
-        btnZoomOut.onclick = (e) => { e.preventDefault(); nativeZoomOut(); };
-        btnZoomFit.onclick = (e) => { e.preventDefault(); nativeZoomFit(); };
+        document.getElementById('cycu-pdf-prev').onclick = (e) => { e.preventDefault(); nativeGoPrevPage(); };
+        document.getElementById('cycu-pdf-next').onclick = (e) => { e.preventDefault(); nativeGoNextPage(); };
+        document.getElementById('cycu-pdf-zoom-in').onclick = (e) => { e.preventDefault(); nativeZoomIn(); };
+        document.getElementById('cycu-pdf-zoom-out').onclick = (e) => { e.preventDefault(); nativeZoomOut(); };
+        document.getElementById('cycu-pdf-zoom-fit').onclick = (e) => { e.preventDefault(); nativeZoomFit(); };
 
         const savedNoteKey = `cycu_note_${pdfId}`;
         noteArea.value = localStorage.getItem(savedNoteKey) || '';
@@ -2016,7 +1982,7 @@
         };
 
         noteArea.oninput = () => {
-            noteStatus.innerText = "⏳ 正在儲存...";
+            noteStatus.innerText = "⏳ 儲存中...";
             noteStatus.style.color = "#f59e0b";
             localStorage.setItem(savedNoteKey, noteArea.value);
             setTimeout(() => {
@@ -2031,7 +1997,7 @@
             document.execCommand('copy');
             const btn = e.target;
             const old = btn.innerText;
-            btn.innerText = "✅ 複製成功！";
+            btn.innerText = "✅ 已複製！";
             setTimeout(() => btn.innerText = old, 1500);
         };
 
