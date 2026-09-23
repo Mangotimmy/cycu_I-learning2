@@ -57,7 +57,94 @@
         }
         return (crc ^ 0xFFFFFFFF) >>> 0;
     }
+ // 使面板支援任意拖曳漂浮（支援 PC 滑鼠與 iPadOS/iOS 觸控，並自動記憶座標）
+function makeDraggable(element, handle) {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let initialLeft = 0, initialTop = 0;
 
+    // 讀取儲存的歷史座標
+    const savedLeft = localStorage.getItem('cycu_assistant_left');
+    const savedTop = localStorage.getItem('cycu_assistant_top');
+    if (savedLeft !== null && savedTop !== null) {
+        element.style.left = `${Math.min(window.innerWidth - 60, Math.max(0, parseInt(savedLeft)))}px`;
+        element.style.top = `${Math.min(window.innerHeight - 60, Math.max(0, parseInt(savedTop)))}px`;
+        element.style.right = 'auto';
+        element.style.bottom = 'auto';
+    }
+
+    // 設置把手樣式
+    handle.style.cursor = 'grab';
+    handle.style.userSelect = 'none';
+    handle.style.touchAction = 'none'; // 避免 iPadOS 觸發原生手勢滾動
+
+    const onStart = (e) => {
+        // 點擊關閉或收折按鈕時不觸發拖曳
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+
+        isDragging = true;
+        handle.style.cursor = 'grabbing';
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const rect = element.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        element.style.right = 'auto';
+        element.style.bottom = 'auto';
+        element.style.left = `${initialLeft}px`;
+        element.style.top = `${initialTop}px`;
+
+        if (e.cancelable) e.preventDefault();
+    };
+
+    const onMove = (e) => {
+        if (!isDragging) return;
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+
+        let newLeft = initialLeft + deltaX;
+        let newTop = initialTop + deltaY;
+
+        // 邊界防出界保護
+        const maxLeft = window.innerWidth - element.offsetWidth - 10;
+        const maxTop = window.innerHeight - element.offsetHeight - 10;
+
+        newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+        newTop = Math.max(10, Math.min(newTop, maxTop));
+
+        element.style.left = `${newLeft}px`;
+        element.style.top = `${newTop}px`;
+    };
+
+    const onEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        handle.style.cursor = 'grab';
+
+        // 記憶最新擺放位置
+        localStorage.setItem('cycu_assistant_left', parseInt(element.style.left, 10));
+        localStorage.setItem('cycu_assistant_top', parseInt(element.style.top, 10));
+    };
+
+    // 滑鼠事件 (PC)
+    handle.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+
+    // 觸控事件 (iPad / Android / iPhone)
+    handle.addEventListener('touchstart', onStart, { passive: false });
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+}
     // Web Audio API 600% 爆音引擎
     function initAudioBooster(video) {
         if (!window.AudioContext && !window.webkitAudioContext) return;
@@ -84,7 +171,13 @@
 
         // 避免重複插入面板
         if (document.getElementById('cycu-video-assistant')) return;
+        // 取得面板與頂部藍色標題列
+const assistantCard = document.querySelector('#cycu-video-assistant') || document.querySelector('.cycu-assistant-card');
+const headerBar = assistantCard.querySelector('.cycu-card-header') || assistantCard.firstElementChild;
 
+// 確保面板使用 fixed 定位並套用拖曳
+assistantCard.style.position = 'fixed';
+makeDraggable(assistantCard, headerBar);
         const panel = document.createElement('div');
         panel.id = 'cycu-video-assistant';
         panel.style.cssText = `
