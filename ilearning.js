@@ -785,7 +785,65 @@
             link.click();
         };
     }
+// 注入 PDF 頂部浮動工具列
+function injectToolBox() {
+    if (document.getElementById('cycu-pdf-toolbox')) return;
 
+    const toolbox = document.createElement('div');
+    toolbox.id = 'cycu-pdf-toolbox';
+    toolbox.style.cssText = `
+        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+        z-index: 2147483640; background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px); border: 1px solid #dcdfe6;
+        border-radius: 30px; padding: 6px 16px; display: flex;
+        align-items: center; gap: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    `;
+
+    const isDarkSaved = localStorage.getItem('cycu_pdf_dark') === 'true';
+    const isHideSaved = localStorage.getItem('cycu_hide_bars') === 'true';
+
+    if (isDarkSaved) document.documentElement.classList.add('cycu-pdf-dark');
+    if (isHideSaved) document.documentElement.classList.add('cycu-hide-bars');
+
+    toolbox.innerHTML = `
+        <button id="cycu-btn-dark" style="background:#f4f4f5;border:1px solid #dcdfe6;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:13px;color:#303133;">
+            ${isDarkSaved ? '☀️ 日間模式' : '🌓 護眼深色'}
+        </button>
+        <button id="cycu-btn-fs" style="background:#f4f4f5;border:1px solid #dcdfe6;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:13px;color:#303133;">
+            🔍 全螢幕
+        </button>
+        <button id="cycu-btn-toggle-bars" style="background:#f4f4f5;border:1px solid #dcdfe6;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:13px;color:#303133;">
+            ${isHideSaved ? '⚙️ 顯示原廠' : '🙈 隱藏原廠'}
+        </button>
+    `;
+
+    document.body.appendChild(toolbox);
+
+    // 1. 🌓 護眼深色切換
+    toolbox.querySelector('#cycu-btn-dark').addEventListener('click', function() {
+        const isDark = document.documentElement.classList.toggle('cycu-pdf-dark');
+        localStorage.setItem('cycu_pdf_dark', isDark);
+        this.textContent = isDark ? '☀️ 日間模式' : '🌓 護眼深色';
+    });
+
+    // 2. 🔍 全螢幕切換
+    toolbox.querySelector('#cycu-btn-fs').addEventListener('click', function() {
+        const target = document.querySelector('#viewerContainer') || document.querySelector('.pdfannotator') || document.documentElement;
+        if (!document.fullscreenElement) {
+            if (target.requestFullscreen) target.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+    });
+
+    // 3. ⚙️ 顯示 / 隱藏原廠導航切換
+    toolbox.querySelector('#cycu-btn-toggle-bars').addEventListener('click', function() {
+        const isHidden = document.documentElement.classList.toggle('cycu-hide-bars');
+        localStorage.setItem('cycu_hide_bars', isHidden);
+        this.textContent = isHidden ? '⚙️ 顯示原廠' : '🙈 隱藏原廠';
+    });
+}
     function init() {
         const url = window.location.href;
         if (url.includes('/mod/')) document.body.classList.add('cycu-clean-mod-header');
