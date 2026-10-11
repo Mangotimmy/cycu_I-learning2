@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.2
-// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 護眼深色模式、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
+// @version      2.2.3
+// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
@@ -172,28 +172,63 @@
         }
     }
 
-    function showToast(message, isError = false) {
+    function showToast(message, isError = false, duration = 2800) {
         let toast = document.getElementById('dl-toast');
         if (!toast) {
             toast = document.createElement('div');
             toast.id = 'dl-toast';
             Object.assign(toast.style, {
-                position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', padding: '10px 16px',
+                position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', padding: '10px 18px',
                 borderRadius: '12px', color: 'white', fontSize: '12px', fontWeight: '600', zIndex: '1000002',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', gap: '10px',
-                width: 'calc(100% - 32px)', maxWidth: '400px', transition: 'all 0.3s ease', opacity: '0'
+                boxShadow: '0 8px 24px rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', gap: '10px',
+                width: 'calc(100% - 32px)', maxWidth: '420px', transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', opacity: '0',
+                cursor: 'pointer', backdropFilter: 'blur(8px)', boxSizing: 'border-box'
             });
             document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '1'; toast.style.bottom = '30px'; }, 10);
         }
-        toast.style.backgroundColor = isError ? '#ef4444' : '#0f172a';
-        toast.innerHTML = `<span style="flex-grow:1; line-height:1.4;">${message}</span>`;
-        if (isError) {
-            const closeBtn = document.createElement('span');
-            closeBtn.innerHTML = '✕';
-            closeBtn.style.cssText = 'cursor:pointer; font-weight:bold; opacity:0.8; margin-left:8px; font-size:14px;';
-            closeBtn.onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
-            toast.appendChild(closeBtn);
+
+        const isTheater = document.body.classList.contains('cycu-pdf-theater-mode');
+        if (isTheater) {
+            toast.style.top = '24px';
+            toast.style.bottom = 'auto';
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            }, 10);
+        } else {
+            toast.style.top = 'auto';
+            toast.style.bottom = '24px';
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(-6px)';
+            }, 10);
+        }
+
+        toast.style.backgroundColor = isError ? 'rgba(239, 68, 68, 0.95)' : 'rgba(15, 23, 42, 0.92)';
+        toast.innerHTML = `
+            <span style="flex-grow:1; line-height:1.4;">${message}</span>
+            <span id="dl-toast-x" style="cursor:pointer; font-weight:bold; opacity:0.8; margin-left:6px; font-size:14px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.15);">✕</span>
+        `;
+
+        const dismiss = () => {
+            if (toast._timer) {
+                clearTimeout(toast._timer);
+                toast._timer = null;
+            }
+            toast.style.opacity = '0';
+            toast.style.transform = isTheater ? 'translateX(-50%) translateY(-10px)' : 'translateX(-50%) translateY(10px)';
+            setTimeout(() => {
+                if (toast.parentNode && toast.style.opacity === '0') {
+                    toast.remove();
+                }
+            }, 250);
+        };
+
+        toast.onclick = dismiss;
+
+        if (toast._timer) clearTimeout(toast._timer);
+        if (duration > 0) {
+            toast._timer = setTimeout(dismiss, duration);
         }
         return toast;
     }
@@ -371,12 +406,41 @@
         /* ================= 劇院全螢幕模式 (YouTube Style) ================= */
         body.cycu-pdf-theater-mode {
             overflow: hidden !important;
-            background: #000000 !important;
+            background: #18181b !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* 徹底抹除頂部紫色導航列、章節分頁列(Overview/Chap/Statistics)、原廠灰色工具列與助理面板 */
+        /* 消除外層 Moodle Boost / Classic 結構干擾，解除 contain/transform/margin，避免 fixed 容器偏移 */
+        body.cycu-pdf-theater-mode #page,
+        body.cycu-pdf-theater-mode #page-wrapper,
+        body.cycu-pdf-theater-mode #topofscroll,
+        body.cycu-pdf-theater-mode #region-main-box,
+        body.cycu-pdf-theater-mode #region-main,
+        body.cycu-pdf-theater-mode .main-inner,
+        body.cycu-pdf-theater-mode [data-region="main"] {
+            margin: 0 !important;
+            padding: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            width: 100vw !important;
+            width: 100dvw !important;
+            max-width: 100vw !important;
+            transform: none !important;
+            filter: none !important;
+            contain: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        /* 徹底抹除頂部導航列、抽屜、原廠灰色工具列與問題側欄 */
+        body.cycu-pdf-theater-mode .drawer,
+        body.cycu-pdf-theater-mode .drawer-left,
+        body.cycu-pdf-theater-mode .drawer-right,
+        body.cycu-pdf-theater-mode .drawer-toggles,
+        body.cycu-pdf-theater-mode [data-region="drawer"],
         body.cycu-pdf-theater-mode .navbar,
         body.cycu-pdf-theater-mode header,
         body.cycu-pdf-theater-mode .fixed-top,
@@ -411,15 +475,18 @@
             display: none !important;
             visibility: hidden !important;
             height: 0 !important;
+            width: 0 !important;
             opacity: 0 !important;
             pointer-events: none !important;
         }
 
-        /* 劇院全螢幕佈局：精準覆蓋主檢視區域，保持 content-wrapper 正常內部滾動與坐標 */
+        /* 劇院全螢幕佈局：精準覆蓋主檢視區域，保證置中排版 */
         body.cycu-pdf-theater-mode #body-wrapper {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
             width: 100vw !important;
             width: 100dvw !important;
             height: 100vh !important;
@@ -429,17 +496,21 @@
             padding: 0 !important;
             border: none !important;
             background: #18181b !important;
-            max-width: none !important;
+            max-width: 100vw !important;
             display: flex !important;
             flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            transform: none !important;
         }
 
         body.cycu-pdf-theater-mode #content-wrapper {
             position: relative !important;
-            width: 100% !important;
-            height: 100% !important;
-            max-width: none !important;
-            margin: 0 !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            margin: 0 auto !important;
             padding: 0 !important;
             border: none !important;
             background: #18181b !important;
@@ -447,13 +518,27 @@
             overflow-x: auto !important;
             flex: 1 1 100% !important;
             box-sizing: border-box !important;
-        }
-
-        body.cycu-pdf-theater-mode #viewer {
-            margin: 20px auto 80px auto !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
+            text-align: center !important;
+            touch-action: pan-x pan-y !important;
+        }
+
+        body.cycu-pdf-theater-mode #viewer {
+            margin: 20px auto 100px auto !important;
+            width: auto !important;
+            min-width: 200px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+        }
+
+        body.cycu-pdf-theater-mode .page {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: block !important;
         }
 
         body.cycu-pdf-theater-mode iframe,
@@ -467,6 +552,26 @@
             height: 100% !important;
             overflow: auto !important;
             border: none !important;
+        }
+
+        /* 啟用 PDF 講義文字框選與複製 */
+        .path-mod-pdfannotator .textLayer,
+        .path-mod-pdfannotator .textLayer span,
+        .path-mod-pdfannotator .pdfViewer .textLayer,
+        .path-mod-pdfannotator .pdfViewer .textLayer span,
+        .path-mod-pdfannotator .pdfViewer.enablePermissions .textLayer span,
+        body.cycu-pdf-theater-mode .textLayer,
+        body.cycu-pdf-theater-mode .textLayer span {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: text !important;
+            pointer-events: auto !important;
+        }
+
+        .path-mod-pdfannotator .textLayer ::selection,
+        body.cycu-pdf-theater-mode .textLayer ::selection {
+            background: rgba(59, 130, 246, 0.45) !important;
+            color: transparent !important;
         }
 
         /* 底部半透明懸浮控制膠囊 (HUD) */
@@ -2251,7 +2356,7 @@
         const total = totalFiles.length;
         let successCount = 0;
 
-        const toast = showToast(`⏳ 正在初始化下載佇列 (0/${total})...`);
+        const toast = showToast(`⏳ 正在初始化下載佇列 (0/${total})...`, false, 0);
 
         const getExtFromMime = (mime) => {
             if (!mime) return "";
@@ -2417,6 +2522,7 @@
             };
 
             document.getElementById('dl-close').onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
+            setTimeout(() => { if (toast.parentNode && toast.style.opacity !== '0') { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); } }, 5000);
         } catch (error) { showToast(`❌ 出錯了: ${error.message}`, true); }
     }
 
@@ -2816,11 +2922,16 @@
 
         // 🎬 YouTube 劇院級原生全螢幕切換
         let theaterIdleTimer = null;
+        let hadDrawerOpenLeft = false;
         function toggleTheaterFullscreen() {
             const isTheater = document.body.classList.toggle('cycu-pdf-theater-mode');
             let hud = document.getElementById('cycu-pdf-theater-hud');
 
             if (isTheater) {
+                if (document.body.classList.contains('drawer-open-left')) {
+                    hadDrawerOpenLeft = true;
+                    document.body.classList.remove('drawer-open-left');
+                }
                 const docEl = document.documentElement;
                 if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => { });
                 else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(() => { });
@@ -2880,10 +2991,17 @@
                 btnFocus.classList.add('cycu-pdf-btn-active');
                 showToast("🎬 已進入 PDF 劇院全螢幕（可按鍵盤 F 或 Esc 退出）");
 
+                const cw = document.getElementById('content-wrapper');
+                if (cw) cw.scrollLeft = 0;
+
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                 }, 150);
             } else {
+                if (hadDrawerOpenLeft) {
+                    document.body.classList.add('drawer-open-left');
+                    hadDrawerOpenLeft = false;
+                }
                 if (document.fullscreenElement || document.webkitFullscreenElement) {
                     if (document.exitFullscreen) document.exitFullscreen().catch(() => { });
                     else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => { });
@@ -2906,19 +3024,106 @@
             toggleTheaterFullscreen();
         };
 
-        // 鍵盤快捷鍵：F 鍵全螢幕、Esc 還原、左右方向鍵翻頁
+        // 鍵盤快捷鍵：F 鍵全螢幕、Esc 還原、左右方向鍵翻頁、Ctrl +/-/0 或直接 +/- 縮放
         window.addEventListener('keydown', (e) => {
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            const isTheater = document.body.classList.contains('cycu-pdf-theater-mode');
+            const isPdfPage = isTheater || document.body.classList.contains('path-mod-pdfannotator');
+
             if (e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
                 toggleTheaterFullscreen();
-            } else if (e.key === 'Escape' && document.body.classList.contains('cycu-pdf-theater-mode')) {
+            } else if (e.key === 'Escape' && isTheater) {
                 toggleTheaterFullscreen();
-            } else if (document.body.classList.contains('cycu-pdf-theater-mode')) {
+            } else if (e.ctrlKey || e.metaKey) {
+                if (isPdfPage) {
+                    if (e.key === '=' || e.key === '+' || e.code === 'NumpadAdd') {
+                        e.preventDefault();
+                        nativeZoomIn();
+                    } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
+                        e.preventDefault();
+                        nativeZoomOut();
+                    } else if (e.key === '0' || e.code === 'Numpad0') {
+                        e.preventDefault();
+                        nativeZoomFit();
+                    }
+                }
+            } else if (isTheater) {
                 if (e.key === 'ArrowLeft') { e.preventDefault(); nativeGoPrevPage(); updatePageIndicator(); }
-                if (e.key === 'ArrowRight') { e.preventDefault(); nativeGoNextPage(); updatePageIndicator(); }
+                else if (e.key === 'ArrowRight') { e.preventDefault(); nativeGoNextPage(); updatePageIndicator(); }
+                else if (e.key === '=' || e.key === '+' || e.code === 'NumpadAdd') { e.preventDefault(); nativeZoomIn(); }
+                else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') { e.preventDefault(); nativeZoomOut(); }
             }
         });
+
+        // 滾輪／觸控板雙指捏合縮放 (Ctrl + Wheel)
+        let wheelZoomThrottle = 0;
+        window.addEventListener('wheel', (e) => {
+            if (document.body.classList.contains('cycu-pdf-theater-mode') || document.body.classList.contains('path-mod-pdfannotator')) {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    const now = Date.now();
+                    if (now - wheelZoomThrottle > 130) {
+                        wheelZoomThrottle = now;
+                        if (e.deltaY < 0) {
+                            nativeZoomIn();
+                        } else if (e.deltaY > 0) {
+                            nativeZoomOut();
+                        }
+                    }
+                }
+            }
+        }, { passive: false });
+
+        // 觸控螢幕／觸控筆電 (touchmon) 雙指捏合縮放手勢
+        let touchStartDist = 0;
+        let touchZoomThrottle = 0;
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                touchStartDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && touchStartDist > 0) {
+                const isPdfPage = document.body.classList.contains('cycu-pdf-theater-mode') || document.body.classList.contains('path-mod-pdfannotator');
+                if (isPdfPage) {
+                    const currentDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const diff = currentDist - touchStartDist;
+                    const now = Date.now();
+                    if (Math.abs(diff) > 35 && now - touchZoomThrottle > 180) {
+                        touchZoomThrottle = now;
+                        touchStartDist = currentDist;
+                        if (diff > 0) {
+                            nativeZoomIn();
+                        } else {
+                            nativeZoomOut();
+                        }
+                    }
+                }
+            }
+        }, { passive: true });
+
+        // 解鎖文字選取時的右鍵複製功能
+        window.addEventListener('contextmenu', (e) => {
+            const sel = window.getSelection();
+            if (sel && sel.toString().trim().length > 0) {
+                e.stopPropagation();
+            }
+        }, true);
+
+        window.addEventListener('copy', (e) => {
+            const sel = window.getSelection();
+            if (sel && sel.toString().length > 0) {
+                e.stopPropagation();
+            }
+        }, true);
 
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement && !document.webkitFullscreenElement && document.body.classList.contains('cycu-pdf-theater-mode')) {
