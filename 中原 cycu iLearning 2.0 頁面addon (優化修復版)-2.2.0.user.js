@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.0
+// @version      2.2.1
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 護眼深色模式、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
@@ -55,7 +55,7 @@
             try {
                 await navigator.clipboard.writeText(text);
                 return true;
-            } catch (e) {}
+            } catch (e) { }
         }
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -1000,7 +1000,7 @@
                 if (typeof data.info.playerState !== 'undefined') updatePlayButtonUI(data.info.playerState === 1);
                 ytPlayerState.lastUpdated = Date.now();
             }
-        } catch (e) {}
+        } catch (e) { }
     });
 
     let ytHooked = false;
@@ -1008,14 +1008,14 @@
         if (window.YT && window.YT.Player && window.YT.Player.prototype && typeof window.YT.Player.prototype.seekTo === 'function' && !ytHooked) {
             ytHooked = true;
             const originalSeekTo = window.YT.Player.prototype.seekTo;
-            window.YT.Player.prototype.seekTo = function(seconds, allowSeekAhead) {
+            window.YT.Player.prototype.seekTo = function (seconds, allowSeekAhead) {
                 if (window.cycu_user_seeking) {
                     return originalSeekTo.apply(this, arguments);
                 } else {
                     try {
                         const current = this.getCurrentTime();
                         if (seconds < current - 1.5) return;
-                    } catch(e) {}
+                    } catch (e) { }
                     return originalSeekTo.apply(this, arguments);
                 }
             };
@@ -1028,8 +1028,8 @@
         if (originalCurrentTimeDesc && originalCurrentTimeDesc.set) {
             Object.defineProperty(HTMLMediaElement.prototype, 'currentTime', {
                 configurable: true, enumerable: true,
-                get: function() { return originalCurrentTimeDesc.get.call(this); },
-                set: function(val) {
+                get: function () { return originalCurrentTimeDesc.get.call(this); },
+                set: function (val) {
                     if (window.cycu_user_seeking) {
                         originalCurrentTimeDesc.set.call(this, val);
                     } else {
@@ -1040,12 +1040,12 @@
                 }
             });
         }
-    } catch(e) {}
+    } catch (e) { }
 
     function findYTPlayer() {
         const keys = ['player', 'ytplayer', 'videoPlayer', 'api', 'player1', 'player2'];
         for (const key of keys) {
-            try { if (window[key] && typeof window[key].seekTo === 'function') return window[key]; } catch (e) {}
+            try { if (window[key] && typeof window[key].seekTo === 'function') return window[key]; } catch (e) { }
         }
         try {
             if (window.YT && typeof window.YT.get === 'function') {
@@ -1055,7 +1055,7 @@
                     if (p && typeof p.seekTo === 'function') return p;
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
         return null;
     }
 
@@ -1066,7 +1066,7 @@
                     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: funcName, args: args }), '*');
                 }
             });
-        } catch (e) {}
+        } catch (e) { }
     }
 
     function enableYouTubeJsApi() {
@@ -1078,7 +1078,7 @@
                     url.searchParams.set('enablejsapi', '1');
                     url.searchParams.set('origin', window.location.origin);
                     iframe.src = url.toString();
-                } catch(e) {}
+                } catch (e) { }
             }
         });
     }
@@ -1095,7 +1095,7 @@
                 const current = yt.getCurrentTime();
                 const duration = yt.getDuration();
                 if (duration > 0) return { current, duration, type: 'yt-api' };
-            } catch(e) {}
+            } catch (e) { }
         }
         return { current: 0, duration: 0, type: 'none' };
     }
@@ -1108,7 +1108,7 @@
             if (v) v.currentTime = dest;
         } else {
             const yt = findYTPlayer();
-            if (yt) { try { yt.seekTo(dest, true); } catch(e) {} }
+            if (yt) { try { yt.seekTo(dest, true); } catch (e) { } }
             sendCommandToYTIframes('seekTo', [dest, true]);
             ytPlayerState.currentTime = dest;
         }
@@ -1122,7 +1122,7 @@
             if (v) v.playbackRate = speed;
         } else {
             const yt = findYTPlayer();
-            if (yt) { try { yt.setPlaybackRate(speed); } catch(e) {} }
+            if (yt) { try { yt.setPlaybackRate(speed); } catch (e) { } }
             sendCommandToYTIframes('setPlaybackRate', [speed]);
         }
     }
@@ -1140,11 +1140,11 @@
             const isPlaying = btn && btn.getAttribute('data-playing') === 'true';
             const yt = findYTPlayer();
             if (isPlaying) {
-                if (yt) { try { yt.pauseVideo(); } catch(e) {} }
+                if (yt) { try { yt.pauseVideo(); } catch (e) { } }
                 sendCommandToYTIframes('pauseVideo');
                 updatePlayButtonUI(false);
             } else {
-                if (yt) { try { yt.playVideo(); } catch(e) {} }
+                if (yt) { try { yt.playVideo(); } catch (e) { } }
                 sendCommandToYTIframes('playVideo');
                 updatePlayButtonUI(true);
             }
@@ -1199,7 +1199,7 @@
     // 解鎖播放進度限制變數
     setInterval(() => {
         const limitVars = ['highest_time', 'maxTime', 'playedTime', 'last_time', 'checkTime', 'highestTime', 'played', 'max_played', 'limit_time'];
-        limitVars.forEach(v => { try { if (typeof window[v] !== 'undefined') window[v] = 99999; } catch(e) {} });
+        limitVars.forEach(v => { try { if (typeof window[v] !== 'undefined') window[v] = 99999; } catch (e) { } });
     }, 500);
 
     setInterval(() => { sendCommandToYTIframes('addEventListener', ['onStateChange']); }, 2500);
@@ -1360,7 +1360,7 @@
             }
         });
 
-        document.getElementById('cycu-v-collapse-btn').addEventListener('click', function(e) {
+        document.getElementById('cycu-v-collapse-btn').addEventListener('click', function (e) {
             e.preventDefault();
             const body = document.getElementById('cycu-v-assistant-body');
             const hideTexts = document.querySelectorAll('.cycu-hide-on-collapse');
@@ -1377,7 +1377,7 @@
             }
         });
 
-        document.getElementById('cycu-v-close-btn').addEventListener('click', function(e) {
+        document.getElementById('cycu-v-close-btn').addEventListener('click', function (e) {
             e.preventDefault();
             document.getElementById('cycu-video-assistant').style.display = 'none';
             document.getElementById('cycu-video-assistant-toggle').style.display = 'block';
@@ -1447,15 +1447,15 @@
                     if (vol > 100) initAudioBooster(v);
                     if (window.cycuGainNode) {
                         window.cycuGainNode.gain.value = vol / 100;
-                        try { v.volume = 1; } catch (e) {}
+                        try { v.volume = 1; } catch (e) { }
                     } else {
-                        try { v.volume = Math.min(vol / 100, 1); } catch (e) {}
+                        try { v.volume = Math.min(vol / 100, 1); } catch (e) { }
                     }
                 }
             } else {
                 const yt = findYTPlayer();
                 const ytVol = Math.min(vol, 100);
-                if (yt) { try { yt.setVolume(ytVol); } catch(e) {} }
+                if (yt) { try { yt.setVolume(ytVol); } catch (e) { } }
                 sendCommandToYTIframes('setVolume', [ytVol]);
             }
         }
@@ -1468,14 +1468,14 @@
                     if (window.cycuGainNode) {
                         window.cycuGainNode.gain.value = muted ? 0 : (currentVolume / 100);
                     }
-                    try { v.muted = muted; } catch(e) {}
+                    try { v.muted = muted; } catch (e) { }
                 }
             } else {
                 const yt = findYTPlayer();
                 if (yt) {
                     try {
                         if (muted) yt.mute(); else yt.unMute();
-                    } catch(e) {}
+                    } catch (e) { }
                 }
                 sendCommandToYTIframes(muted ? 'mute' : 'unMute');
             }
@@ -1554,14 +1554,14 @@
                     v.webkitEnterFullscreen();
                     showToast("🎬 已呼叫原生全螢幕播放器（頂部網址列已隱藏）！");
                     return;
-                } catch(err) {}
+                } catch (err) { }
             }
 
             if (v && !isVideoFocus) {
                 try {
                     if (v.requestFullscreen) { v.requestFullscreen(); return; }
                     else if (v.webkitRequestFullscreen) { v.webkitRequestFullscreen(); return; }
-                } catch(err) {}
+                } catch (err) { }
             }
 
             isVideoFocus = !isVideoFocus;
@@ -1608,9 +1608,9 @@
     }
 
     function injectFloatingDrawerButton() {
-        if(document.getElementById('cycu-floating-drawer-toggle')) return;
+        if (document.getElementById('cycu-floating-drawer-toggle')) return;
         const drawer = document.getElementById('theme_boost-drawers-courseindex');
-        if(!drawer) return;
+        if (!drawer) return;
 
         const btn = document.createElement('button');
         btn.id = 'cycu-floating-drawer-toggle';
@@ -1622,7 +1622,7 @@
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             isOpen = !isOpen;
-            if(isOpen) {
+            if (isOpen) {
                 drawer.classList.add('show');
                 btn.classList.add('cycu-drawer-open');
                 btn.innerHTML = '✕';
@@ -1895,7 +1895,7 @@
             secBlock.appendChild(itemsWrap);
             listContainer.appendChild(secBlock);
 
-            secHeader.querySelector('.cycu-fs-sec-all-cb').addEventListener('change', function() {
+            secHeader.querySelector('.cycu-fs-sec-all-cb').addEventListener('change', function () {
                 const checked = this.checked;
                 itemsWrap.querySelectorAll('.cycu-fs-item-checkbox').forEach(cb => {
                     const r = cb.closest('.cycu-fs-item-row');
@@ -1997,7 +1997,7 @@
                                 }
                             }
                         }
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             }
         }
@@ -2118,13 +2118,13 @@
             original.parentNode.insertBefore(sortContainer, container);
 
             document.querySelectorAll('.cycu-accordion-header').forEach(header => {
-                header.addEventListener('click', function(e) {
+                header.addEventListener('click', function (e) {
                     e.preventDefault();
                     const btn = this.querySelector('.cycu-toggle-btn');
                     const targetId = btn.getAttribute('href');
                     const target = document.querySelector(targetId);
-                    if(target) {
-                        if(target.classList.contains('show')) {
+                    if (target) {
+                        if (target.classList.contains('show')) {
                             target.classList.remove('show');
                             btn.classList.add('collapsed');
                         } else {
@@ -2315,9 +2315,9 @@
                             if (initialCt.includes('text/html')) {
                                 const text = await initialHead.text();
                                 const realUrlMatch = text.match(/<object[^>]+data="([^"]+)"/) ||
-                                                     text.match(/<iframe[^>]+src="([^"]+)"/) ||
-                                                     text.match(/<div class="resourceworkaround"><a href="([^"]+)"/) ||
-                                                     text.match(/window\.location\.replace\('([^']+)'\)/);
+                                    text.match(/<iframe[^>]+src="([^"]+)"/) ||
+                                    text.match(/<div class="resourceworkaround"><a href="([^"]+)"/) ||
+                                    text.match(/window\.location\.replace\('([^']+)'\)/);
                                 if (realUrlMatch && realUrlMatch[1]) {
                                     downloadUrl = realUrlMatch[1].replace(/&amp;/g, '&');
                                 }
@@ -2336,7 +2336,7 @@
                             const m = cd.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
                             if (m && m[1]) {
                                 let rawName = m[1].replace(/['"]/g, '');
-                                try { rawName = decodeURIComponent(rawName); } catch(e) {}
+                                try { rawName = decodeURIComponent(rawName); } catch (e) { }
                                 const extMatch = rawName.match(/\.[^.]+$/);
                                 if (extMatch) fileExtension = extMatch[0];
                             }
@@ -2345,7 +2345,7 @@
                                 try {
                                     const urlExtMatch = response.url.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
                                     if (urlExtMatch) fileExtension = "." + urlExtMatch[1];
-                                } catch(e) {}
+                                } catch (e) { }
                             }
                         }
 
@@ -2359,7 +2359,7 @@
 
                     zip.file((file.sectionnumber === 0 ? "公告 - " : `第${file.sectionnumber}週 - `) + safeName + fileExtension, fileData);
                     successCount++;
-                } catch (err) {}
+                } catch (err) { }
             }
 
             if (successCount === 0) throw new Error("無成功檔案。");
@@ -2407,7 +2407,7 @@
                 total = window.PDFViewerApplication.pagesCount || 1;
                 return { current, total, pageInput: null };
             }
-        } catch (e) {}
+        } catch (e) { }
         const pageInput = document.querySelector('#pdfannotator_index input[type="number"], #pageNumber, .pageNumber, input[class*="page" i]');
         if (pageInput) current = parseInt(pageInput.value, 10) || 1;
         const numPagesEl = document.querySelector('#numPages, .numPages, span[id*="numPages" i], span[class*="total" i]');
@@ -2427,7 +2427,7 @@
                 window.PDFViewerApplication.page--;
                 return true;
             }
-        } catch (e) {}
+        } catch (e) { }
         const btn = document.querySelector('#previous') || document.querySelector('#pdfannotator_prev') || document.querySelector('.pdfannotator-prev') || document.querySelector('button[class*="prev" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
@@ -2445,7 +2445,7 @@
                 window.PDFViewerApplication.page++;
                 return true;
             }
-        } catch (e) {}
+        } catch (e) { }
         const btn = document.querySelector('#next') || document.querySelector('#pdfannotator_next') || document.querySelector('.pdfannotator-next') || document.querySelector('button[class*="next" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
@@ -2463,7 +2463,7 @@
                 window.PDFViewerApplication.zoomIn();
                 return;
             }
-        } catch (e) {}
+        } catch (e) { }
         const btn = document.getElementById('zoomIn') || document.querySelector('#pdfannotator_zoomin') || document.querySelector('button[class*="zoomin" i]');
         if (btn) btn.click();
     }
@@ -2474,7 +2474,7 @@
                 window.PDFViewerApplication.zoomOut();
                 return;
             }
-        } catch (e) {}
+        } catch (e) { }
         const btn = document.getElementById('zoomOut') || document.querySelector('#pdfannotator_zoomout') || document.querySelector('button[class*="zoomout" i]');
         if (btn) btn.click();
     }
@@ -2485,7 +2485,7 @@
                 window.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-width';
                 return;
             }
-        } catch (e) {}
+        } catch (e) { }
         const scaleSelect = document.getElementById('scaleSelect') || document.querySelector('select[class*="scale" i]');
         if (scaleSelect) {
             scaleSelect.value = 'page-width';
@@ -2497,7 +2497,7 @@
         document.querySelectorAll('iframe').forEach(iframe => {
             try {
                 if (iframe.contentWindow) iframe.contentWindow.postMessage({ type: 'CYCU_PDF_ACTION', action: actionName }, '*');
-            } catch (e) {}
+            } catch (e) { }
         });
     }
 
@@ -2561,7 +2561,7 @@
                         }
                     ` : '';
                 }
-            } catch (e) {}
+            } catch (e) { }
         });
     }
 
@@ -2589,7 +2589,7 @@
                     let current = parseInt(pageInput.value, 10) || 1;
                     let total = numPages ? (parseInt(numPages.textContent.replace(/[^0-9]/g, ''), 10) || 1) : '--';
                     window.parent.postMessage({ type: 'CYCU_PDF_STATUS', current, total }, '*');
-                } catch(e) {}
+                } catch (e) { }
             }
         }, 500);
 
@@ -2762,8 +2762,8 @@
 
             if (isTheater) {
                 const docEl = document.documentElement;
-                if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
-                else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(() => {});
+                if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => { });
+                else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(() => { });
 
                 toggleIframeNativeToolbar(true);
 
@@ -2826,8 +2826,8 @@
                 }, 150);
             } else {
                 if (document.fullscreenElement || document.webkitFullscreenElement) {
-                    if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => {});
+                    if (document.exitFullscreen) document.exitFullscreen().catch(() => { });
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => { });
                 }
                 if (hud) hud.style.display = 'none';
                 clearTimeout(theaterIdleTimer);
@@ -2906,7 +2906,7 @@
                     const hudPage = document.querySelector('#cycu-hud-page');
                     if (hudPage && hudPage.innerText !== text) hudPage.innerText = text;
                 }
-            } catch (e) {}
+            } catch (e) { }
         };
         setInterval(updatePageIndicator, 600);
         updatePageIndicator();
@@ -3006,7 +3006,7 @@
         try {
             const saved = localStorage.getItem('cycu_theme_settings');
             if (saved) return Object.assign({}, DEFAULT_THEME_SETTINGS, JSON.parse(saved));
-        } catch (e) {}
+        } catch (e) { }
         return Object.assign({}, DEFAULT_THEME_SETTINGS);
     }
 
