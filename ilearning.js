@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.1
+// @version      2.2.2
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 護眼深色模式、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
@@ -415,9 +415,8 @@
             pointer-events: none !important;
         }
 
-        /* 劇院全螢幕佈局：精準覆蓋主檢視區域，保持 viewerContainer 正常內部滾動與坐標 */
-        body.cycu-pdf-theater-mode #body-wrapper,
-        body.cycu-pdf-theater-mode #content-wrapper {
+        /* 劇院全螢幕佈局：精準覆蓋主檢視區域，保持 content-wrapper 正常內部滾動與坐標 */
+        body.cycu-pdf-theater-mode #body-wrapper {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
@@ -431,7 +430,30 @@
             border: none !important;
             background: #18181b !important;
             max-width: none !important;
-            flex: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        body.cycu-pdf-theater-mode #content-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            background: #18181b !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            flex: 1 1 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        body.cycu-pdf-theater-mode #viewer {
+            margin: 20px auto 80px auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
         }
 
         body.cycu-pdf-theater-mode iframe,
@@ -2398,6 +2420,19 @@
         } catch (error) { showToast(`❌ 出錯了: ${error.message}`, true); }
     }
 
+    // 自動修復先前因 Bug 導致 localStorage 寫入的無效 NaN scale
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.endsWith('/scale')) {
+                const val = localStorage.getItem(k);
+                if (val === 'NaN' || isNaN(parseFloat(val))) {
+                    localStorage.setItem(k, '1');
+                }
+            }
+        }
+    } catch (e) { }
+
     function getNativePageInfo() {
         let current = 1;
         let total = 1;
@@ -2408,9 +2443,9 @@
                 return { current, total, pageInput: null };
             }
         } catch (e) { }
-        const pageInput = document.querySelector('#pdfannotator_index input[type="number"], #pageNumber, .pageNumber, input[class*="page" i]');
+        const pageInput = document.getElementById('currentPage') || document.querySelector('#pdfannotator_index input[type="number"], #pageNumber, .pageNumber, input[class*="page" i]');
         if (pageInput) current = parseInt(pageInput.value, 10) || 1;
-        const numPagesEl = document.querySelector('#numPages, .numPages, span[id*="numPages" i], span[class*="total" i]');
+        const numPagesEl = document.getElementById('sumPages') || document.querySelector('#numPages, .numPages, span[id*="numPages" i], span[id*="sumPages" i], span[class*="total" i]');
         if (numPagesEl) {
             total = parseInt(numPagesEl.textContent.replace(/[^0-9]/g, ''), 10) || 1;
         } else if (pageInput && pageInput.parentElement) {
@@ -2428,7 +2463,7 @@
                 return true;
             }
         } catch (e) { }
-        const btn = document.querySelector('#previous') || document.querySelector('#pdfannotator_prev') || document.querySelector('.pdfannotator-prev') || document.querySelector('button[class*="prev" i]');
+        const btn = document.getElementById('prevPage') || document.querySelector('#previous') || document.querySelector('#pdfannotator_prev') || document.querySelector('.pdfannotator-prev') || document.querySelector('button[class*="prev" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
         if (info.pageInput && info.current > 1) {
@@ -2446,7 +2481,7 @@
                 return true;
             }
         } catch (e) { }
-        const btn = document.querySelector('#next') || document.querySelector('#pdfannotator_next') || document.querySelector('.pdfannotator-next') || document.querySelector('button[class*="next" i]');
+        const btn = document.getElementById('nextPage') || document.querySelector('#next') || document.querySelector('#pdfannotator_next') || document.querySelector('.pdfannotator-next') || document.querySelector('button[class*="next" i]');
         if (btn) { btn.click(); return true; }
         const info = getNativePageInfo();
         if (info.pageInput && info.current < info.total) {
@@ -2464,7 +2499,7 @@
                 return;
             }
         } catch (e) { }
-        const btn = document.getElementById('zoomIn') || document.querySelector('#pdfannotator_zoomin') || document.querySelector('button[class*="zoomin" i]');
+        const btn = document.getElementById('scalePlus') || document.getElementById('zoomIn') || document.querySelector('#pdfannotator_zoomin') || document.querySelector('button[class*="zoomin" i]');
         if (btn) btn.click();
     }
 
@@ -2475,7 +2510,7 @@
                 return;
             }
         } catch (e) { }
-        const btn = document.getElementById('zoomOut') || document.querySelector('#pdfannotator_zoomout') || document.querySelector('button[class*="zoomout" i]');
+        const btn = document.getElementById('scaleMinus') || document.getElementById('zoomOut') || document.querySelector('#pdfannotator_zoomout') || document.querySelector('button[class*="zoomout" i]');
         if (btn) btn.click();
     }
 
@@ -2486,10 +2521,35 @@
                 return;
             }
         } catch (e) { }
-        const scaleSelect = document.getElementById('scaleSelect') || document.querySelector('select[class*="scale" i]');
-        if (scaleSelect) {
-            scaleSelect.value = 'page-width';
-            scaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+        const scaleSelect = document.querySelector('.toolbar select.scale, select[class*="scale" i]');
+        if (scaleSelect && scaleSelect.options && scaleSelect.options.length > 0) {
+            const contentWrapper = document.getElementById('content-wrapper') || document.body;
+            const availableWidth = contentWrapper.clientWidth || window.innerWidth;
+            const firstPage = document.querySelector('#viewer .page');
+            let basePageWidth = 600;
+            if (firstPage && firstPage.clientWidth > 0) {
+                const cur = parseFloat(scaleSelect.value) || 1;
+                basePageWidth = firstPage.clientWidth / cur;
+            }
+            const idealScale = Math.max(0.5, Math.min(2.0, (availableWidth - 80) / basePageWidth));
+
+            let bestVal = scaleSelect.options[0].value;
+            let minDiff = Infinity;
+            for (let i = 0; i < scaleSelect.options.length; i++) {
+                const optVal = parseFloat(scaleSelect.options[i].value);
+                if (!isNaN(optVal)) {
+                    const diff = Math.abs(optVal - idealScale);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        bestVal = scaleSelect.options[i].value;
+                    }
+                }
+            }
+            if (scaleSelect.value !== bestVal) {
+                scaleSelect.value = bestVal;
+                scaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
         }
     }
 
@@ -2821,7 +2881,6 @@
                 showToast("🎬 已進入 PDF 劇院全螢幕（可按鍵盤 F 或 Esc 退出）");
 
                 setTimeout(() => {
-                    nativeZoomFit();
                     window.dispatchEvent(new Event('resize'));
                 }, 150);
             } else {
@@ -2836,7 +2895,6 @@
                 btnFocus.classList.remove('cycu-pdf-btn-active');
                 showToast("🔍 已退出全螢幕");
                 setTimeout(() => {
-                    nativeZoomFit();
                     window.dispatchEvent(new Event('resize'));
                 }, 150);
             }
@@ -2897,6 +2955,13 @@
         // 頁碼與縮放事件
         const updatePageIndicator = () => {
             try {
+                // 自動修復損壞的 scale 避免白畫面
+                const scaleSelect = document.querySelector('.toolbar select.scale, select[class*="scale" i]');
+                if (scaleSelect && (isNaN(parseFloat(scaleSelect.value)) || !scaleSelect.value)) {
+                    scaleSelect.value = '1';
+                    scaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
                 const info = getNativePageInfo();
                 if (info) {
                     const totalStr = info.total > 1 ? info.total : '--';
