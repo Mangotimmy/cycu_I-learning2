@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.6
-// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
+// @version      2.2.8
+// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔與圖片Base64內嵌(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
@@ -1983,6 +1983,7 @@
         if (document.getElementById('cycu-enhanced-toolbox')) return;
         const container = document.querySelector('.course-content') || document.querySelector('#region-main') || document.querySelector('.weeks') || document.querySelector('.topics');
         if (container) {
+            const courseId = getCourseId();
             const card = document.createElement('div');
             card.id = 'cycu-enhanced-toolbox';
             card.style.cssText = "margin-bottom:20px; padding:0;";
@@ -1999,6 +2000,25 @@
                             <button id="cycu-btn-pack-menu" style="display:flex; align-items:center; justify-content:center; gap:5px; padding:10px; border-radius:10px; border:none; background:#10b981; color:white; font-weight:700; font-size:12px; cursor:pointer; box-shadow:0 3px 8px rgba(16,185,129,0.22);">📦 依類型快打</button>
                             <button id="cycu-btn-theme-settings" style="display:flex; align-items:center; justify-content:center; gap:5px; padding:10px; border-radius:10px; border:none; background:linear-gradient(135deg, #ec4899, #8b5cf6); color:white; font-weight:700; font-size:12px; cursor:pointer; box-shadow:0 3px 8px rgba(139,92,246,0.25);">🎨 自訂外觀與色彩</button>
                         </div>
+
+                        ${courseId ? `
+                        <div id="cycu-toolbox-activities-bar" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:8px 12px; background:rgba(99,102,241,0.06); border-radius:10px; border:1px solid rgba(99,102,241,0.15); font-size:12px;">
+                            <span style="font-weight:700; color:#4f46e5; display:inline-flex; align-items:center; gap:4px;">
+                                📌 課程活動捷徑:
+                            </span>
+                            <a href="https://ilearning.cycu.edu.tw/mod/assign/index.php?id=${courseId}" style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; background:white; color:#4f46e5; font-weight:600; text-decoration:none; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(0,0,0,0.04); transition:all 0.15s;" title="作業總覽清單">
+                                <img src="${config['作業']?.logo || ''}" width="15" height="15" style="vertical-align:middle;"> 作業
+                            </a>
+                            <a href="https://ilearning.cycu.edu.tw/mod/forum/index.php?id=${courseId}" style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; background:white; color:#4f46e5; font-weight:600; text-decoration:none; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(0,0,0,0.04); transition:all 0.15s;" title="討論區總覽清單">
+                                <img src="${config['討論區']?.logo || ''}" width="15" height="15" style="vertical-align:middle;"> 討論區
+                            </a>
+                            <a href="https://ilearning.cycu.edu.tw/course/resources.php?id=${courseId}" style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; background:white; color:#4f46e5; font-weight:600; text-decoration:none; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(0,0,0,0.04); transition:all 0.15s;" title="全部資源教材清單">
+                                <img src="${config['檔案']?.logo || ''}" width="15" height="15" style="vertical-align:middle;"> 資源
+                            </a>
+                            <a href="https://ilearning.cycu.edu.tw/mod/quiz/index.php?id=${courseId}" style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; background:white; color:#4f46e5; font-weight:600; text-decoration:none; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(0,0,0,0.04); transition:all 0.15s;" title="測驗小考總覽清單">
+                                <span style="font-size:13px;">⏱️</span> 測驗
+                            </a>
+                        </div>` : ''}
 
                         <div id="cycu-pack-options" style="display:none; flex-direction:column; gap:8px; padding:12px; border-radius:10px; border:1px solid var(--cycu-card-border, #cbd5e1); background:var(--cycu-card-bg, #f1f5f9);">
                             <span style="font-size:12px; font-weight:bold; color:inherit;">請勾選要打包的教材類型：</span>
@@ -2304,10 +2324,135 @@
         document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
     }
 
+    function getCourseId() {
+        try {
+            if (window.M && window.M.cfg && window.M.cfg.courseId && window.M.cfg.courseId != 1) {
+                return String(window.M.cfg.courseId);
+            }
+        } catch (e) { }
+
+        const bodyMatch = document.body?.className?.match(/\bcourse-(\d+)\b/); if (bodyMatch && bodyMatch[1] !== '1') return bodyMatch[1];
+        if (window.location.href.includes('/course/')) { const urlParams = new URLSearchParams(window.location.search);
+            const paramId = urlParams.get('id');
+            if (/^\d+$/.test(paramId) && paramId !== '1') return paramId;
+        }
+
+        const m = window.location.href.match(/course\/view\.php\?id=(\d+)/);
+
+        if (m && m[1] !== '1') return m[1];
+
+        const breadcrumbLink = document.querySelector('.breadcrumb a[href*="course/view.php?id="], a[href*="/course/view.php?id="]');
+        if (breadcrumbLink) {
+            const bm = breadcrumbLink.href.match(/id=(\d+)/);
+            if (bm) return bm[1];
+        }
+        return null;
+    }
+
+    function injectMissingActivityBlock() {
+        const courseId = getCourseId();
+        if (!courseId) return;
+
+        const assignLogo = config['作業']?.logo || 'https://ilearning.cycu.edu.tw/theme/image.php/boost_union/assign/1/monologo?filtericon=1';
+        const forumLogo = config['討論區']?.logo || 'https://ilearning.cycu.edu.tw/theme/image.php/boost_union/forum/1/monologo?filtericon=1';
+        const resourceLogo = config['檔案']?.logo || 'https://ilearning.cycu.edu.tw/theme/image.php/boost_union/resource/1/monologo?filtericon=1';
+        const quizLogo = 'https://ilearning.cycu.edu.tw/theme/image.php/boost_union/quiz/1/monologo?filtericon=1';
+
+        // 1. 補充右側抽屜區塊欄（#block-region-side-pre）：若此課程未被老師加入「活動」區塊，則自動補全
+        let sidePre = document.getElementById('block-region-side-pre');
+        if (!sidePre) {
+            const drawerBlocksContent = document.querySelector('#theme_boost-drawers-blocks .drawercontent');
+            if (drawerBlocksContent) {
+                const aside = document.createElement('aside');
+                aside.id = 'block-region-side-pre';
+                aside.className = 'block-region';
+                aside.setAttribute('data-blockregion', 'side-pre');
+                drawerBlocksContent.appendChild(aside);
+                sidePre = aside;
+            }
+        }
+
+        if (sidePre && !document.getElementById('cycu-injected-activity-block')) {
+            const hasExisting = sidePre.querySelector('.block_activity_modules, a[href*="course/resources.php"], a[href*="mod/assign/index.php"], a[href*="mod/forum/index.php"]');
+            if (!hasExisting) {
+                const section = document.createElement('section');
+                section.id = 'cycu-injected-activity-block';
+                section.className = 'block_activity_modules block card mb-3';
+                section.setAttribute('role', 'region');
+                section.setAttribute('aria-label', '活動');
+                section.innerHTML = `
+                    <div class="card-body p-3">
+                        <h5 class="card-title d-inline" style="font-weight:700; color:#1e293b; font-size:16px;">活動</h5>
+                        <div class="card-text content mt-3">
+                            <ul class="activity-list list-unstyled mb-0" style="display:flex; flex-direction:column; gap:10px; padding-left:0; list-style:none;">
+                                <li class="activity-item" style="display:flex; align-items:center;">
+                                    <a href="https://ilearning.cycu.edu.tw/mod/assign/index.php?id=${courseId}" class="d-flex align-items-center text-decoration-none" style="color:#6366f1; font-weight:600; font-size:14px; gap:8px;">
+                                        <img src="${assignLogo}" width="18" height="18" style="vertical-align:middle;">
+                                        <span>作業</span>
+                                    </a>
+                                </li>
+                                <li class="activity-item" style="display:flex; align-items:center;">
+                                    <a href="https://ilearning.cycu.edu.tw/mod/forum/index.php?id=${courseId}" class="d-flex align-items-center text-decoration-none" style="color:#6366f1; font-weight:600; font-size:14px; gap:8px;">
+                                        <img src="${forumLogo}" width="18" height="18" style="vertical-align:middle;">
+                                        <span>討論區</span>
+                                    </a>
+                                </li>
+                                <li class="activity-item" style="display:flex; align-items:center;">
+                                    <a href="https://ilearning.cycu.edu.tw/course/resources.php?id=${courseId}" class="d-flex align-items-center text-decoration-none" style="color:#6366f1; font-weight:600; font-size:14px; gap:8px;">
+                                        <img src="${resourceLogo}" width="18" height="18" style="vertical-align:middle;">
+                                        <span>資源</span>
+                                    </a>
+                                </li>
+                                <li class="activity-item" style="display:flex; align-items:center;">
+                                    <a href="https://ilearning.cycu.edu.tw/mod/quiz/index.php?id=${courseId}" class="d-flex align-items-center text-decoration-none" style="color:#6366f1; font-weight:600; font-size:14px; gap:8px;">
+                                        <img src="${quizLogo}" width="18" height="18" style="vertical-align:middle;">
+                                        <span>測驗</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                sidePre.insertBefore(section, sidePre.firstChild);
+            }
+        }
+
+        // 2. 補充左側大綱目錄抽屜頂部（#theme_boost-drawers-courseindex）
+        const courseIndexContent = document.getElementById('courseindex-content') || document.querySelector('#theme_boost-drawers-courseindex .drawercontent');
+        if (courseIndexContent && !document.getElementById('cycu-courseindex-activity-block')) {
+            const hasExistingInIndex = courseIndexContent.querySelector('a[href*="course/resources.php"], a[href*="mod/assign/index.php"]');
+            if (!hasExistingInIndex) {
+                const indexBlock = document.createElement('div');
+                indexBlock.id = 'cycu-courseindex-activity-block';
+                indexBlock.style.cssText = "padding:10px 14px; margin:8px 12px 14px 12px; background:rgba(99,102,241,0.06); border-radius:12px; border:1px solid rgba(99,102,241,0.15);";
+                indexBlock.innerHTML = `
+                    <div style="font-weight:700; font-size:13px; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+                        <span>⚡ 課程活動總覽</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <a href="https://ilearning.cycu.edu.tw/mod/assign/index.php?id=${courseId}" style="display:flex; align-items:center; gap:6px; color:#4f46e5; text-decoration:none; font-size:12px; font-weight:600; padding:4px 8px; border-radius:6px; background:white; border:1px solid #e0e7ff;">
+                            <img src="${assignLogo}" width="15" height="15"> 作業列表
+                        </a>
+                        <a href="https://ilearning.cycu.edu.tw/mod/forum/index.php?id=${courseId}" style="display:flex; align-items:center; gap:6px; color:#4f46e5; text-decoration:none; font-size:12px; font-weight:600; padding:4px 8px; border-radius:6px; background:white; border:1px solid #e0e7ff;">
+                            <img src="${forumLogo}" width="15" height="15"> 討論區總覽
+                        </a>
+                        <a href="https://ilearning.cycu.edu.tw/course/resources.php?id=${courseId}" style="display:flex; align-items:center; gap:6px; color:#4f46e5; text-decoration:none; font-size:12px; font-weight:600; padding:4px 8px; border-radius:6px; background:white; border:1px solid #e0e7ff;">
+                            <img src="${resourceLogo}" width="15" height="15"> 全部資源教材
+                        </a>
+                        <a href="https://ilearning.cycu.edu.tw/mod/quiz/index.php?id=${courseId}" style="display:flex; align-items:center; gap:6px; color:#4f46e5; text-decoration:none; font-size:12px; font-weight:600; padding:4px 8px; border-radius:6px; background:white; border:1px solid #e0e7ff;">
+                            <img src="${quizLogo}" width="15" height="15"> 測驗小考
+                        </a>
+                    </div>
+                `;
+                courseIndexContent.insertBefore(indexBlock, courseIndexContent.firstChild);
+            }
+        }
+    }
+
     function getItems() {
         const result = {};
-        const courseIdMatch = window.location.href.match(/course\/view\.php\?id=(\d+)/);
-        const courseId = courseIdMatch ? courseIdMatch[1] : null;
+
+        const courseId = getCourseId();
         if (!courseId) return { items: {}, sections: [] };
 
         let sections = [];
@@ -2442,16 +2587,27 @@
                 if (sortOrder === 'asc') otherWeeks.sort((a, b) => a - b);
                 else otherWeeks.sort((a, b) => b - a);
                 let sortedWeeks = week0.concat(otherWeeks);
+                const courseId = getCourseId();
+                let overviewBtn = '';
+                if (courseId) {
+                    if (modname === "作業") {
+                        overviewBtn = `<a href="https://ilearning.cycu.edu.tw/mod/assign/index.php?id=${courseId}" class="btn btn-sm btn-outline-primary ms-auto" style="pointer-events:auto; font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600; text-decoration:none; margin-right:8px; display:inline-flex; align-items:center; gap:3px; background:white;" title="前往作業總覽清單" onclick="event.stopPropagation();">作業總覽 ↗</a>`;
+                    } else if (modname === "討論區") {
+                        overviewBtn = `<a href="https://ilearning.cycu.edu.tw/mod/forum/index.php?id=${courseId}" class="btn btn-sm btn-outline-primary ms-auto" style="pointer-events:auto; font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600; text-decoration:none; margin-right:8px; display:inline-flex; align-items:center; gap:3px; background:white;" title="前往討論區總覽" onclick="event.stopPropagation();">討論區總覽 ↗</a>`;
+                    } else if (modname === "檔案") {
+                        overviewBtn = `<a href="https://ilearning.cycu.edu.tw/course/resources.php?id=${courseId}" class="btn btn-sm btn-outline-primary ms-auto" style="pointer-events:auto; font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600; text-decoration:none; margin-right:8px; display:inline-flex; align-items:center; gap:3px; background:white;" title="前往資源總覽清單" onclick="event.stopPropagation();">資源總覽 ↗</a>`;
+                    }
+                }
 
                 let sectionHTML = `
                 <div class="section-item">
-                    <div class="course-section-header d-flex cycu-accordion-header">
-                        <div class="d-flex align-items-center position-relative w-100" style="pointer-events:none;">
+                    <div class="course-section-header d-flex cycu-accordion-header" style="justify-content:space-between; align-items:center;">
+                        <div class="d-flex align-items-center position-relative" style="pointer-events:none; flex:1;">
                             <a role="button" class="btn btn-icon me-2 icons-collapse-expand justify-content-center collapsed cycu-toggle-btn" href="#side-coursecontentcollapse${sectionNum}">
                                 <span class="collapsed-icon p-1"><i class="icon fa fa-chevron-right fa-fw"></i></span>
                                 <span class="expanded-icon p-1"><i class="icon fa fa-chevron-down fa-fw"></i></span>
                             </a>
-                            <h3 class="h5 sectionname mb-0 w-100" style="margin-left: 6px;">${escapeHtml(config[modname]?.title || modname)}</h3>
+                            <h3 class="h5 sectionname mb-0" style="margin-left: 6px;">${escapeHtml(config[modname]?.title || modname)}</h3>${overviewBtn}
                         </div>
                     </div>
                     <div id="side-coursecontentcollapse${sectionNum}" class="content collapse cycu-collapse-content">
@@ -2779,26 +2935,87 @@
                         const pageText = await pageResp.text();
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(pageText, 'text/html');
-                        const mainContent = doc.querySelector('[role="main"]') || 
-                                           doc.querySelector('.box.py-3.generalbox') || 
+
+                        // 核心內容選取：優先鎖定 Moodle 頁面專屬的核心內容框 (.generalbox)
+                        let mainContent = doc.querySelector('.box.py-3.generalbox') || 
+                                           doc.querySelector('[role="main"] .generalbox') || 
+                                           doc.querySelector('.mod_page .generalbox') || 
+                                           doc.querySelector('.no-overflow') || 
+                                           doc.querySelector('[role="main"]') || 
                                            doc.querySelector('#region-main') || 
                                            doc.body;
+
+                        // 提取標題與最後修改時間
+                        const pageTitle = escapeHtml(file.name);
+                        const headingEl = doc.querySelector('.page-header-headings h1, [role="main"] h2, h2.title, h2');
+                        const displayHeading = headingEl ? headingEl.textContent.trim() : file.name;
+                        const modifiedEl = doc.querySelector('.modified, .activity-information, [data-region="activity-information"]');
+                        const modifiedText = modifiedEl ? modifiedEl.textContent.trim().replace(/\s+/g, ' ') : '';
+
                         if (mainContent) {
-                            mainContent.querySelectorAll('nav, .sr-only, .accesshide, .activity-navigation, .mform, button, input[type="submit"], .urlworkaround').forEach(el => el.remove());
-                            mainContent.querySelectorAll('img').forEach(img => {
-                                const src = img.getAttribute('src');
-                                if (src && !src.startsWith('data:') && !src.startsWith('http')) {
-                                    try { img.src = new URL(src, file.url).href; } catch (e) { }
+                            // 1. 徹底清除所有 script、link、style、iframe、object、form 等可能引起登入重定向或非離線相依的元素
+                            mainContent.querySelectorAll('script, link, style, iframe, object, embed, noscript, meta, nav, header, footer, .sr-only, .accesshide, .activity-navigation, .mform, button, input, select, textarea, form, .local-accessibility-panel, .local-accessibility-buttoncontainer, #user-notifications, .urlworkaround, .continuebutton, .singlebutton').forEach(el => el.remove());
+
+                            // 2. 移除所有 HTML 標籤上的 inline 事件屬性 (onload, onerror, onclick 等) 與 javascript: 虛擬連結，避免離線執行錯誤
+                            mainContent.querySelectorAll('*').forEach(el => {
+                                for (const attr of Array.from(el.attributes)) {
+                                    const attrName = attr.name.toLowerCase();
+                                    if (attrName.startsWith('on') || (attrName === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:'))) {
+                                        el.removeAttribute(attr.name);
+                                    }
                                 }
                             });
+
+                            // 3. 圖片轉 Base64 內嵌：因為 pluginfile.php 嚴格需要 iLearning 登入 Cookie，離線或無登入態無法讀取。
+                            // 在下載當下即將所有圖片下載並轉為 data:image 內嵌，實現 100% 離線免登入檢視！
+                            const imgList = Array.from(mainContent.querySelectorAll('img'));
+                            for (const img of imgList) {
+                                let src = img.getAttribute('src');
+                                if (!src) continue;
+                                try {
+                                    if (!src.startsWith('data:') && !src.startsWith('http')) {
+                                        src = new URL(src, file.url).href;
+                                    }
+                                    if (src.startsWith('http')) {
+                                        const imgResp = await fetch(src, { credentials: 'include' });
+                                        if (imgResp.ok) {
+                                            const imgBlob = await imgResp.blob();
+                                            const base64Data = await new Promise((res) => {
+                                                const reader = new FileReader();
+                                                reader.onload = () => res(reader.result);
+                                                reader.onerror = () => res(src);
+                                                reader.readAsDataURL(imgBlob);
+                                            });
+                                            img.setAttribute('src', base64Data);
+                                            img.removeAttribute('srcset');
+                                            img.removeAttribute('loading');
+                                        } else {
+                                            img.setAttribute('src', src);
+                                        }
+                                    }
+                                } catch (imgErr) {
+                                    img.setAttribute('src', src);
+                                }
+                            }
+
+                            // 4. 超連結修復：轉為絕對網址並在新分頁開啟，若指向 pluginfile 檔案附註提示
                             mainContent.querySelectorAll('a').forEach(a => {
                                 const href = a.getAttribute('href');
-                                if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('#')) {
-                                    try { a.href = new URL(href, file.url).href; } catch (e) { }
+                                if (href) {
+                                    if (!href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('#') && !href.startsWith('data:')) {
+                                        try { a.href = new URL(href, file.url).href; } catch (e) { }
+                                    }
+                                    a.setAttribute('target', '_blank');
+                                    a.setAttribute('rel', 'noopener noreferrer');
+                                    if (a.href.includes('pluginfile.php')) {
+                                        a.title = (a.title ? a.title + " " : "") + "(注意：此為 iLearning 線上檔案，下載需登入中原帳號)";
+                                    }
                                 }
                             });
                         }
-                        const pageTitle = escapeHtml(file.name);
+
+                        const renderedContent = mainContent ? mainContent.innerHTML.trim() : `<p>${pageTitle}</p>`;
+
                         htmlContent = `<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -2806,23 +3023,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${pageTitle}</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 860px; margin: 30px auto; padding: 20px; background: #f8fafc; }
-        .page-container { background: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
-        h1.title { color: #0f172a; border-bottom: 2px solid #3b82f6; padding-bottom: 12px; margin-bottom: 20px; font-size: 22px; }
-        .meta-info { font-size: 12px; color: #64748b; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
-        img { max-width: 100%; height: auto; border-radius: 6px; }
-        table { border-collapse: collapse; width: 100%; margin: 16px 0; }
-        th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
-        th { background: #f1f5f9; }
-        a { color: #2563eb; text-decoration: underline; }
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background: var(--bg-page);
+            margin: 0;
+            padding: 24px 16px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .top-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .badge-offline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #10b981;
+            background: #ecfdf5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #a7f3d0;
+        }
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-print {
+            background: var(--primary);
+            color: #ffffff;
+        }
+        .btn-print:hover {
+            background: var(--primary-hover);
+        }
+        .btn-link {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid var(--border);
+        }
+        .btn-link:hover {
+            background: #e2e8f0;
+        }
+        .card-main {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 36px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        h1.page-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 0;
+            margin-bottom: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e0e7ff;
+            line-height: 1.3;
+        }
+        .meta-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .content {
+            font-size: 15px;
+            color: #334155;
+            line-height: 1.8;
+            word-break: break-word;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 14px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: block;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .content th, .content td {
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            text-align: left;
+        }
+        .content th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .content tr:nth-child(even) {
+            background: #fdfdfe;
+        }
+        .content a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .content a:hover {
+            color: var(--primary-hover);
+        }
+        .content pre, .content code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .content pre {
+            padding: 14px;
+            overflow-x: auto;
+            border-radius: 8px;
+        }
+        .content blockquote {
+            border-left: 4px solid var(--primary);
+            margin: 16px 0;
+            padding: 8px 16px;
+            background: #f8fafc;
+            color: #475569;
+            border-radius: 0 8px 8px 0;
+        }
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+            .top-toolbar {
+                display: none !important;
+            }
+            .card-main {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+            a {
+                text-decoration: none !important;
+                color: #000000 !important;
+            }
+            img, table, pre, blockquote {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="page-container">
-        <h1 class="title">${pageTitle}</h1>
-        <div class="meta-info">中原大學 iLearning 教學平台 | 原始網址: <a href="${file.url}" target="_blank">${escapeHtml(file.url)}</a></div>
-        <div class="content">
-            ${mainContent ? mainContent.innerHTML : pageText}
+    <div class="container">
+        <div class="top-toolbar">
+            <span class="badge-offline">✅ 100% 離線完整存檔 (無需登入)</span>
+            <div class="toolbar-actions">
+                <button type="button" class="btn btn-print" onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+                <a href="${file.url}" target="_blank" rel="noopener noreferrer" class="btn btn-link">🌐 原站連結</a>
+            </div>
+        </div>
+        <div class="card-main">
+            <h1 class="page-title">${escapeHtml(displayHeading)}</h1>
+            <div class="meta-info">
+                <span class="meta-item">🏫 中原大學 iLearning 2.0</span>
+                ${modifiedText ? `<span class="meta-item">🕒 ${escapeHtml(modifiedText)}</span>` : ''}
+                <span class="meta-item">🔗 <a href="${file.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(file.url)}</a></span>
+            </div>
+            <div class="content">
+                ${renderedContent}
+            </div>
         </div>
     </div>
 </body>
@@ -4623,6 +5041,11 @@
         initThemeEngine();
         setTimeout(polishAnnouncementContainers, 300);
         setTimeout(polishAnnouncementContainers, 1500);
+        if (url.includes('/course/') || url.includes('/mod/')) {
+            injectMissingActivityBlock();
+            setTimeout(injectMissingActivityBlock, 600);
+            setTimeout(injectMissingActivityBlock, 1500);
+        }
 
         if (url.includes('/mod/pdfannotator/view.php')) {
             const fullUrl = extractFullUrl();
