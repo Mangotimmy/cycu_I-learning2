@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.4
+// @version      2.2.5
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
@@ -224,7 +224,10 @@
             }, 250);
         };
 
-        toast.onclick = dismiss;
+        const toastX = toast.querySelector('#dl-toast-x');
+        if (toastX) toastX.onclick = (e) => { e.stopPropagation(); dismiss(); };
+        toast.onclick = (duration > 0) ? dismiss : null;
+        toast.style.cursor = (duration > 0) ? 'pointer' : 'default';
 
         if (toast._timer) clearTimeout(toast._timer);
         if (duration > 0) {
@@ -2866,16 +2869,44 @@
                         const zipBlob = zip.generateBlob();
                         const blobUrl = URL.createObjectURL(zipBlob);
                         const fileName = `${document.title.split('|')[0].trim()}_部分教材打包(${successCount}檔).zip`;
+                        toast.onclick = null;
+                        if (toast._timer) { clearTimeout(toast._timer); toast._timer = null; }
+                        toast.style.cursor = 'default';
                         toast.innerHTML = `
                             <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
-                                <span style="font-weight:700; font-size:13px; color:#10b981;">🎉 部分打包完成！(${successCount}/${total})</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:700; font-size:13px; color:#10b981;">🎉 部分打包完成！(${successCount}/${total})</span>
+                                    <span id="dl-close-x-partial" style="cursor:pointer; font-size:14px; color:#94a3b8; font-weight:bold; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.15);" title="關閉視窗">✕</span>
+                                </div>
                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px;">
                                     <a href="${blobUrl}" download="${fileName}" style="background:#10b981; color:white; padding:8px; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:12px;">直接下載</a>
                                     <button id="dl-ios-tab-partial" style="background:#f59e0b; color:white; padding:8px; border-radius:8px; border:none; font-weight:bold; text-align:center; font-size:12px; cursor:pointer;">iOS 分頁儲存</button>
                                 </div>
-                                <span id="dl-close-partial" style="font-size:10px; text-align:center; cursor:pointer; text-decoration:underline; color:#94a3b8;">關閉通知</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+                                    <span style="font-size:10px; color:#94a3b8;">✅ 檔案已就緒，視窗將保持開啟</span>
+                                    <span id="dl-close-partial" style="font-size:10px; text-align:right; cursor:pointer; text-decoration:underline; color:#cbd5e1;">關閉視窗</span>
+                                </div>
                             </div>`;
-                        toast.querySelector('#dl-close-partial').onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
+                        // 自動觸發下載 (無須手忙腳亂點擊按鈕，即刻開始儲存)
+                        try {
+                            const autoA = document.createElement('a');
+                            autoA.href = blobUrl;
+                            autoA.download = fileName;
+                            autoA.style.display = 'none';
+                            document.body.appendChild(autoA);
+                            autoA.click();
+                            setTimeout(() => autoA.remove(), 1000);
+                        } catch (dlErr) { }
+
+                        const closePartialToast = (e) => {
+                            if (e) e.stopPropagation();
+                            toast.style.opacity = '0';
+                            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
+                        };
+                        const closePartBtn = toast.querySelector('#dl-close-partial');
+                        if (closePartBtn) closePartBtn.onclick = closePartialToast;
+                        const closePartX = toast.querySelector('#dl-close-x-partial');
+                        if (closePartX) closePartX.onclick = closePartialToast;
                         toast.querySelector('#dl-ios-tab-partial').onclick = (e) => {
                             e.preventDefault();
                             const reader = new FileReader();
@@ -2905,16 +2936,25 @@
             const zipBlob = zip.generateBlob();
             const blobUrl = URL.createObjectURL(zipBlob);
             const fileName = `${document.title.split('|')[0].trim()}_教材打包.zip`;
+            toast.onclick = null;
+            if (toast._timer) { clearTimeout(toast._timer); toast._timer = null; }
+            toast.style.cursor = 'default';
 
             toast.style.backgroundColor = '#0f172a';
             toast.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
-                    <span style="font-weight:700; font-size:14px; color:#10b981;">🎉 打包完成！(${successCount}/${total})</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; font-size:14px; color:#10b981;">🎉 打包完成！(${successCount}/${total})</span>
+                        <span id="dl-close-x" style="cursor:pointer; font-size:14px; color:#94a3b8; font-weight:bold; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.15);" title="關閉視窗">✕</span>
+                    </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px;">
                         <a href="${blobUrl}" download="${fileName}" id="cycu-dl-btn" style="background:#10b981; color:white; padding:8px; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:12px;">直接下載</a>
                         <button id="dl-ios-tab" style="background:#f59e0b; color:white; padding:8px; border-radius:8px; border:none; font-weight:bold; text-align:center; font-size:12px; cursor:pointer;">iOS 開啟分頁儲存</button>
                     </div>
-                    <span id="dl-close" style="font-size:10px; text-align:center; cursor:pointer; text-decoration:underline; color:#94a3b8; margin-top:2px;">關閉通知視窗</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+                        <span style="font-size:10px; color:#94a3b8;">✅ 檔案已就緒，視窗將保持開啟</span>
+                        <span id="dl-close" style="font-size:10px; text-align:right; cursor:pointer; text-decoration:underline; color:#cbd5e1;">關閉視窗</span>
+                    </div>
                 </div>`;
 
             document.getElementById('dl-ios-tab').onclick = (e) => {
@@ -2931,8 +2971,28 @@
                 reader.readAsDataURL(zipBlob);
             };
 
-            document.getElementById('dl-close').onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
-            setTimeout(() => { if (toast.parentNode && toast.style.opacity !== '0') { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); } }, 5000);
+            // 自動觸發下載 (無須手忙腳亂點擊按鈕，即刻開始儲存)
+            try {
+                const autoA = document.createElement('a');
+                autoA.href = blobUrl;
+                autoA.download = fileName;
+                autoA.style.display = 'none';
+                document.body.appendChild(autoA);
+                autoA.click();
+                setTimeout(() => autoA.remove(), 1000);
+            } catch (dlErr) { }
+
+            // 保持視窗常駐開啟，提供使用者手動關閉
+            const closeFinishToast = (e) => {
+                if (e) e.stopPropagation();
+                toast.style.opacity = '0';
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
+            };
+            const dlCloseBtn = document.getElementById('dl-close');
+            if (dlCloseBtn) dlCloseBtn.onclick = closeFinishToast;
+            const dlCloseX = document.getElementById('dl-close-x');
+            if (dlCloseX) dlCloseX.onclick = closeFinishToast;
+
         } catch (error) { if (error.message !== 'DOWNLOAD_STOPPED') showToast(`❌ 出錯了: ${error.message}`, true); }
     }
 
