@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.5
+// @version      2.2.6
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
@@ -2006,6 +2006,8 @@
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="檔案" checked> 📝 文件 (PPT/Doc)</label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="資料夾" checked> 📁 資料夾</label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="PDF Annotation" checked> 📖 PDF 講義</label>
+                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="頁面" checked> 📄 課程頁面 / 文章</label>
+                                <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="網址"> 🔗 外部網址</label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:4px;"><input type="checkbox" class="cycu-pack-cb" value="超級影片"> 🎬 影片檔 <span style="color:#ef4444; font-size:10px; font-weight:bold;">(iOS 易閃退請勿勾)</span></label>
                             </div>
                             <button id="cycu-btn-start-pack" style="margin-top:2px; padding:8px; border-radius:8px; border:none; background:#0ea5e9; color:white; font-weight:700; font-size:12px; cursor:pointer;">🚀 確定，開始打包</button>
@@ -2098,7 +2100,9 @@
                             <button class="cycu-fs-filter-chip active" data-filter="all">全部</button>
                             <button class="cycu-fs-filter-chip" data-filter="PDF Annotation">📖 PDF</button>
                             <button class="cycu-fs-filter-chip" data-filter="檔案">📝 文件</button>
+                            <button class="cycu-fs-filter-chip" data-filter="頁面">📄 頁面</button>
                             <button class="cycu-fs-filter-chip" data-filter="資料夾">📁 資料夾</button>
+                            <button class="cycu-fs-filter-chip" data-filter="網址">🔗 網址</button>
                             <button class="cycu-fs-filter-chip" data-filter="超級影片">🎬 影片</button>
                         </div>
                     </div>
@@ -2172,7 +2176,7 @@
 
         const { items } = getItems();
         let allDownloadableFiles = [];
-        const supportedMods = ["檔案", "資料夾", "PDF Annotation", "超級影片"];
+        const supportedMods = ["檔案", "資料夾", "PDF Annotation", "頁面", "網址", "超級影片"];
         supportedMods.forEach(mod => {
             if (items[mod]) allDownloadableFiles.push(...items[mod]);
         });
@@ -2200,15 +2204,16 @@
             secBlock.className = 'cycu-fs-sec-block';
             secBlock.dataset.secNum = secNum;
 
+            const secTitle = files[0]?.sectionname || (secNum === 0 ? "課程公告" : `第 ${secNum} 週`);
             const secHeader = document.createElement('div');
             secHeader.style.cssText = "display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding-bottom:3px; border-bottom:1px solid #e2e8f0; font-size:12px; font-weight:700; color:#334155;";
             secHeader.innerHTML = `
                 <div style="display:flex; align-items:center; gap:5px;">
-                    <span>📌 ${secNum === 0 ? "課程公告" : `第 ${secNum} 週`}</span>
+                    <span>📌 ${escapeHtml(secTitle)}</span>
                     <span style="font-size:10px; color:#64748b; font-weight:500;">(${files.length} 檔)</span>
                 </div>
                 <label style="font-size:10px; color:#4f46e5; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:3px;">
-                    <input type="checkbox" class="cycu-fs-sec-all-cb" data-sec="${secNum}" checked> 本週全選
+                    <input type="checkbox" class="cycu-fs-sec-all-cb" data-sec="${secNum}" checked> 本區全選
                 </label>
             `;
             secBlock.appendChild(secHeader);
@@ -2224,8 +2229,10 @@
                 row.dataset.fileName = file.name.toLowerCase();
 
                 const isVideo = file.modname === "超級影片";
-                const badgeColor = file.modname === "PDF Annotation" ? "#ef4444" : (file.modname === "資料夾" ? "#f59e0b" : (isVideo ? "#8b5cf6" : "#3b82f6"));
-                const badgeLabel = file.modname === "PDF Annotation" ? "PDF" : (file.modname === "資料夾" ? "DIR" : (isVideo ? "MP4" : "FILE"));
+                const isPage = file.modname === "頁面";
+                const isUrl = file.modname === "網址";
+                const badgeColor = file.modname === "PDF Annotation" ? "#ef4444" : (file.modname === "資料夾" ? "#f59e0b" : (isVideo ? "#8b5cf6" : (isPage ? "#0ea5e9" : (isUrl ? "#14b8a6" : "#3b82f6"))));
+                const badgeLabel = file.modname === "PDF Annotation" ? "PDF" : (file.modname === "資料夾" ? "DIR" : (isVideo ? "MP4" : (isPage ? "PAGE" : (isUrl ? "URL" : "FILE"))));
 
                 row.innerHTML = `
                     <input type="checkbox" class="cycu-fs-item-checkbox" data-sec="${secNum}" data-file-info="${encodeURIComponent(JSON.stringify(file))}" ${isVideo ? '' : 'checked'} style="width:15px; height:15px; cursor:pointer; accent-color:#4f46e5;">
@@ -2314,9 +2321,9 @@
             if (lower.includes('resource') || lower.includes('file')) return "檔案";
             if (lower.includes('folder')) return "資料夾";
             if (lower.includes('supervideo')) return "超級影片";
-            if (lower.includes('url')) return "網址";
+            if (lower.includes('url') || lower.includes('網址') || lower.includes('連結')) return "網址";
             if (lower.includes('feedback')) return "回饋單";
-            if (lower.includes('page')) return "頁面";
+            if (lower.includes('page') || lower.includes('頁面') || lower.includes('文章') || lower.includes('網頁')) return "頁面";
             return modname;
         };
 
@@ -2336,6 +2343,8 @@
                                     if (item.modname === "子單元") continue;
                                     item.sectionid = main_section[item.sectionid];
                                     item.sectionnumber = sections.findIndex(s => s.id === item.sectionid);
+                                    const secObj = sections.find(s => s.id === item.sectionid);
+                                    if (secObj && secObj.name) item.sectionname = secObj.name.replace(/[\\/:*?"<>|]/g, '_').trim();
                                     const translatedModName = mapModNameToCategory(item.modname);
                                     if (!result[translatedModName]) result[translatedModName] = [];
                                     result[translatedModName].push(item);
@@ -2354,7 +2363,12 @@
                 if (link) {
                     const sectionLi = item.closest('li.section');
                     let secNum = 1;
-                    if (sectionLi && sectionLi.getAttribute('data-number')) secNum = parseInt(sectionLi.getAttribute('data-number'), 10);
+                    let secName = '';
+                    if (sectionLi) {
+                        if (sectionLi.getAttribute('data-number')) secNum = parseInt(sectionLi.getAttribute('data-number'), 10);
+                        const titleEl = sectionLi.querySelector('.sectionname, .section-title, h3, h4');
+                        if (titleEl) secName = titleEl.textContent.trim().replace(/[\\/:*?"<>|]/g, '_');
+                    }
 
                     let name = '未命名';
                     const nameEl = item.querySelector('.instancename');
@@ -2369,7 +2383,7 @@
                     const modname = mapModNameToCategory(rawModname);
                     const url = link.href;
                     if (!result[modname]) result[modname] = [];
-                    result[modname].push({ name, url, modname, sectionnumber: secNum });
+                    result[modname].push({ name, url, modname, sectionnumber: secNum, sectionname: secName });
                 }
             });
         }
@@ -2576,11 +2590,13 @@
         if (Array.isArray(selectedTypesOrFiles) && selectedTypesOrFiles.length > 0 && typeof selectedTypesOrFiles[0] === 'object') {
             totalFiles = selectedTypesOrFiles;
         } else {
-            const selectedTypes = selectedTypesOrFiles || ["檔案", "資料夾", "PDF Annotation"];
+            const selectedTypes = selectedTypesOrFiles || ["檔案", "資料夾", "PDF Annotation", "頁面"];
             const { items } = getItems();
             if (selectedTypes.includes("檔案") && items["檔案"]) totalFiles.push(...items["檔案"]);
             if (selectedTypes.includes("資料夾") && items["資料夾"]) totalFiles.push(...items["資料夾"]);
             if (selectedTypes.includes("PDF Annotation") && items["PDF Annotation"]) totalFiles.push(...items["PDF Annotation"]);
+            if (selectedTypes.includes("頁面") && items["頁面"]) totalFiles.push(...items["頁面"]);
+            if (selectedTypes.includes("網址") && items["網址"]) totalFiles.push(...items["網址"]);
             if (selectedTypes.includes("超級影片") && items["超級影片"]) totalFiles.push(...items["超級影片"]);
         }
 
@@ -2758,6 +2774,86 @@
                     } else if (file.modname === "資料夾") {
                         downloadUrl = file.url.replace(/view\.php/, 'download_folder.php');
                         fileExtension = ".zip";
+                    } else if (file.modname === "頁面") {
+                        const pageResp = await fetch(file.url, { credentials: 'include' });
+                        const pageText = await pageResp.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(pageText, 'text/html');
+                        const mainContent = doc.querySelector('[role="main"]') || 
+                                           doc.querySelector('.box.py-3.generalbox') || 
+                                           doc.querySelector('#region-main') || 
+                                           doc.body;
+                        if (mainContent) {
+                            mainContent.querySelectorAll('nav, .sr-only, .accesshide, .activity-navigation, .mform, button, input[type="submit"], .urlworkaround').forEach(el => el.remove());
+                            mainContent.querySelectorAll('img').forEach(img => {
+                                const src = img.getAttribute('src');
+                                if (src && !src.startsWith('data:') && !src.startsWith('http')) {
+                                    try { img.src = new URL(src, file.url).href; } catch (e) { }
+                                }
+                            });
+                            mainContent.querySelectorAll('a').forEach(a => {
+                                const href = a.getAttribute('href');
+                                if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('#')) {
+                                    try { a.href = new URL(href, file.url).href; } catch (e) { }
+                                }
+                            });
+                        }
+                        const pageTitle = escapeHtml(file.name);
+                        htmlContent = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${pageTitle}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 860px; margin: 30px auto; padding: 20px; background: #f8fafc; }
+        .page-container { background: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+        h1.title { color: #0f172a; border-bottom: 2px solid #3b82f6; padding-bottom: 12px; margin-bottom: 20px; font-size: 22px; }
+        .meta-info { font-size: 12px; color: #64748b; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
+        img { max-width: 100%; height: auto; border-radius: 6px; }
+        table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
+        th { background: #f1f5f9; }
+        a { color: #2563eb; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <h1 class="title">${pageTitle}</h1>
+        <div class="meta-info">中原大學 iLearning 教學平台 | 原始網址: <a href="${file.url}" target="_blank">${escapeHtml(file.url)}</a></div>
+        <div class="content">
+            ${mainContent ? mainContent.innerHTML : pageText}
+        </div>
+    </div>
+</body>
+</html>`;
+                        isHtmlRedirect = true;
+                        fileExtension = ".html";
+                    } else if (file.modname === "網址") {
+                        let targetUrl = file.url;
+                        try {
+                            const pageText = await (await fetch(file.url, { credentials: 'include' })).text();
+                            const urlMatch = pageText.match(/<div class="urlworkaround">\s*<a href="([^"]+)"/) ||
+                                             pageText.match(/window\.location\.replace\('([^']+)'\)/) ||
+                                             pageText.match(/<meta\s+http-equiv="refresh"\s+content="[^;]+;\s*url=([^"]+)"/i);
+                            if (urlMatch && urlMatch[1]) targetUrl = urlMatch[1].replace(/&amp;/g, '&');
+                        } catch (e) { }
+
+                        const pageTitle = escapeHtml(file.name);
+                        isHtmlRedirect = true;
+                        fileExtension = "_網址導向.html";
+                        htmlContent = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=${targetUrl}">
+    <title>${pageTitle}</title>
+</head>
+<body style="font-family:system-ui,-apple-system,sans-serif; text-align:center; padding-top:50px;">
+    <h2>正在為您導向至教材網址...</h2>
+    <p><a href="${targetUrl}">${targetUrl}</a></p>
+</body>
+</html>`;
                     } else if (file.modname === "超級影片") {
                         const pageText = await (await fetch(file.url, { credentials: 'include' })).text();
                         const mp4Match = pageText.match(/https:\/\/[^"]+\.mp4/);
@@ -2829,14 +2925,20 @@
                         fileExtension = "";
                     }
 
-                    zip.file((file.sectionnumber === 0 ? "公告 - " : `第${file.sectionnumber}週 - `) + safeName + fileExtension, fileData);
+                    const secPrefix = file.sectionname ? `${file.sectionname} - ` : (file.sectionnumber === 0 ? "公告 - " : `第${file.sectionnumber}週 - `);
+                    zip.file(secPrefix + safeName + fileExtension, fileData);
                     successCount++;
                 } catch (err) {
                     if ((err && err.message === "DOWNLOAD_STOPPED") || downloadController.isCancelled) {
                         break;
                     }
                 }
-            } /*
+            }
+            /*
+                        break;
+                    }
+                }
+            }
                         break;
                     }
                 }
@@ -2846,7 +2948,8 @@
 
 
 
-            */ if (downloadController.isCancelled) {
+            */
+            if (downloadController.isCancelled) {
                 if (successCount > 0) {
                     toast.style.backgroundColor = '#0f172a';
                     toast.innerHTML = `
