@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.3
-// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
+// @version      2.2.4
+// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
@@ -246,13 +246,13 @@
         .cycu-accordion-header:active { background: #f1f5f9; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 僅針對不需要 header 的資源/影片/PDF 隱藏，作業繳交頁面 (/mod/assign/) 絕對不隱藏 */
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) #page-header,
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) .page-context-header,
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) .breadcrumb { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; margin: 0 !important; padding: 0 !important; pointer-events: none !important; overflow: hidden !important; }
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) .activity-header:not(:has(#intro, .activity-description)) { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; margin: 0 !important; padding: 0 !important; pointer-events: none !important; overflow: hidden !important; }
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) #page { margin-top: 15px !important; }
-        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign) #region-main { padding-top: 0 !important; margin-top: 0 !important; }
+        /* 僅針對不需要 header 的資源/影片/PDF 隱藏，作業繳交頁面 (/mod/assign/) 與測驗小考頁面 (/mod/quiz/) 絕對不隱藏 */
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) #page-header,
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) .page-context-header,
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) .breadcrumb { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; margin: 0 !important; padding: 0 !important; pointer-events: none !important; overflow: hidden !important; }
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) .activity-header:not(:has(#intro, .activity-description)) { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; margin: 0 !important; padding: 0 !important; pointer-events: none !important; overflow: hidden !important; }
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) #page { margin-top: 15px !important; }
+        body.cycu-clean-mod-header:not(.cycu-assign-page):not(.path-mod-assign):not(.cycu-quiz-page):not(.path-mod-quiz) #region-main { padding-top: 0 !important; margin-top: 0 !important; }
 
         /* 作業繳交頁面 (Submit Page) 強制保留作業標題、說明內容 (#intro) 與繳交期限 */
         body.cycu-assign-page #page-header,
@@ -287,6 +287,221 @@
             margin-bottom: 20px !important;
             font-size: 14px !important;
             line-height: 1.7 !important;
+        }
+
+
+        /* 測驗小考頁面 (Quiz Page) 強制保留完整標題、麵包屑導航、作答期限、作答歷史與資訊說明 */
+        body.cycu-quiz-page #page-header,
+        body.cycu-quiz-page .activity-header,
+        body.cycu-quiz-page .activity-information,
+        body.cycu-quiz-page [data-region="activity-dates"],
+        body.cycu-quiz-page .breadcrumb,
+        body.cycu-quiz-page .page-context-header,
+        body.cycu-quiz-page .quizinfo,
+        body.cycu-quiz-page .quizreviewsummary,
+        body.cycu-quiz-page .quizattempt,
+        body.path-mod-quiz #page-header,
+        body.path-mod-quiz .activity-header,
+        body.path-mod-quiz .activity-information,
+        body.path-mod-quiz [data-region="activity-dates"],
+        body.path-mod-quiz .breadcrumb,
+        body.path-mod-quiz .page-context-header,
+        body.path-mod-quiz .quizinfo,
+        body.path-mod-quiz .quizreviewsummary,
+        body.path-mod-quiz .quizattempt {
+            display: block !important;
+            height: auto !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            overflow: visible !important;
+            margin: revert !important;
+            padding: revert !important;
+        }
+
+        body.cycu-quiz-page .activity-dates,
+        body.path-mod-quiz .activity-dates {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 10px 16px !important;
+            margin-top: 10px !important;
+            margin-bottom: 14px !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 16px !important;
+            font-size: 13px !important;
+            color: #334155 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+        }
+
+        body.cycu-quiz-page .quizinfo,
+        body.path-mod-quiz .quizinfo {
+            background: #eff6ff !important;
+            border-left: 4px solid #3b82f6 !important;
+            border-radius: 8px !important;
+            padding: 10px 14px !important;
+            margin-bottom: 16px !important;
+            font-weight: 600 !important;
+            color: #1e40af !important;
+            font-size: 13px !important;
+        }
+
+        body.cycu-quiz-page .quizinfo p,
+        body.path-mod-quiz .quizinfo p {
+            margin: 0 !important;
+        }
+
+        body.cycu-quiz-page .quizattempt,
+        body.path-mod-quiz .quizattempt {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 14px 18px !important;
+            margin-top: 18px !important;
+        }
+
+        body.cycu-quiz-page .generaltable.quizreviewsummary,
+        body.path-mod-quiz .generaltable.quizreviewsummary {
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            width: 100% !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+            border: 1px solid #e2e8f0 !important;
+            margin-bottom: 10px !important;
+        }
+
+        body.cycu-quiz-page .generaltable.quizreviewsummary th,
+        body.path-mod-quiz .generaltable.quizreviewsummary th {
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            font-weight: 700 !important;
+            padding: 8px 12px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            width: 120px !important;
+        }
+
+        body.cycu-quiz-page .generaltable.quizreviewsummary td,
+        body.path-mod-quiz .generaltable.quizreviewsummary td {
+            background: #ffffff !important;
+            color: #1e293b !important;
+            padding: 8px 12px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        /* 測驗專屬列印工具欄與浮動面板 */
+        #cycu-quiz-print-bar {
+            position: sticky !important;
+            top: 52px !important;
+            z-index: 9999 !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+            padding: 8px 16px !important;
+            margin-bottom: 16px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+        }
+
+        /* 試題列印專用樣式 (@media print) */
+        @media print {
+            body.cycu-print-no-answers .que .outcome,
+            body.cycu-print-no-answers .que .rightanswer,
+            body.cycu-print-no-answers .que .feedback,
+            body.cycu-print-no-answers .que .comment,
+            body.cycu-print-no-answers .que .generalfeedback,
+            body.cycu-print-no-answers .que .grading,
+            body.cycu-print-no-answers .que .state,
+            body.cycu-print-no-answers .que .grade,
+            body.cycu-print-no-answers .que .im-feedback {
+                display: none !important;
+            }
+
+            #cycu-quiz-print-bar,
+            .navbar,
+            .breadcrumb,
+            #usernavigation,
+            .drawer,
+            .drawer-toggles,
+            #page-footer,
+            #local-accessibility-buttoncontainer,
+            .local-accessibility-panel,
+            #cycu-video-assistant,
+            #cycu-pdf-assistant,
+            .quizattempt .continuebutton,
+            .singlebutton,
+            .questionflag,
+            .im-controls,
+            .comment-link,
+            .history,
+            .toast-wrapper,
+            #dl-toast,
+            #at-bubble,
+            #userwayAccessibilityIcon,
+            .userway-accessibility-icon,
+            .activity-navigation,
+            .d-print-none {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            body, #page, #page-wrapper, #topofscroll, #region-main-box, #region-main, #page-content {
+                background: white !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .que {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 8px !important;
+                padding: 12px 16px !important;
+                margin-bottom: 16px !important;
+                background: white !important;
+            }
+
+            .que .info {
+                border-bottom: 1px dashed #cbd5e1 !important;
+                padding-bottom: 4px !important;
+                margin-bottom: 8px !important;
+                font-size: 12px !important;
+                color: #64748b !important;
+            }
+
+            .que .qtext {
+                font-size: 14px !important;
+    
+                font-weight: 600 !important;
+                margin-bottom: 10px !important;
+                line-height: 1.6 !important;
+            }
+
+            .que .outcome, .que .rightanswer {
+                background: #f0fdf4 !important;
+                border: 1px solid #86efac !important;
+                border-radius: 6px !important;
+                padding: 6px 10px !important;
+                margin-top: 8px !important;
+                color: #15803d !important;
+                font-size: 12px !important;
+            }
+        }
+
+
+
+
         }
 
         body.cycu-pdf-focus-mode #page-header, body.cycu-pdf-focus-mode #usernavigation, body.cycu-pdf-focus-mode .navbar, body.cycu-pdf-focus-mode header, body.cycu-pdf-focus-mode .fixed-top, body.cycu-pdf-focus-mode #page-footer, body.cycu-pdf-focus-mode .breadcrumb, body.cycu-pdf-focus-mode #nav-drawer { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
@@ -2288,8 +2503,13 @@
         return `${m}m ${s.toString().padStart(2, '0')}s`;
     }
 
-    async function fetchWithProgress(url, options = {}, onProgress) {
-        const response = await fetch(url, options);
+    async function fetchWithProgress(url, options = {}, onProgress, controller = null) {
+        if (controller) await controller.waitIfPaused();
+        const fetchOptions = {
+            ...options,
+            signal: controller ? controller.abortController.signal : options.signal
+        };
+        const response = await fetch(url, fetchOptions);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const contentLength = response.headers.get('content-length');
@@ -2308,6 +2528,17 @@
         let currentSpeed = 0;
 
         while (true) {
+            if (controller) {
+                if (controller.isCancelled) {
+                    try { reader.cancel(); } catch (e) { }
+                    throw new Error("DOWNLOAD_STOPPED");
+                }
+                if (controller.isPaused) {
+                    await controller.waitIfPaused();
+                    lastTime = performance.now();
+                    lastLoaded = loaded;
+                }
+            }
             const { done, value } = await reader.read();
             if (done) break;
             chunks.push(value);
@@ -2356,6 +2587,47 @@
         const total = totalFiles.length;
         let successCount = 0;
 
+        const downloadController = {
+            isPaused: false,
+            isCancelled: false,
+            pauseResolver: null,
+            abortController: new AbortController(),
+            async waitIfPaused() {
+                if (this.isCancelled) throw new Error("DOWNLOAD_STOPPED");
+                while (this.isPaused && !this.isCancelled) {
+                    await new Promise(resolve => {
+                        this.pauseResolver = resolve;
+                    });
+                }
+                if (this.isCancelled) throw new Error("DOWNLOAD_STOPPED");
+            },
+            pause() {
+                if (this.isCancelled || this.isPaused) return;
+                this.isPaused = true;
+            },
+            resume() {
+                if (!this.isPaused) return;
+                this.isPaused = false;
+                if (this.pauseResolver) {
+                    const r = this.pauseResolver;
+                    this.pauseResolver = null;
+                    r();
+                }
+            },
+            stop() {
+                this.isCancelled = true;
+                this.isPaused = false;
+                if (this.pauseResolver) {
+                    const r = this.pauseResolver;
+                    this.pauseResolver = null;
+                    r();
+                }
+                try {
+                    this.abortController.abort();
+                } catch (e) { }
+            }
+        };
+
         const toast = showToast(`⏳ 正在初始化下載佇列 (0/${total})...`, false, 0);
 
         const getExtFromMime = (mime) => {
@@ -2371,7 +2643,73 @@
             return "";
         };
 
+        let lastFileIndex = 0;
+        let lastFileName = "";
+        let lastProgress = { loaded: 0, total: 0, currentSpeed: 0, eta: null };
+
         const renderProgressToast = (fileIndex, currentFileName, fileProgress) => {
+            lastFileIndex = fileIndex;
+            lastFileName = currentFileName;
+            lastProgress = fileProgress;
+
+            const fileRatio = fileProgress.total > 0 ? (fileProgress.loaded / fileProgress.total) : 0.5;
+            const overallPercent = Math.min(100, Math.max(0, ((fileIndex + fileRatio) / total) * 100));
+
+            toast.style.backgroundColor = '#0f172a';
+            toast.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                        <span style="font-weight:700; font-size:12px; color:#38bdf8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;" title="${escapeHtml(currentFileName)}">
+                            ${downloadController.isPaused ? '⏸️ (已暫停) ' : '📥 '}${escapeHtml(currentFileName)}
+                        </span>
+                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                            <span style="font-size:11px; font-weight:700; color:#10b981; font-family:monospace;">
+                                ${overallPercent.toFixed(0)}%
+                            </span>
+                            <button id="cycu-dl-pause-btn" style="background:${downloadController.isPaused ? '#10b981' : '#334155'}; color:white; border:1px solid #475569; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:3px;">
+                                ${downloadController.isPaused ? '▶️ 繼續' : '⏸️ 暫停'}
+                            </button>
+                            <button id="cycu-dl-stop-btn" style="background:#ef4444; color:white; border:none; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:3px;">
+                                ⏹️ 停止
+                            </button>
+                        </div>
+                    </div>
+                    <div style="width:100%; height:5px; background:#334155; border-radius:3px; overflow:hidden;">
+                        <div style="width:${overallPercent}%; height:100%; background:linear-gradient(90deg, #38bdf8, #6366f1, #10b981); border-radius:3px; transition:width 0.2s ease;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#cbd5e1;">
+                        <span>進度: ${fileIndex + 1}/${total} 檔 (${formatBytes(fileProgress.loaded)}${fileProgress.total > 0 ? ' / ' + formatBytes(fileProgress.total) : ''})</span>
+                        ${downloadController.isPaused 
+                            ? `<span style="color:#f59e0b; font-weight:700;">⏸️ 下載已暫停 (點擊繼續)</span>`
+                            : `<span>⚡ <b style="color:#f59e0b;">${formatSpeed(fileProgress.currentSpeed)}</b> | ⏳ <b style="color:#38bdf8;">${formatETA(fileProgress.eta)}</b></span>`
+                        }
+                    </div>
+                </div>
+            `;
+
+            const pauseBtn = toast.querySelector('#cycu-dl-pause-btn');
+            if (pauseBtn) {
+                pauseBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (downloadController.isPaused) {
+                        downloadController.resume();
+                    } else {
+                        downloadController.pause();
+                    }
+                    renderProgressToast(lastFileIndex, lastFileName, lastProgress);
+                };
+            }
+
+            const stopBtn = toast.querySelector('#cycu-dl-stop-btn');
+            if (stopBtn) {
+                stopBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    downloadController.stop();
+                };
+            }
+        };
+
+        const legacyRenderProgressToast = (fileIndex, currentFileName, fileProgress) => {
             const fileRatio = fileProgress.total > 0 ? (fileProgress.loaded / fileProgress.total) : 0.5;
             const overallPercent = Math.min(100, Math.max(0, ((fileIndex + fileRatio) / total) * 100));
 
@@ -2399,6 +2737,9 @@
 
         try {
             for (let i = 0; i < total; i++) {
+                if (downloadController.isCancelled) break;
+                await downloadController.waitIfPaused();
+                if (downloadController.isCancelled) break;
                 const file = totalFiles[i];
                 try {
                     let downloadUrl = file.url;
@@ -2455,9 +2796,10 @@
 
                         const { buffer, response } = await fetchWithProgress(downloadUrl, { credentials: 'include' }, (progress) => {
                             renderProgressToast(i, file.name, progress);
-                        });
+                        }, downloadController); /*
+                        }); */
 
-                        const ct = response.headers.get('content-type') || '';
+             const ct = response.headers.get('content-type') || '';
                         if (!fileExtension) {
                             const cd = response.headers.get('content-disposition') || '';
                             const m = cd.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -2486,7 +2828,75 @@
 
                     zip.file((file.sectionnumber === 0 ? "公告 - " : `第${file.sectionnumber}週 - `) + safeName + fileExtension, fileData);
                     successCount++;
+                } catch (err) {
+                    if ((err && err.message === "DOWNLOAD_STOPPED") || downloadController.isCancelled) {
+                        break;
+                    }
+                }
+            } /*
+                        break;
+                    }
+                }
+            }
                 } catch (err) { }
+            }
+
+
+
+            */ if (downloadController.isCancelled) {
+                if (successCount > 0) {
+                    toast.style.backgroundColor = '#0f172a';
+                    toast.innerHTML = `
+                        <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                            <span style="font-weight:700; font-size:13px; color:#f59e0b;">⏹️ 下載已停止（已完成 ${successCount}/${total} 檔）</span>
+                            <div style="font-size:11px; color:#cbd5e1; line-height:1.4;">您可以將目前已完成的 ${successCount} 個檔案打包為 ZIP 下載，或是完全放棄。</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px;">
+                                <button id="cycu-dl-partial-zip" style="background:#10b981; color:white; padding:7px; border-radius:6px; border:none; font-weight:bold; font-size:11px; cursor:pointer;">📦 打包已載檔案</button>
+                                <button id="cycu-dl-abort-exit" style="background:#475569; color:white; padding:7px; border-radius:6px; border:none; font-weight:bold; font-size:11px; cursor:pointer;">✕ 放棄並關閉</button>
+                            </div>
+                        </div>`;
+
+                    toast.querySelector('#cycu-dl-abort-exit').onclick = () => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => toast.remove(), 300);
+                    };
+
+                    toast.querySelector('#cycu-dl-partial-zip').onclick = () => {
+                        toast.innerHTML = `<div style="display:flex; align-items:center; gap:6px;"><span>⚡</span><span>壓縮已下載 ${successCount} 檔中...</span></div>`;
+                        const zipBlob = zip.generateBlob();
+                        const blobUrl = URL.createObjectURL(zipBlob);
+                        const fileName = `${document.title.split('|')[0].trim()}_部分教材打包(${successCount}檔).zip`;
+                        toast.innerHTML = `
+                            <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                                <span style="font-weight:700; font-size:13px; color:#10b981;">🎉 部分打包完成！(${successCount}/${total})</span>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:2px;">
+                                    <a href="${blobUrl}" download="${fileName}" style="background:#10b981; color:white; padding:8px; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:12px;">直接下載</a>
+                                    <button id="dl-ios-tab-partial" style="background:#f59e0b; color:white; padding:8px; border-radius:8px; border:none; font-weight:bold; text-align:center; font-size:12px; cursor:pointer;">iOS 分頁儲存</button>
+                                </div>
+                                <span id="dl-close-partial" style="font-size:10px; text-align:center; cursor:pointer; text-decoration:underline; color:#94a3b8;">關閉通知</span>
+                            </div>`;
+                        toast.querySelector('#dl-close-partial').onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
+                        toast.querySelector('#dl-ios-tab-partial').onclick = (e) => {
+                            e.preventDefault();
+                            const reader = new FileReader();
+                            reader.onload = function () {
+                                const a = document.createElement('a');
+                                a.href = reader.result;
+                                a.download = fileName;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                            };
+                            reader.readAsDataURL(zipBlob);
+                        };
+                    };
+                    return;
+                } else {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                    showToast("⏹️ 下載已取消", true);
+                    return;
+                }
             }
 
             if (successCount === 0) throw new Error("無成功檔案。");
@@ -2523,7 +2933,7 @@
 
             document.getElementById('dl-close').onclick = () => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); };
             setTimeout(() => { if (toast.parentNode && toast.style.opacity !== '0') { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); } }, 5000);
-        } catch (error) { showToast(`❌ 出錯了: ${error.message}`, true); }
+        } catch (error) { if (error.message !== 'DOWNLOAD_STOPPED') showToast(`❌ 出錯了: ${error.message}`, true); }
     }
 
     // 自動修復先前因 Bug 導致 localStorage 寫入的無效 NaN scale
@@ -3702,10 +4112,343 @@
         modal.style.display = 'flex';
     }
 
+    // ================= 測驗小考功能增強與試題列印匯出引擎 =================
+    function initQuizPageHelper() {
+        const url = window.location.href;
+        document.body.classList.add('cycu-quiz-page');
+        document.body.classList.remove('cycu-clean-mod-header');
+
+        // 美化與補齊測驗資訊（麵包屑、測驗標題、開始/結束時間、作答限制）
+        polishQuizInformation();
+
+        if (url.includes('/mod/quiz/view.php')) {
+            setupQuizViewPage();
+        } else if (url.includes('/mod/quiz/review.php') || url.includes('/mod/quiz/attempt.php')) {
+            setupQuizReviewPage();
+        }
+
+        // 監聽後續動態載入的作答紀錄或題目
+        const obs = new MutationObserver(() => {
+            polishQuizInformation();
+            if (url.includes('/mod/quiz/view.php')) {
+                attachPrintButtonsToViewForms();
+            }
+        });
+        obs.observe(document.body, { childList: true, subtree: true });
+    }
+
+    function polishQuizInformation() {
+        // 確保測驗頂部標題、麵包屑、測驗時間資訊顯示
+        const pageHeader = document.getElementById('page-header');
+        if (pageHeader) {
+            pageHeader.style.setProperty('display', 'block', 'important');
+            pageHeader.style.setProperty('visibility', 'visible', 'important');
+            pageHeader.style.setProperty('opacity', '1', 'important');
+        }
+
+        const breadcrumb = document.querySelector('.breadcrumb');
+        if (breadcrumb) {
+            breadcrumb.style.setProperty('display', 'flex', 'important');
+            breadcrumb.style.setProperty('visibility', 'visible', 'important');
+            breadcrumb.style.setProperty('opacity', '1', 'important');
+        }
+
+        const activityHeader = document.querySelector('.activity-header');
+        if (activityHeader) {
+            activityHeader.style.setProperty('display', 'block', 'important');
+            activityHeader.style.setProperty('visibility', 'visible', 'important');
+            activityHeader.style.setProperty('opacity', '1', 'important');
+        }
+
+        const actDates = document.querySelector('[data-region="activity-dates"]');
+        if (actDates) {
+            actDates.style.setProperty('display', 'flex', 'important');
+            actDates.style.setProperty('visibility', 'visible', 'important');
+        }
+
+        // 美化作答狀態文字（例如「已經完成」標記為綠色 Badge）
+        document.querySelectorAll('.quizreviewsummary td, .generaltable td').forEach(td => {
+            const text = td.innerText.trim();
+            if (text === '已經完成' && !td.querySelector('.badge')) {
+                td.innerHTML = '<span class="badge" style="background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:3px 8px; border-radius:6px; border:1px solid #bbf7d0;">✓ 已經完成</span>';
+            } else if (text.includes('進行中') && !td.querySelector('.badge')) {
+                td.innerHTML = '<span class="badge" style="background:#e0f2fe; color:#0369a1; font-size:12px; font-weight:700; padding:3px 8px; border-radius:6px; border:1px solid #bae6fd;">⏳ 進行中</span>';
+            }
+        });
+    }
+
+    function attachPrintButtonsToViewForms() {
+        const reviewForms = document.querySelectorAll('form[action*="review.php"]');
+        reviewForms.forEach(form => {
+            if (form.querySelector('.cycu-quiz-print-btn')) return;
+
+            const printBtn = document.createElement('button');
+            printBtn.type = 'button';
+            printBtn.className = 'btn cycu-quiz-print-btn';
+            printBtn.innerHTML = '🖨️ 列印此作答試題 (PDF)';
+            printBtn.style.cssText = 'background:#0ea5e9 !important; color:#ffffff !important; font-weight:700 !important; font-size:12px !important; padding:6px 14px !important; border-radius:8px !important; border:none !important; margin-left:8px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; gap:4px !important; box-shadow:0 2px 6px rgba(14,165,233,0.3) !important; transition:all 0.15s !important; vertical-align:middle !important;';
+
+            printBtn.onmouseover = () => { printBtn.style.background = '#0284c7 !important'; };
+            printBtn.onmouseout = () => { printBtn.style.background = '#0ea5e9 !important'; };
+
+            printBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                exportQuizFromReviewForm(form);
+            };
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.parentNode.insertBefore(printBtn, submitBtn.nextSibling);
+            } else {
+                form.appendChild(printBtn);
+            }
+        });
+    }
+
+    function setupQuizViewPage() {
+        attachPrintButtonsToViewForms();
+    }
+
+    async function exportQuizFromReviewForm(form) {
+        const toast = showToast("⏳ 正在取得作答記錄與試題資料...", false, 0);
+
+        try {
+            const formData = new FormData(form);
+            const resp = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+            const html = await resp.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            const questions = doc.querySelectorAll('.que');
+            const summaryTable = doc.querySelector('.quizreviewsummary') || doc.querySelector('.generaltable');
+            const quizTitleEl = doc.querySelector('.page-header-headings h1') || doc.querySelector('.page-header-headings h2') || document.querySelector('.page-header-headings h1') || document.querySelector('h2');
+            const quizTitle = quizTitleEl ? quizTitleEl.innerText.trim() : document.title.split('|')[0].trim();
+
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 200);
+
+            if (!questions || questions.length === 0) {
+                sessionStorage.setItem('cycu_auto_print', '1');
+                form.submit();
+                return;
+            }
+
+            openQuizPrintPreviewModal(quizTitle, summaryTable, questions);
+        } catch (err) {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 200);
+            showToast("ℹ️ 正在為您開啟複習頁面列印...", false, 1500);
+            sessionStorage.setItem('cycu_auto_print', '1');
+            form.submit();
+        }
+    }
+
+    function openQuizPrintPreviewModal(title, summaryTable, questions) {
+        let modal = document.getElementById('cycu-quiz-modal');
+        if (modal) modal.remove();
+
+        modal = document.createElement('div');
+        modal.id = 'cycu-quiz-modal';
+        modal.className = 'd-print-none';
+        modal.style.cssText = 'position:fixed; inset:0; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:1000000; display:flex; align-items:center; justify-content:center; padding:16px; box-sizing:border-box;';
+
+        const card = document.createElement('div');
+        card.style.cssText = 'background:#ffffff; width:100%; max-width:920px; height:90vh; max-height:90vh; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 48px rgba(0,0,0,0.25);';
+
+        card.innerHTML = `
+            <div style="padding:14px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:18px;">📝</span>
+                    <div>
+                        <div style="font-size:15px; font-weight:700; color:#0f172a;">${escapeHtml(title)} - 試題匯出列印預覽</div>
+                        <div style="font-size:11px; color:#64748b;">共 ${questions.length} 題，可直接列印或另存為 PDF 文件</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <label style="display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:#334155; cursor:pointer; margin:0;" title="勾選包含作答紀錄、正確答案與解析反饋；取消勾選則僅列印題目與選項">
+                        <input type="checkbox" id="cycu-modal-toggle-ans" checked style="cursor:pointer; width:15px; height:15px; accent-color:#4f46e5;">
+                        <span>包含作答紀錄與解析</span>
+                    </label>
+                    <button id="cycu-modal-btn-print" style="background:#4f46e5; color:white; border:none; padding:7px 16px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 3px 8px rgba(79,70,229,0.3);">
+                        🖨️ 立即列印 (另存 PDF)
+                    </button>
+                    <button id="cycu-modal-btn-close" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:7px 12px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">
+                        ✕ 關閉
+                    </button>
+                </div>
+            </div>
+            <div id="cycu-quiz-modal-body" style="flex:1; overflow-y:auto; padding:20px; background:#f8fafc; display:flex; flex-direction:column; gap:16px;"></div>
+        `;
+
+        modal.appendChild(card);
+        document.body.appendChild(modal);
+
+        const modalBody = card.querySelector('#cycu-quiz-modal-body');
+
+        if (summaryTable) {
+            const summaryWrap = document.createElement('div');
+            summaryWrap.style.cssText = 'background:white; border-radius:10px; border:1px solid #e2e8f0; padding:14px; box-shadow:0 2px 6px rgba(0,0,0,0.02); margin-bottom:4px;';
+            summaryWrap.innerHTML = `<h5 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#334155;">📊 作答記錄資訊</h5>` + summaryTable.outerHTML;
+            modalBody.appendChild(summaryWrap);
+        }
+
+        const qContainer = document.createElement('div');
+        qContainer.id = 'cycu-modal-questions-container';
+        qContainer.style.cssText = 'display:flex; flex-direction:column; gap:14px;';
+
+        questions.forEach(q => {
+            const qClone = q.cloneNode(true);
+            qClone.style.cssText = 'background:white; border-radius:10px; border:1px solid #cbd5e1; padding:14px; margin:0; box-shadow:0 2px 6px rgba(0,0,0,0.02);';
+            qContainer.appendChild(qClone);
+        });
+        modalBody.appendChild(qContainer);
+
+        const toggleAns = card.querySelector('#cycu-modal-toggle-ans');
+        const updateAnswersVisibility = () => {
+            const showAnswers = toggleAns.checked;
+            qContainer.querySelectorAll('.outcome, .rightanswer, .feedback, .comment, .generalfeedback, .grading, .state, .grade, .im-feedback').forEach(el => {
+                el.style.display = showAnswers ? '' : 'none';
+            });
+        };
+        toggleAns.onchange = updateAnswersVisibility;
+
+        card.querySelector('#cycu-modal-btn-close').onclick = () => modal.remove();
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+
+        card.querySelector('#cycu-modal-btn-print').onclick = () => {
+            printQuizContent(title, modalBody.innerHTML, toggleAns.checked);
+        };
+    }
+
+    function printQuizContent(title, bodyHtml, includeAnswers) {
+        let printIframe = document.getElementById('cycu-print-frame');
+        if (printIframe) printIframe.remove();
+
+        printIframe = document.createElement('iframe');
+        printIframe.id = 'cycu-print-frame';
+        printIframe.style.cssText = 'position:fixed; top:-9999px; left:-9999px; width:0; height:0; border:none;';
+        document.body.appendChild(printIframe);
+
+        const frameDoc = printIframe.contentWindow.document;
+        frameDoc.open();
+        frameDoc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>${escapeHtml(title)}</title>
+                <style>
+                    @page { size: A4; margin: 15mm; }
+                    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif; font-size: 13px; line-height: 1.6; color: #111827; background: white; margin: 0; padding: 0; }
+                    h2 { font-size: 18px; margin: 0 0 12px 0; border-bottom: 2px solid #334155; padding-bottom: 6px; }
+                    .generaltable { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+                    .generaltable th, .generaltable td { border: 1px solid #cbd5e1; padding: 6px 10px; }
+                    .generaltable th { background: #f8fafc; font-weight: 700; width: 120px; }
+                    .que { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 16px; margin-bottom: 14px; background: white; }
+                    .que .info { border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 8px; font-size: 11px; color: #64748b; }
+                    .que .qtext { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.6; }
+                    .que .formulation, .que .ablock { font-size: 13px; line-height: 1.6; }
+                    .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 6px 10px !important; margin-top: 8px !important; color: #15803d !important; font-size: 12px !important; }
+                    ${includeAnswers ? '' : '.outcome, .rightanswer, .feedback, .comment, .generalfeedback, .grading, .state, .grade, .im-feedback { display: none !important; }'}
+                </style>
+            </head>
+            <body>
+                <h2>📝 ${escapeHtml(title)}</h2>
+                ${bodyHtml}
+            </body>
+            </html>
+        `);
+        frameDoc.close();
+
+        setTimeout(() => {
+            printIframe.contentWindow.focus();
+            printIframe.contentWindow.print();
+        }, 500);
+    }
+
+    function setupQuizReviewPage() {
+        const questions = document.querySelectorAll('.que');
+        if (questions.length === 0) return;
+
+        if (document.getElementById('cycu-quiz-print-bar')) return;
+
+        const mainRegion = document.getElementById('region-main') || document.querySelector('[role="main"]') || document.body;
+        const printBar = document.createElement('div');
+        printBar.id = 'cycu-quiz-print-bar';
+        printBar.className = 'd-print-none';
+
+        printBar.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">📝</span>
+                <span style="font-weight:700; font-size:13px; color:#1e293b;">測驗試題檢視與列印工具箱</span>
+                <span class="badge" style="background:#e0e7ff; color:#4338ca; font-weight:700; padding:3px 8px; border-radius:12px; font-size:11px;">共 ${questions.length} 題</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <label style="display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:#334155; cursor:pointer; margin:0;" title="勾選包含作答紀錄、正確答案與解析反饋；取消勾選則僅列印題目與選項">
+                    <input type="checkbox" id="cycu-review-toggle-ans" checked style="cursor:pointer; width:15px; height:15px; accent-color:#4f46e5;">
+                    <span>列印作答紀錄與解析</span>
+                </label>
+                <button id="cycu-btn-review-print" class="cycu-slim-btn" style="background:#4f46e5 !important; color:white !important; border-color:#4f46e5 !important; font-size:12px !important; padding:4px 14px !important; height:30px !important;">
+                    🖨️ 列印 / 另存為 PDF
+                </button>
+            </div>
+        `;
+
+        if (mainRegion.firstChild) {
+            mainRegion.insertBefore(printBar, mainRegion.firstChild);
+        } else {
+            mainRegion.appendChild(printBar);
+        }
+
+        const toggleAns = printBar.querySelector('#cycu-review-toggle-ans');
+        const btnPrint = printBar.querySelector('#cycu-btn-review-print');
+
+        const updatePrintClass = () => {
+            if (toggleAns.checked) {
+                document.body.classList.remove('cycu-print-no-answers');
+            } else {
+                document.body.classList.add('cycu-print-no-answers');
+            }
+        };
+
+        toggleAns.onchange = updatePrintClass;
+
+        btnPrint.onclick = () => {
+            updatePrintClass();
+            window.print();
+        };
+
+        if (sessionStorage.getItem('cycu_auto_print') === '1') {
+            sessionStorage.removeItem('cycu_auto_print');
+            setTimeout(() => {
+                updatePrintClass();
+                window.print();
+            }, 600);
+        }
+    }
+
     function init() {
         const url = window.location.href;
 
-        // 排除作業繳交頁面（/mod/assign/），避免作業標題、說明內容 (#intro) 與繳交期限被隱藏
+        // 排除作業繳交頁面（/mod/assign/）與測驗小考頁面（/mod/quiz/），避免標題、說明內容、作答紀錄與繳交期限被隱藏
+        if (url.includes('/mod/assign/')) {
+            document.body.classList.add('cycu-assign-page');
+            document.body.classList.remove('cycu-clean-mod-header');
+        } else if (url.includes('/mod/quiz/')) {
+            document.body.classList.add('cycu-quiz-page');
+            document.body.classList.remove('cycu-clean-mod-header');
+            initQuizPageHelper();
+        } else if (url.includes('/mod/')) {
+            document.body.classList.add('cycu-clean-mod-header');
+        } /*
         if (url.includes('/mod/assign/')) {
             document.body.classList.add('cycu-assign-page');
             document.body.classList.remove('cycu-clean-mod-header');
@@ -3713,7 +4456,7 @@
             document.body.classList.add('cycu-clean-mod-header');
         }
 
-        // 初始化全站自訂背景與色彩修復引擎
+        */ // 初始化全站自訂背景與色彩修復引擎
         initThemeEngine();
         setTimeout(polishAnnouncementContainers, 300);
         setTimeout(polishAnnouncementContainers, 1500);
