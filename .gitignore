@@ -1,0 +1,26 @@
+git
+# Dependencies
+ilearning.cycu.edu.tw/
+view.html
+
+# Environment & Credentials
+.env
+.env.*
+
+
+
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
