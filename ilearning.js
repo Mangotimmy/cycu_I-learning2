@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.10
+// @version      2.2.11
 
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔與圖片Base64內嵌(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題列印修復(徹底杜絕巨型黑旗與白畫面空白頁Bug/完美匯出A4 PDF/支援題目卷解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 
@@ -474,13 +474,26 @@
                 break-inside: avoid !important;
                 border: 1px solid #cbd5e1 !important;
                 border-radius: 8px !important;
-                padding: 12px 16px !important;
+                flex-direction: row !important;
+                gap: 10px !important;
+                align-items: flex-start !important;
+                padding: 10px 12px !important;
+                margin-bottom: 10px !important;
                 margin-bottom: 16px !important;
                 background: white !important;
             }
 
             .que .info {
-                border-bottom: 1px dashed #cbd5e1 !important;
+                width: 80px !important;
+                min-width: 80px !important;
+                max-width: 85px !important;
+                flex-shrink: 0 !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 6px !important;
+                background: #f8fafc !important;
+                padding: 6px 8px !important;
+                text-align: left !important;
+                margin: 0 !important;
                 padding-bottom: 4px !important;
                 margin-bottom: 8px !important;
                 font-size: 12px !important;
@@ -1285,36 +1298,131 @@
                 break-inside: avoid !important;
                 border: 1px solid #cbd5e1 !important;
                 border-radius: 8px !important;
-                padding: 12px 16px !important;
-                margin-bottom: 16px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: flex-start !important;
+                padding: 10px 12px !important;
+                margin-bottom: 10px !important;
                 background: white !important;
                 background-color: white !important;
             }
 
             .que .info {
-                border-bottom: 1px dashed #cbd5e1 !important;
-                padding-bottom: 4px !important;
-                margin-bottom: 8px !important;
+                width: 80px !important;
+                min-width: 80px !important;
+                max-width: 85px !important;
+                flex-shrink: 0 !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 6px !important;
+                background: #f8fafc !important;
+                padding: 6px 8px !important;
+                text-align: left !important;
+                margin: 0 !important;
                 font-size: 12px !important;
                 color: #64748b !important;
-                display: flex !important;
-                gap: 12px !important;
-                align-items: center !important;
             }
 
             .que .info h3.no, .que .info .no {
-                margin: 0 !important;
-                font-size: 13px !important;
+                margin: 0 0 3px 0 !important;
+                font-size: 12px !important;
                 font-weight: 700 !important;
                 color: #0f172a !important;
+                line-height: 1.2 !important;
+            }
+
+            .que .info .state {
+                font-size: 10.5px !important;
+                color: #64748b !important;
+                line-height: 1.3 !important;
+                margin: 0 !important;
+            }
+
+            .que .info .grade {
+                font-size: 10px !important;
+                color: #94a3b8 !important;
+                margin-top: 2px !important;
+            }
+
+            .que .content {
+                flex-grow: 1 !important;
+                min-width: 0 !important;
+            }
+
+            .que .formulation {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 6px !important;
+                padding: 8px 12px !important;
+                margin-bottom: 6px !important;
             }
 
             .que .qtext {
-                font-size: 14px !important;
+                font-size: 12.5px !important;
                 font-weight: 600 !important;
-                margin-bottom: 10px !important;
-                line-height: 1.6 !important;
+                margin-bottom: 8px !important;
+                line-height: 1.45 !important;
                 color: #0f172a !important;
+            }
+
+            .que fieldset.ablock, .que .ablock {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: transparent !important;
+            }
+
+            .que legend {
+                display: none !important;
+            }
+
+            .que .prompt {
+                font-size: 10.5px !important;
+                color: #64748b !important;
+                margin-bottom: 4px !important;
+                font-weight: 500 !important;
+            }
+
+            .que .answer {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 3px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .que .answer div.r0, .que .answer div.r1 {
+                display: flex !important;
+                align-items: baseline !important;
+                gap: 5px !important;
+                margin: 0 !important;
+                padding: 1px 0 !important;
+                font-size: 11.5px !important;
+                line-height: 1.4 !important;
+            }
+
+            .que .answer input[type="radio"], .que .answer input[type="checkbox"] {
+                margin: 0 !important;
+                position: relative !important;
+                top: 1px !important;
+                width: 12px !important;
+                height: 12px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .que .answer label {
+                display: inline !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11.5px !important;
+                line-height: 1.4 !important;
+                color: #1e293b !important;
+                cursor: default !important;
+            }
+
+            .que .answer label .answernumber {
+                font-weight: 700 !important;
+                margin-right: 4px !important;
+                color: #334155 !important;
             }
 
             svg, .icon {
@@ -1342,10 +1450,11 @@
                 background: #f0fdf4 !important;
                 border: 1px solid #86efac !important;
                 border-radius: 6px !important;
-                padding: 6px 10px !important;
-                margin-top: 8px !important;
+                padding: 5px 10px !important;
+                margin-top: 6px !important;
                 color: #15803d !important;
-                font-size: 12px !important;
+                font-size: 11px !important;
+                line-height: 1.4 !important;
             }
         }
     `;
@@ -4989,8 +5098,8 @@
 
         if (summaryTable) {
             const summaryWrap = document.createElement('div');
-            summaryWrap.style.cssText = 'background:white; border-radius:10px; border:1px solid #e2e8f0; padding:14px; box-shadow:0 2px 6px rgba(0,0,0,0.02); margin-bottom:4px;';
-            summaryWrap.innerHTML = `<h5 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#334155;">📊 作答記錄資訊</h5>` + summaryTable.outerHTML;
+            summaryWrap.style.cssText = 'background:white; border-radius:8px; border:1px solid #e2e8f0; padding:10px 14px; box-shadow:0 2px 6px rgba(0,0,0,0.02); margin-bottom:4px;';
+            summaryWrap.innerHTML = `<h5 style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#334155;">📊 作答記錄資訊</h5>` + summaryTable.outerHTML;
             modalBody.appendChild(summaryWrap);
         }
 
@@ -5014,7 +5123,7 @@
                 i.style.setProperty('display', 'inline-block', 'important');
                 i.style.setProperty('vertical-align', 'middle', 'important');
             });
-            qClone.style.cssText = 'background:white; border-radius:10px; border:1px solid #cbd5e1; padding:14px; margin:0; box-shadow:0 2px 6px rgba(0,0,0,0.02);';
+            qClone.style.cssText = 'background:white; border-radius:8px; border:1px solid #cbd5e1; padding:10px 12px; margin:0; box-shadow:0 2px 6px rgba(0,0,0,0.02); display:flex; flex-direction:row; gap:10px; align-items:flex-start;';
             qContainer.appendChild(qClone);
         });
         modalBody.appendChild(qContainer);
@@ -5054,18 +5163,31 @@
                 <meta charset="utf-8">
                 <title>${escapeHtml(title)}</title>
                 <style>
-                    @page { size: A4; margin: 15mm; }
-                    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif; font-size: 13px; line-height: 1.6; color: #111827; background: white; margin: 0; padding: 0; }
-                    h2 { font-size: 18px; margin: 0 0 12px 0; border-bottom: 2px solid #334155; padding-bottom: 6px; }
-                    .generaltable { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
-                    .generaltable th, .generaltable td { border: 1px solid #cbd5e1; padding: 6px 10px; }
+                    @page { size: A4; margin: 10mm 12mm; }
+                    * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Microsoft JhengHei", sans-serif; font-size: 11.5px; line-height: 1.45; color: #1e293b; background: white; margin: 0; padding: 0; }
+                    h2 { font-size: 15px; font-weight: 700; margin: 0 0 10px 0; border-bottom: 2px solid #334155; padding-bottom: 5px; color: #0f172a; }
+                    .generaltable { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; }
+                    .generaltable th, .generaltable td { border: 1px solid #cbd5e1; padding: 4px 8px; }
                     .generaltable th { background: #f8fafc; font-weight: 700; width: 120px; }
-                    .que { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 16px; margin-bottom: 14px; background: white; }
-                    .que .info { border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 8px; font-size: 11px; color: #64748b; }
-                    .que .qtext { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.6; }
-                    .que .formulation, .que .ablock { font-size: 12.5px; line-height: 1.5; }
+                    .que { page-break-inside: avoid !important; break-inside: avoid !important; display: flex !important; flex-direction: row !important; gap: 10px !important; align-items: flex-start !important; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; background: #ffffff; }
+                    .que .info { width: 80px !important; min-width: 80px !important; max-width: 85px !important; flex-shrink: 0 !important; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; padding: 6px 8px; text-align: left; font-size: 11px; color: #64748b; margin: 0; }
+                    .que .info h3.no, .que .info .no { margin: 0 0 3px 0; font-size: 12px; font-weight: 700; color: #0f172a; line-height: 1.2; }
+                    .que .info .state { font-size: 10.5px; color: #64748b; line-height: 1.3; margin: 0; }
+                    .que .info .grade { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+                    .que .content { flex-grow: 1; min-width: 0; }
+                    .que .formulation { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; }
+                    .que .qtext { font-size: 12.5px; font-weight: 600; margin-bottom: 8px; line-height: 1.45; color: #0f172a; }
+                    .que fieldset.ablock, .que .ablock { border: none !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
+                    .que legend { display: none !important; }
+                    .que .prompt { font-size: 10.5px; color: #64748b; margin-bottom: 4px; font-weight: 500; }
+                    .que .answer { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 0; }
+                    .que .answer div.r0, .que .answer div.r1 { display: flex; align-items: baseline; gap: 5px; margin: 0; padding: 1px 0; font-size: 11.5px; line-height: 1.4; }
+                    .que .answer input[type="radio"], .que .answer input[type="checkbox"] { margin: 0; position: relative; top: 1px; width: 12px; height: 12px; flex-shrink: 0; }
+                    .que .answer label { display: inline; margin: 0; padding: 0; font-size: 11.5px; line-height: 1.4; color: #1e293b; cursor: default; }
+                    .que .answer label .answernumber { font-weight: 700; margin-right: 4px; color: #334155; }
                     [class*="flag" i], [id*="flag" i], [name*="flag" i], [data-action*="flag" i], a[href*="flag" i], .questionflag, .questionflagsave, .questionflagimage, .questionflagtext, .accesshide, .sr-only, .visually-hidden, .editquestion, .comment-link, .im-controls, .history, input[type="checkbox"], input[type="hidden"], input[type="submit"], input[type="button"], button { display: none !important; visibility: hidden !important; height: 0 !important; width: 0 !important; max-height: 0 !important; max-width: 0 !important; overflow: hidden !important; opacity: 0 !important; pointer-events: none !important; }
-                    svg, .icon { max-width: 20px !important; max-height: 20px !important; width: 20px !important; height: 20px !important; display: inline-block !important; vertical-align: middle !important; } img { max-width: 100% !important; height: auto !important; } .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 6px 10px !important; margin-top: 8px !important; color: #15803d !important; font-size: 12px !important; }
+                    svg, .icon { max-width: 16px !important; max-height: 16px !important; width: 16px !important; height: 16px !important; display: inline-block !important; vertical-align: middle !important; } img { max-width: 100% !important; height: auto !important; } .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 5px 10px !important; margin-top: 6px !important; color: #15803d !important; font-size: 11px !important; line-height: 1.4 !important; }
                     ${includeAnswers ? '' : '.outcome, .rightanswer, .feedback, .comment, .generalfeedback, .grading, .state, .grade, .im-feedback { display: none !important; }'}
                 </style>
             </head>
