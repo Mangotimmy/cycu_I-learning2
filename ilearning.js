@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.8
-// @description  可任意拖曳漂浮面板、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF 、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP。
+// @version      2.2.9
+// @description  可任意拖曳漂浮面板、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔(免登入完整瀏覽/支援列印為PDF)。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
