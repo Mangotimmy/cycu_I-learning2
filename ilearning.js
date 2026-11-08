@@ -1,8 +1,12 @@
 // ==UserScript==
-// @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
+// @name         中原 cycu iLearning 2.0 頁面addon
 // @namespace    http://ilearning.cycu.edu.tw/
 // @version      2.2.9
+<<<<<<< HEAD
 // @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔與圖片Base64內嵌(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題列印修復(徹底杜絕巨型黑旗與白畫面空白頁Bug/完美匯出A4 PDF/支援題目卷解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
+=======
+// @description  可任意拖曳漂浮面板、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔(免登入完整瀏覽/支援列印為PDF)。
+>>>>>>> 15f3719b5ab9b74fb35123d77c54ba024dacd9d2
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
