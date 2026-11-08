@@ -5,7 +5,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Platform Support](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20iPadOS%20%7C%20iOS%20%7C%20Android-blue?style=flat-square)](#-跨平台安裝指南)
 [![CYCU iLearning 2.0](https://img.shields.io/badge/CYCU-iLearning%202.0-0ea5e9?style=flat-square)](https://ilearning.cycu.edu.tw/)
+> **免責聲明**：本腳本僅供中原大學師生學術交流與增進線上學習體驗使用，請勿用於任何違反校規或侵犯智慧財產權之用途。
 
+
+> **免責聲明**：本腳本僅供中原大學師生學術交流與增進線上學習體驗使用，請勿用於任何違反校規或侵犯智慧財產權之用途。
 專為**中原大學 (CYCU) iLearning 2.0** 平台打造的全方位體驗優化油猴腳本（UserScript）。告別 Moodle 播放限制、iPadOS 滿版時消不掉的網址列、微弱課堂錄音與繁瑣的逐檔下載作業！
 
 👉 **[立即前往 Greasy Fork 安裝最新版本](https://greasyfork.org/zh-TW/scripts/597066-%E4%B8%AD%E5%8E%9F-cycu-ilearning-2-0-%E9%A0%81%E9%9D%A2addon)**
