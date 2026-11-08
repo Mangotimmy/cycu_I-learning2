@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         中原 cycu iLearning 2.0 頁面addon (優化修復版)
 // @namespace    http://ilearning.cycu.edu.tw/
-// @version      2.2.8
-// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔與圖片Base64內嵌(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題一鍵匯出/列印為 PDF (支援題目卷/解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
+// @version      2.2.9
+// @description  可任意拖曳漂浮面板（支援 PC 滑鼠/iPad 觸控與座標防出界記憶）、教材批量下載「暫停/繼續」與「停止/局部封裝」、頁面教材100%離線存檔與圖片Base64內嵌(免登入完整瀏覽/支援列印為PDF)、自動補齊課程缺少的「活動」側欄區塊（作業/討論區/資源總覽捷徑）、測驗小考完整資訊修復與美化、測驗試題列印修復(徹底杜絕巨型黑旗與白畫面空白頁Bug/完美匯出A4 PDF/支援題目卷解答卷切換)、HTML5 Video 原生全螢幕、影片進度條、獨立影片/PDF直載、大綱抽屜解鎖、全格式教材自訂打包 ZIP、Web Audio 600% 爆音引擎、PDF 劇院置中全螢幕與文字複製選取解鎖、鍵盤/觸控板/觸控螢幕縮放手勢、作業繳交頁面說明修復、全站自訂背景桌布/色彩與智慧高對比色彩修復引擎。
 // @author       Mangotimmy
 // @license      MIT
 // @match        *://ilearning.cycu.edu.tw/*
@@ -426,7 +426,7 @@
                 display: none !important;
             }
 
-            #cycu-quiz-print-bar,
+            #cycu-quiz-print-bar, #cycu-floating-theme-toggle, #cycu-floating-drawer-toggle, #cycu-custom-bg-backdrop, #cycu-custom-bg-dim, #cycu-quiz-modal, #cycu-theme-modal, #cycu-file-select-modal, #theme_boost-drawers-courseindex, #theme_boost-drawers-blocks, .questionflagimage, .questionflagtext, .editquestion, input[name*="flagged"],
             .navbar,
             .breadcrumb,
             #usernavigation,
@@ -454,7 +454,7 @@
                 visibility: hidden !important;
             }
 
-            body, #page, #page-wrapper, #topofscroll, #region-main-box, #region-main, #page-content {
+            html, body, #page-wrapper, #page, #page.drawers, #topofscroll, #region-main-box, #region-main, #page-content, .main-inner, [role="main"] { height: auto !important; min-height: 0 !important; max-height: none !important; overflow: visible !important; position: static !important; float: none !important; display: block !important;
                 background: white !important;
                 color: #000000 !important;
                 margin: 0 !important;
@@ -491,7 +491,7 @@
                 line-height: 1.6 !important;
             }
 
-            .que .outcome, .que .rightanswer {
+            .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 6px 10px !important; margin-top: 8px !important; color: #15803d !important; font-size: 12px !important; } /* cycu-print-end */ /*
                 background: #f0fdf4 !important;
                 border: 1px solid #86efac !important;
                 border-radius: 6px !important;
@@ -507,7 +507,7 @@
 
         }
 
-        body.cycu-pdf-focus-mode #page-header, body.cycu-pdf-focus-mode #usernavigation, body.cycu-pdf-focus-mode .navbar, body.cycu-pdf-focus-mode header, body.cycu-pdf-focus-mode .fixed-top, body.cycu-pdf-focus-mode #page-footer, body.cycu-pdf-focus-mode .breadcrumb, body.cycu-pdf-focus-mode #nav-drawer { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+        */ } body.cycu-pdf-focus-mode #page-header, body.cycu-pdf-focus-mode #usernavigation, body.cycu-pdf-focus-mode .navbar, body.cycu-pdf-focus-mode header, body.cycu-pdf-focus-mode .fixed-top, body.cycu-pdf-focus-mode #page-footer, body.cycu-pdf-focus-mode .breadcrumb, body.cycu-pdf-focus-mode #nav-drawer { display: none !important; height: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
         body.cycu-pdf-focus-mode { padding-top: 0 !important; margin-top: 0 !important; }
         body.path-mod-pdfannotator #page { margin-top: 0 !important; padding-top: 0 !important; top: 0 !important; }
         body.cycu-pdf-focus-mode #region-main { padding: 0 !important; margin: 0 !important; border: none !important; }
@@ -4712,7 +4712,7 @@
         const obs = new MutationObserver(() => {
             polishQuizInformation();
             if (url.includes('/mod/quiz/view.php')) {
-                attachPrintButtonsToViewForms();
+                attachPrintButtonsToViewForms(); attachPrintButtonsToLinks();
             }
         });
         obs.observe(document.body, { childList: true, subtree: true });
@@ -4787,8 +4787,8 @@
         });
     }
 
-    function setupQuizViewPage() {
-        attachPrintButtonsToViewForms();
+    function attachPrintButtonsToLinks() { const reviewLinks = document.querySelectorAll('a[href*="review.php"]'); reviewLinks.forEach(link => { if (link.parentNode.querySelector('.cycu-quiz-print-link-btn') || link.closest('#cycu-quiz-modal') || link.classList.contains('cycu-quiz-print-btn')) return; const printBtn = document.createElement('button'); printBtn.type = 'button'; printBtn.className = 'btn btn-sm cycu-quiz-print-link-btn'; printBtn.innerHTML = '🖨️ 列印 (PDF)'; printBtn.style.cssText = 'background:#0ea5e9 !important; color:#ffffff !important; font-weight:700 !important; font-size:11px !important; padding:3px 8px !important; border-radius:6px !important; border:none !important; margin-left:6px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; gap:3px !important; vertical-align:middle !important;'; printBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); exportQuizFromUrl(link.href); }; link.parentNode.insertBefore(printBtn, link.nextSibling); }); } async function exportQuizFromUrl(reviewUrl) { const toast = showToast("⏳ 正在取得作答記錄與試題資料...", false, 0); try { const resp = await fetch(reviewUrl, { credentials: 'include' }); if (!resp.ok) throw new Error(`HTTP ${resp.status}`); const html = await resp.text(); const doc = new DOMParser().parseFromString(html, 'text/html'); const questions = doc.querySelectorAll('.que'); const summaryTable = doc.querySelector('.quizreviewsummary') || doc.querySelector('.generaltable'); const quizTitleEl = doc.querySelector('.page-header-headings h1') || doc.querySelector('.page-header-headings h2') || document.querySelector('h2'); const quizTitle = quizTitleEl ? quizTitleEl.innerText.trim() : document.title.split('|')[0].trim(); toast.style.opacity = '0'; setTimeout(() => toast.remove(), 200); if (!questions || questions.length === 0) { window.location.href = reviewUrl; return; } openQuizPrintPreviewModal(quizTitle, summaryTable, questions); } catch (err) { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 200); window.location.href = reviewUrl; } } function setupQuizViewPage() {
+        attachPrintButtonsToViewForms(); attachPrintButtonsToLinks();
     }
 
     async function exportQuizFromReviewForm(form) {
@@ -4832,7 +4832,7 @@
         }
     }
 
-    function openQuizPrintPreviewModal(title, summaryTable, questions) {
+    function openQuizPrintPreviewModal(title, summaryTable, questions, defaultIncludeAnswers = true) {
         let modal = document.getElementById('cycu-quiz-modal');
         if (modal) modal.remove();
 
@@ -4886,7 +4886,7 @@
         qContainer.style.cssText = 'display:flex; flex-direction:column; gap:14px;';
 
         questions.forEach(q => {
-            const qClone = q.cloneNode(true);
+            const qClone = q.cloneNode(true); qClone.querySelectorAll('.questionflag, .editquestion, .comment-link, .im-controls, .history, .questionflagimage, .questionflagtext, input[name*="flagged"], input[type="hidden"], input[type="submit"]').forEach(el => el.remove()); qClone.querySelectorAll('svg, .icon').forEach(i => { i.style.maxWidth = '18px'; i.style.maxHeight = '18px'; i.style.width = '18px'; i.style.height = '18px'; });
             qClone.style.cssText = 'background:white; border-radius:10px; border:1px solid #cbd5e1; padding:14px; margin:0; box-shadow:0 2px 6px rgba(0,0,0,0.02);';
             qContainer.appendChild(qClone);
         });
@@ -4899,7 +4899,7 @@
                 el.style.display = showAnswers ? '' : 'none';
             });
         };
-        toggleAns.onchange = updateAnswersVisibility;
+        toggleAns.onchange = updateAnswersVisibility; toggleAns.checked = !!defaultIncludeAnswers; updateAnswersVisibility();
 
         card.querySelector('#cycu-modal-btn-close').onclick = () => modal.remove();
         modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
@@ -4936,8 +4936,8 @@
                     .que { page-break-inside: avoid !important; break-inside: avoid !important; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 16px; margin-bottom: 14px; background: white; }
                     .que .info { border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 8px; font-size: 11px; color: #64748b; }
                     .que .qtext { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.6; }
-                    .que .formulation, .que .ablock { font-size: 13px; line-height: 1.6; }
-                    .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 6px 10px !important; margin-top: 8px !important; color: #15803d !important; font-size: 12px !important; }
+                    .que .formulation, .que .ablock { font-size: 13px; line-height: 1.6; } .questionflag, .editquestion, .comment-link, .im-controls, .history, .questionflagimage, .questionflagtext, input[type="hidden"], input[type="submit"], .submitbtns, .accesshide, .sr-only { display: none !important; visibility: hidden !important; height: 0 !important; width: 0 !important; overflow: hidden !important; }
+                    svg, .icon { max-width: 18px !important; max-height: 18px !important; width: auto !important; height: auto !important; } img { max-width: 100% !important; height: auto !important; } .que .outcome, .que .rightanswer { background: #f0fdf4 !important; border: 1px solid #86efac !important; border-radius: 6px !important; padding: 6px 10px !important; margin-top: 8px !important; color: #15803d !important; font-size: 12px !important; }
                     ${includeAnswers ? '' : '.outcome, .rightanswer, .feedback, .comment, .generalfeedback, .grading, .state, .grade, .im-feedback { display: none !important; }'}
                 </style>
             </head>
@@ -4978,7 +4978,7 @@
                     <span>列印作答紀錄與解析</span>
                 </label>
                 <button id="cycu-btn-review-print" class="cycu-slim-btn" style="background:#4f46e5 !important; color:white !important; border-color:#4f46e5 !important; font-size:12px !important; padding:4px 14px !important; height:30px !important;">
-                    🖨️ 列印 / 另存為 PDF
+                    🖨️ 列印預覽 / 匯出 PDF
                 </button>
             </div>
         `;
@@ -5000,14 +5000,14 @@
             }
         };
 
-        toggleAns.onchange = updatePrintClass;
+        toggleAns.onchange = updatePrintClass; const triggerQuizPrintModal = () => { const summaryTable = document.querySelector('.quizreviewsummary') || document.querySelector('.generaltable'); const quizTitleEl = document.querySelector('.page-header-headings h1') || document.querySelector('.page-header-headings h2') || document.querySelector('h2'); const quizTitle = quizTitleEl ? quizTitleEl.innerText.trim() : document.title.split('|')[0].trim(); const currentQuestions = document.querySelectorAll('.que'); openQuizPrintPreviewModal(quizTitle, summaryTable, currentQuestions, toggleAns.checked); }; btnPrint.onclick = (e) => { if (e) e.preventDefault(); triggerQuizPrintModal(); };
 
-        btnPrint.onclick = () => {
+        const unusedNativePrint = () => {
             updatePrintClass();
             window.print();
         };
 
-        if (sessionStorage.getItem('cycu_auto_print') === '1') {
+        if (sessionStorage.getItem('cycu_auto_print') === '1') { sessionStorage.removeItem('cycu_auto_print'); setTimeout(triggerQuizPrintModal, 600); } if (false) {
             sessionStorage.removeItem('cycu_auto_print');
             setTimeout(() => {
                 updatePrintClass();
